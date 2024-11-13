@@ -1,0 +1,25 @@
+{
+    "cmake.debugConfig": {
+
+        "cwd": "${workspaceRoot}" ,
+        "args": [
+
+            // "--log-level-console", "DEBUG",
+            // "--analysis",  "synthesis",
+            // "--xml-structrec-library-file",  "StructRec/xml/AnalogLibrary.xml",
+            // "--xml-circuit-library-file", "Synthesis/hspice/Library.xml",
+            // "--hspice-mapping-file", "InputFileExamples/SynthesisSmallLibrary/HSpiceMapping.xcat",
+            // "--hspice-supplynet-file", "InputFileExamples/SynthesisSmallLibrary/supplyNets.xcat",
+            // "--device-types-file", "InputFileExamples/SynthesisSmallLibrary/deviceTypes.xcat",
+            // "--xml-technologie-file", "InputFileExamples/SynthesisSmallLibrary/TechnologieFile.xml",
+            // "--xml-circuit-information-file", "InputFileExamples/SynthesisSmallLibrary/CircuitSpecifications.xml",
+            // "--transistor-model", "SHM",
+            // "--scaling", "1mum",
+            // "--HSPICE-netlist-dir", "InputFileExamples/SynthesisSmallLibrary/Netlist",
+            // "--use-hspice-library", "true"
+        ]
+    },
+    "files.associations": {
+        "*.gen": "cpp"
+    }
+}
