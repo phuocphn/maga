@@ -67,6 +67,12 @@ namespace Control {
         return oss.str();
     }
 
+    /**
+     * @brief Parse the given command arguments with boost::po::command_line_parser, and set the user-defined `parsedFlag_`  to True.
+     * 
+     * @param argc 
+     * @param argv 
+     */
     void OptionsBase::parse(int argc, char ** argv)
     {
         boost::program_options::parsed_options parsedOptions = boost::program_options::command_line_parser(argc,argv)

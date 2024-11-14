@@ -48,7 +48,7 @@ namespace Core {
 
     std::string Object::toStr() const
     {
-        return std::string(typeid(*this).name())+"@"+boost::lexical_cast<std::string>(static_cast<const void *>(this));
+        return "<" + std::string(typeid(*this).name())+" at "+boost::lexical_cast<std::string>(static_cast<const void *>(this)) + ">";
     }
 
     Object::~Object()

@@ -76,11 +76,14 @@ namespace Control {
      * @param argv 
      */
     void Control::run(int argc, char *argv[])
-    {
+    {   
+        // globalOptions_ is a private object from Control::Control class.  #inheritance: [GlobalOptions] -> [OptionBase]
+        // it contains all information about command arguments.
+        // after parsing, we can use values from Control::Control::optionsDescription_ (BoostOptionsDescription) and Control::Control::variablesMap_ (BoostVariablesMap) 
         globalOptions_.parse(argc,argv);
         initializeLogger();
 
-
+        // if argv contains `help` arguments i.e. ["--help", "help description"], just give help doc and do nothing!
         if(globalOptions_.hasHelp())
         {
             globalOptions_.printHelp(std::cout);
@@ -124,6 +127,8 @@ namespace Control {
     AbstractAnalysis* Control::createNewAnalysis(const OptionsBase & localOptions) const
     {
         logDebug( "Setting up Analysis...");
+
+        // analysisType: "synthesis", "automaticsizing", etc
         std::string analysisType = globalOptions_.findAnalysisType();
         AbstractAnalysis* analysis = createNewAnalysis(analysisType);
 
@@ -151,6 +156,7 @@ namespace Control {
 
     AnalysisFactory & Control::findAnalysisFactory(const std::string& analysisType)
     {
+        // FactoryMapKey(analysisType): convert `str` to MapKey
         AnalysesFactoryMap* analysisFactoryMap = AnalysesFactoryMap::getInstance();
         AnalysisFactory* analysisFactory = analysisFactoryMap->find(FactoryMapKey(analysisType));
         return *analysisFactory;
