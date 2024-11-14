@@ -1,9 +1,6 @@
-# acst
-
-Please refer to the documentation.pdf to obtain information how to use the software
+# maga
 
 
-## For Developers
-
-Please use the command `$ git update-index --assume-unchanged <file>` to remove files with local file paths from git commit, e.g.,
-`$ git update-index --assume-unchanged CMakeLists.txt`
+# References
+- inga000/acst: acst - Analog Circuit Synthesis Tool https://github.com/inga000/acst
+- AugustUnderground/circus: Analog CIrcuit Sizing Gym Environment (GACE 2.0) https://github.com/AugustUnderground/circus/
