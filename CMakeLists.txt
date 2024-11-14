@@ -130,6 +130,17 @@ add_custom_target(${TEST_BUILD_TARGET})
 add_executable(synthesis_small_library tests/synthesis_small_library.cpp)
 target_link_libraries(synthesis_small_library Log Control ManagedComponents boost_program_options.a rt) # rt = runtime
 
+add_executable(common_object tests/common/object.cpp)
+target_link_libraries(common_object Control) # rt = runtime
+
+add_executable(analysisfactory tests/control_cmd/AnalysesFactory.cpp)
+# target_link_libraries(analysisfactory Control Log Control ManagedComponents ${Boost_LIBRARIES} ) # rt = runtime
+target_link_libraries(analysisfactory Log Control ManagedComponents boost_program_options.a rt) # rt = runtime
+
+# target_include_directories(control_cmd PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/Control/incl/Analysis)
+
+
+
 add_dependencies(tests synthesis_small_library)
 
 foreach(dir IN LISTS COMPONENTS)
