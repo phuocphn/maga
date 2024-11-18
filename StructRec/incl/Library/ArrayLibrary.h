@@ -90,6 +90,8 @@ namespace StructRec {
 		bool hasArrayLibraryItem(const StructureName& structureName) const;
 
 		void writeXml(Core::XmlNode & node, Core::XmlDocument & doc) const;
+		int getLevel() const;
+		
 	private:
 		StructureCircuits & recognizeArraysRecursively(const Core::Circuit & circuit,
 				CircuitRegister & circuitRegister, Core::VisitedInstances & visitedInstances) const;
@@ -108,7 +110,7 @@ namespace StructRec {
 
 		void eraseAllLibraryItems();
 
-		int getLevel() const;
+
 
 	private:
 		const StructureCore& getStructureCore() const;

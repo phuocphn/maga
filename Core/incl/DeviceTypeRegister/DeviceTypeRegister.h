@@ -59,6 +59,11 @@ namespace Core {
 
 		bool hasDeviceType(const DeviceTypeName& deviceTypeName) const;
 
+		// FDO
+		DeviceTypeMap& getdeviceTypeMap_() {
+			return deviceTypeMap_; 
+		}
+
 	private:
 		DeviceTypeMap deviceTypeMap_;
 	};
