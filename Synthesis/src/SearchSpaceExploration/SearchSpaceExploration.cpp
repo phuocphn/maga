@@ -132,8 +132,10 @@ namespace Synthesis
 
 		logDebug("Create one stage op amps");
 		std::vector<Circuit*> oneStageOpAmps = getLibrary().createOneStageOpAmps();
+		logDebug("Num one stage op amps: " << oneStageOpAmps.size() ); // oneStageOpAmps.size() = 6
 
-		logDebug("Test circuits");
+		logDebug("Test circuits"); 
+		int num_opamps_passed = 0;
 		for(auto & oneStageOpAmp : oneStageOpAmps)
 		{
 			Core::NetId outputNet = createNetId("outFirstStage1");
@@ -144,8 +146,10 @@ namespace Synthesis
 			if(passedFirstStage != nullptr)
 			{
 				passedFirstStages.push_back(passedFirstStage);
+				num_opamps_passed += 1;
 			}
 		}
+		logDebug ( "Number one stage op-amps passsed: " << num_opamps_passed ); // num_opamps_passed = 6
 		return passedFirstStages;
 
 	}
@@ -169,7 +173,7 @@ namespace Synthesis
 
 	void SearchSpaceExploration::testTwoStageOpAmps(std::vector<Circuit*> firstStages)
 	{
-		std::vector<Circuit*> twoStageOpAmps = getLibrary().createTwoStageOpAmps(firstStages);
+		std::vector<Circuit*> twoStageOpAmps = getLibrary().createTwoStageOpAmps(firstStages); // size: 24
 
 		for(auto & twoStageOpAmp : twoStageOpAmps)
 		{
@@ -345,7 +349,7 @@ namespace Synthesis
 			}
 			if(circuit.fulfillsAllSpecifications())
 			{
-				getResult().add(circuit);
+				getResult().add(circuit); // Synthesis:Result
 			}
 		}
 		else

@@ -79,10 +79,39 @@ namespace AutomaticSizing {
 		const CircuitSpecification & getCircuitSpecification() const;
 		const DesignAttributes & getDesignAttributes() const;
 
+
+		/**
+		 * @brief Get the Technologie Specification EKV based on the technology type of `component`
+		 * 
+		 * @param component 
+		 * @return TechnologieSpecificationEKVNmos() if component.getTechType() == N else  TechnologieSpecificationEKVPmos()
+		 */
 		const TechnologieSpecificationEKV & getTechnologieSpecificationEKV(Partitioning::Component & component) const;
+		
+		/**
+		 * @brief Get the Technologie Specification EKV based on the technology type of `structure`
+		 * 
+		 * @param structure 
+		 * @return TechnologieSpecificationEKVNmos() if component.getTechType() == N else  TechnologieSpecificationEKVPmos() 
+		 */
 		const TechnologieSpecificationEKV & getTechnologieSpecificationEKV(const StructRec::Structure & structure) const;
+
+		/**
+		 * @brief Get the Technologie Specification EKV based on the technology type of `component`
+		 * 
+		 * @param component 
+		 * @return getTechnologieSpecificationSHMNmos() if component.getTechType() == N else  getTechnologieSpecificationSHMPmos() 
+		 */
 		const TechnologieSpecificationSHM & getTechnologieSpecificationSHM(Partitioning::Component & component) const;
+
+		/**
+		 * @brief Get the Technologie Specification EKV based on the technology type of `structure`
+		 * 
+		 * @param structure 
+		 * @return getTechnologieSpecificationSHMNmos() if component.getTechType() == N else  getTechnologieSpecificationSHMPmos() 
+		 */
 		const TechnologieSpecificationSHM & getTechnologieSpecificationSHM(const StructRec::Structure & structure) const;
+
 
 		bool hasTechnologieSpecificationEKVPmos() const;
 		bool hasTechnologieSpecificationEKVNmos() const;
@@ -95,13 +124,30 @@ namespace AutomaticSizing {
 
 	private:
 
+
+		// Data for `circuitSpecification_` and `circuitParameter_` are mainly parsed from `Synthesis::TechnologieFileSHM/TechnologieFileEKV`
+		// for NMOS transistors (nmosSHM_) and PMOS transistors (pmosSHM_)
 		const TechnologieSpecificationSHM * nmosSHM_;
 		const TechnologieSpecificationSHM * pmosSHM_;
 
 		const TechnologieSpecificationEKV * nmosEKV_;
 		const TechnologieSpecificationEKV * pmosEKV_;
+
+
+		// This class/variable contains information about fixed circuit design parameters 
+		// (e.g. is complementary/fully differential op-amp, bias current, load capacity, supply/ground/input voltage).
 		CircuitParameter * circuitParameter_;
+
+		// This class/variable contains information about specifications (e.g: minimum gain, minimum CMRR, etc)
+		// Data for `circuitSpecification_` and `circuitParameter_` are mainly parsed from `Synthesis::CircuitSpecificationFile`
+
+		// e.g
+		// Synthesis::CircuitSpecificationFile specificationFile;
+		// specificationFile.setPath("InputFileExamples/Synthesis/CircuitSpecifications.xml");
+		// specificationFile.setUseHSpiceLibrary(false);
+		// specificationFile.parse(*circuitInformation);
 		const CircuitSpecification* circuitSpecification_;
+
 		const DesignAttributes * designAttributes_;
 
 	};

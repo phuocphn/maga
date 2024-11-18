@@ -53,9 +53,27 @@ namespace Core {
 
     class DeviceType : public Object
     {
+
+    // <deviceTypes>
+    // <deviceType name = "Mosfet">
+    //     <techTypes>
+    //         <techType>n</techType>
+    //         <techType>p</techType>
+    //     </techTypes>
+    //     <pinTypes>
+    //         <pinType>Drain</pinType>
+    //         <pinType>Gate</pinType>
+    //         <pinType>Source</pinType>
+    //         <pinType optional = "true" autoConnection="Source">Bulk</pinType>
+    //     </pinTypes>
+    // </deviceType>
+
+    // name_ = Mosfet
+    // pinTypes_
+    // techTypes_
     protected:
-    	typedef std::map<PinName, PinType> PinTypeMap;
-    	typedef std::set<TechType> TechTypesSet;
+    	typedef std::map<PinName, PinType> PinTypeMap; /// for storing <pinTypes>
+    	typedef std::set<TechType> TechTypesSet; /// for storing <techTypes>
 
     public:
     	DeviceType();

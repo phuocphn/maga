@@ -63,6 +63,15 @@ namespace Control {
         virtual ~AnalysisFactory();
 
         virtual std::string getLocalOptionsStringDescription() const = 0;
+
+        /**
+         * @brief Get the Local Options object. New classes extend this base `AnalysisFactory` need to define this method,
+         * which will return specified options that only available for this class/component.
+         * 
+         * New classes/components such as [Synthesis|StructRec]Factory.[h/cpp] will contains a "private" variable name localOptions_ (type: [Synthesis|StructRec]LocalOptions)
+         * to store local options. We can see file with the same name "LocalOptions.h" in all component folders (all inherited from the base classes: Control::OptionsBase/ Control::HspiceOptions)
+         * @return OptionsBase& 
+         */
         virtual OptionsBase & getLocalOptions() = 0;
         virtual AbstractAnalysis* create() const = 0;
 

@@ -121,6 +121,12 @@ namespace Control {
         return supplyNetFile;
     }
 
+    /**
+     * @brief check the command argument `device-types-file` exist
+     * 
+     * @return true if exist
+     * @return false otherwise
+     */
     bool HspiceOptions::hasDeviceTypesFile() const
     {
     	return hasOptionValue(DEVICETYPES_FILE_OPTION_);

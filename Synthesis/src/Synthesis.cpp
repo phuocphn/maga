@@ -97,15 +97,15 @@ namespace Synthesis {
         if(getLocalOptions().useHSpiceLibrary())
         {
         	logDebug("Parsing Circuit Library");
-        	Library* circuitLibrary = parseCircuitLibrary();
+        	Library* circuitLibrary = parseCircuitLibrary(); // Synthesis::Library*
         	logDebug("Done parsing circuit library");
-        	circuitLibrary->setStructRecLibrary(*structureLibrary);
+        	circuitLibrary->setStructRecLibrary(*structureLibrary); 
 
             SearchSpaceExploration * searchSpaceExploration = new SearchSpaceExploration;
 
             searchSpaceExploration->setLibrary(*circuitLibrary);
-            searchSpaceExploration->setDefinition(getLocalOptions().getScaling());
-            searchSpaceExploration->setTransistorModel(getLocalOptions().getTransistorModel());
+            searchSpaceExploration->setDefinition(getLocalOptions().getScaling()); // e.g: 1mum
+            searchSpaceExploration->setTransistorModel(getLocalOptions().getTransistorModel()); // e.g: SHM
             searchSpaceExploration->setCircuitInformation(*parseCircuitInformation());
             logDebug("Start search space exploration");
             result_ = &searchSpaceExploration->compute();
