@@ -48,6 +48,7 @@
 #include <sstream>
 #include <cstring>
 #include "Log/incl/LogMacros.h"
+#include <ostream>
 
 namespace Control {
 
@@ -130,10 +131,13 @@ namespace Control {
         }
         catch (rapidxml::parse_error & e) {
            if (!isBuiltIn()) {
-               logDebug("Parsing of file failed:" << getPath());
-               logDebug(e.what());
+            //    logDebug("Parsing of file failed:" << getPath());
+            //    logDebug(e.what());
+                std::cout << "Parsing of file failed:" << getPath();
+                std::cout << e.what();
            } else {
-               logDebug("Parsing of built in file failed");
+               //logDebug("Parsing of built in file failed");
+                std::cout << "Parsing of built in file failed";
            }
            throw;
         }

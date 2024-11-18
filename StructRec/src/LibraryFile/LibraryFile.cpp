@@ -79,9 +79,9 @@ namespace StructRec {
 		library_ = new Library();
 
 		parseArrayLibraries();
-		logDebug("Parsed ArrayLibrary successfully")
+		// TODO: uncomment logDebug("Parsed ArrayLibrary successfully")
 		parsePairLibraries();
-		logDebug("Parsed PairLibrary successfully")
+		// TODO: uncomment logDebug("Parsed PairLibrary successfully")
 		return &getLibrary();
 	}
 
@@ -119,8 +119,12 @@ namespace StructRec {
 		Core::XmlNode* pairLibrariesNode = libraryNode->first_node(PAIR_LIBRARIES_NODE_.c_str());
 		return pairLibrariesNode->first_node(PAIR_LIBRARY_FILE_NODE_.c_str());
 	}
-
-	void LibraryFile::parseArrayLibraries()
+	
+	/**
+	 * @brief this method will parse the `StructRec/xml/Array/ArrayLibrary.xml` file (absoluteFilePath)
+	 * the while loop runs only 1 for the `common_test`.
+	 */
+	void LibraryFile:: parseArrayLibraries()
 	{
 		if(hasArrayLibrariesNode())
 		{
@@ -128,15 +132,17 @@ namespace StructRec {
 			while(arrayLibraryFileNode != NULL) {
 				std::string relativeFilePath = arrayLibraryFileNode->value();
 				std::string absoluteFilePath = computeAbsoluteFilePath(relativeFilePath);
-				logDebug("Parsing: " << relativeFilePath);
+				//logDebug("Parsing: " << relativeFilePath);
+				//std::cout << "parsing array library: " << absoluteFilePath << std::endl;
 
+				// parseArrayLibrary (TEST ID: #5)
 				ArrayLibrary* arrayLibrary = parseArrayLibrary(absoluteFilePath);
 				arrayLibrary->setFilePath(relativeFilePath);
 				getLibrary().addAndMergeArrayLibrary(*arrayLibrary);
 				delete arrayLibrary;
 
 				arrayLibraryFileNode = arrayLibraryFileNode->next_sibling(ARRAY_LIBRARY_FILE_NODE_.c_str());
-				logDebug("Parsed " << relativeFilePath << " successfully.");
+				//logDebug("Parsed " << relativeFilePath << " successfully.");
 			}
 		}
 	}
@@ -149,7 +155,7 @@ namespace StructRec {
 			while(pairLibraryFileNode != NULL) {
 				std::string relativeFilePath = pairLibraryFileNode->value();
 				std::string absoluteFilePath = computeAbsoluteFilePath(relativeFilePath);
-				logDebug("Parsing: " << relativeFilePath);
+				//logDebug("Parsing: " << relativeFilePath);
 
 				PairLibrary * pairLibrary = parsePairLibrary(absoluteFilePath);
 				pairLibrary->setFilePath(relativeFilePath);
@@ -157,7 +163,7 @@ namespace StructRec {
 				delete pairLibrary;
 
 				pairLibraryFileNode = pairLibraryFileNode->next_sibling(PAIR_LIBRARY_FILE_NODE_.c_str());
-				logDebug("Parsed " << relativeFilePath << " successfully.");
+				//logDebug("Parsed " << relativeFilePath << " successfully.");
 			}
 		}
 	}

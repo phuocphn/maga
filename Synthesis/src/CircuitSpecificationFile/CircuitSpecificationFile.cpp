@@ -51,6 +51,7 @@
 #include "Core/incl/Common/Backtrace.h"
 #include "Core/incl/Common/BacktraceAssert.h"
 
+#include <ostream>
 namespace Synthesis {
 
 	const std::string CircuitSpecificationFile::CIRCUIT_SPECIFICATIONS_NODE_ = "Specifications";
@@ -118,7 +119,8 @@ namespace Synthesis {
 
 	void CircuitSpecificationFile::parse(AutomaticSizing::CircuitInformation & circuitInformation)
 	{
-		logDebug("Start Parsing circuit Informations");
+		//logDebug("Start Parsing circuit Informations");
+		std::cout << "Start Parsing circuit Informations" << std::endl;
 		try
 		{
 			Control::XmlInputFile::parse();
