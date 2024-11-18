@@ -116,10 +116,9 @@ comp_def_function(ANALYSIS)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS} -rdynamic -Wall -Wextra -Wformat=2  -Werror=return-type -Wold-style-cast -Wno-reorder -Xlinker -export-dynamic") # -pg")
 
-enable_testing()
-set(TEST_BUILD_TARGET "tests")
-add_custom_target(${TEST_BUILD_TARGET})
 
+
+# add_dependencies(${TEST_BUILD_TARGET} common_test)
 
 # add_subdirectory(tests)
 # target_include_directories(${CMAKE_SOURCE_DIR}/tests)
@@ -127,21 +126,22 @@ add_custom_target(${TEST_BUILD_TARGET})
 # include_directories(${CMAKE_SOURCE_DIR}/tests)
 # target_sources(synthesis_small_library  INTERFACE  ${CMAKE_SOURCE_DIR}/tests/synthesis_small_library.cpp)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
-add_executable(synthesis_small_library tests/synthesis_small_library.cpp)
-target_link_libraries(synthesis_small_library Log Control ManagedComponents boost_program_options.a rt) # rt = runtime
+# add_executable(synthesis_small_library tests/synthesis_small_library.cpp)
+# target_link_libraries(synthesis_small_library Log Control ManagedComponents boost_program_options.a rt ) # rt = runtime
 
-add_executable(common_object tests/common/object.cpp)
-target_link_libraries(common_object Control) # rt = runtime
+# add_executable(common_object tests/common/object.cpp)
+# target_link_libraries(common_object Control) # rt = runtime
 
-add_executable(analysisfactory tests/control_cmd/AnalysesFactory.cpp)
+# add_executable(analysisfactory tests/control_cmd/AnalysesFactory.cpp)
 # target_link_libraries(analysisfactory Control Log Control ManagedComponents ${Boost_LIBRARIES} ) # rt = runtime
-target_link_libraries(analysisfactory Log Control ManagedComponents boost_program_options.a rt) # rt = runtime
+# target_link_libraries(analysisfactory Log Control ManagedComponents boost_program_options.a rt) # rt = runtime
 
 # target_include_directories(control_cmd PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/Control/incl/Analysis)
 
+include_directories(/opt/thirdparty_libs/gecode-release-6.2.0)
+link_directories(/opt/thirdparty_libs/gecode-release-6.2.0)
 
-
-add_dependencies(tests synthesis_small_library)
+# add_dependencies(tests synthesis_small_library)
 
 foreach(dir IN LISTS COMPONENTS)
     message("Adding component ${dir}")
@@ -152,7 +152,17 @@ add_executable (${BINARY_NAME}
     main.cpp
 )
 
+enable_testing()
+set(TEST_BUILD_TARGET "tests")
+add_custom_target(${TEST_BUILD_TARGET})
+add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
+
 target_link_libraries(${BINARY_NAME} Log Control ManagedComponents boost_program_options.a rt) # rt = runtime
+
+
+
+
+
 
 if(NOT EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BINARY_NAME}.cds)
     add_custom_command(TARGET ${BINARY_NAME} POST_BUILD 

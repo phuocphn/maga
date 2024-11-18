@@ -47,4 +47,4 @@ get_property(CONTROL_SRC GLOBAL PROPERTY SOURCES_Control)
 
 add_library(Control ${CONTROL_SRC})
 
-target_link_libraries(Control ${ACST_CIRCUITSOURCE_LIBS})
+target_link_libraries(Control ${ACST_CIRCUITSOURCE_LIBS} boost_program_options.a  )
