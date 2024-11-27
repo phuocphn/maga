@@ -358,8 +358,8 @@ namespace Synthesis {
 
         if(outputTransistor.getCircuitIdentifier() == circuitIds.diodeTransistor())
         {
-            Core::Instance & sourceInstance = createInstance(sourceTransistor, SOURCETRANSISTOR_);
-            Core::Instance & outputInstance = createInstance(outputTransistor, OUTPUTTRANSISTOR_);
+            Core::Instance & sourceInstance = createInstance(sourceTransistor, SOURCETRANSISTOR_); // bottom transistor
+            Core::Instance & outputInstance = createInstance(outputTransistor, OUTPUTTRANSISTOR_); // top transistor
 
             Core::Circuit * circuit = new Core::Circuit;
 
@@ -369,6 +369,7 @@ namespace Synthesis {
 		    circuit->setCircuitIdentifier(voltageBiasId);
 
             std::vector<Core::NetId> netNames;
+            //5 nets
             netNames.push_back(IN_NET_);
             netNames.push_back(SOURCE_NET_);
             netNames.push_back(INNER_NET_);
@@ -411,6 +412,7 @@ namespace Synthesis {
 		    circuit->setCircuitIdentifier(voltageBiasId);
 
             std::vector<Core::NetId> netNames;
+            // 4 nets only
             netNames.push_back(IN_NET_);
             netNames.push_back(SOURCE_NET_);
             netNames.push_back(INNER_NET_);
@@ -475,7 +477,7 @@ namespace Synthesis {
         Core::TerminalId terminalIdSource;
         terminalIdSource.setTerminalName(NormalTransistor::SOURCE_TERMINAL_);
        
-        //SourceTransistor
+        //SourceTransistor: bottom transistor
         Core::InstanceTerminal & gateTerminalSourceTransistor = sourceTransistor.findInstanceTerminal(terminalIdGate);
         if(circuit.hasNet(OUTSOURCE_NET_))
         {
@@ -492,7 +494,8 @@ namespace Synthesis {
         Core::InstanceTerminal & sourceTerminalSourceTransistor = sourceTransistor.findInstanceTerminal(terminalIdSource);
         sourceTerminalSourceTransistor.connect(circuit.findNet(SOURCE_NET_));
 
-        // OutputTransistor
+
+        // OutputTransistor (top transistors in Figure 4. FUBUCO paper)
         Core::InstanceTerminal & gateTerminalOutputTransistor = outputTransistor.findInstanceTerminal(terminalIdGate);
         gateTerminalOutputTransistor.connect(circuit.findNet(OUTINPUT_NET_));
 

@@ -53,6 +53,10 @@ namespace Core {
     class Device;
     class InstanceTerminal;
 
+    /**
+     * @brief 
+     * @unclear: NetAssignMent, Supply, InstanceTerminal (why we are dealing with Instance in Net class?)
+     */
     class Net: public Object
     {
     private:
@@ -73,6 +77,7 @@ namespace Core {
         void addPin(Pin & pin);
         void removePin(const Pin & pin);
 
+        // add `instanceTerminal` to self.instanceTerminals_
         void addInstanceTerminal(InstanceTerminal & instanceTerminal);
 
         bool isGlobal() const;
@@ -80,10 +85,18 @@ namespace Core {
         bool isVddSupply() const;
         bool isGndSupply() const;
 
+        // check self.pins_ is not empty
         bool hasPins() const;
+
+        // iterate over all self.pins to check if there is any pin MosfetDeviceType.gate()
         bool hasGatePin() const;
+
+        // iterate over all self.pins to check if there is any pin MosfetDeviceType.drain()
         bool hasDrainPin() const;
+
         bool hasAssignment() const;
+
+        // check self.instanceTerminals_ is not empty
         bool hasInstanceTerminals() const;
 
         std::vector<InstanceTerminal*> getInstanceTerminals() const;

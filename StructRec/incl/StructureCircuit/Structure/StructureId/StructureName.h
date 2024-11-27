@@ -51,6 +51,12 @@ namespace StructRec {
 		StructureName();
 		StructureName(const std::string & name);
 
+		/**
+		 * @brief add `node` to `doc` with the name of "structureName" and content: _toStr()
+		 * 
+		 * @param node 
+		 * @param doc 
+		 */
 		void writeXml(Core::XmlNode & node, Core::XmlDocument & doc) const;
 
 		operator std::string() const;

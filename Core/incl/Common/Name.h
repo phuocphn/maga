@@ -44,6 +44,12 @@
 
 namespace Core {
 
+    /**
+     * @brief The main for storing name of circuits, net, device.
+     * it is just a wrapper around std::string with other ultity functions
+     * 
+     * @tparam NameClass 
+     */
     template<class NameClass>
     class Name : public Object
     {

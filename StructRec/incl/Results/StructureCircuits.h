@@ -58,6 +58,23 @@ namespace StructRec {
 	class PairLibrary;
 	class CircuitRegister;
 
+
+
+
+	/**
+	 * @brief This class is 
+	 * Note: There is another class with the similar name StructRec:StructureCircuitS (with `s` at the end). Don't be confused!.
+	 * @usage: StructureCircuit(s) is used to obtain std::vector<const StructRec::Structure*> via findStructureCircuit(int) in SearchSpace.cpp 
+	 * @dependencies:
+	 * 	- Core::InstanceId:
+	 *  - InstanceNamePath
+	 *  - Structure:
+	 *  - StructureName
+	 *  - StructureId
+	 * 	- StructureInstance
+	 *  - StructureCore
+	 */
+
 	class StructureCircuits : public Core::Object
 	{
 	public:
@@ -127,8 +144,32 @@ namespace StructRec {
 
 	private:
 		const StructureCore* structureCore_;
+
+		// may be the most important property ?
+		// for different "hierarchy" circuit map (circuitMap_.size() == 4 == Number of Hierarchy Levels.)
+		// in other words, the index of each StructureCircuit corresponds to hierarchyLevel_
+		// for `cmd_structure_recognition` we have total of 4 hierarchy levels.
+		
+		// In the first level H=0 (i.e.  index=0, of circuitMap_[0]), we the 16 elements for circuitMap_[0].structureMap_ (corresponds to 10xMosfetNormalArray + 6xMosfetDiodeArray)
+		// 13 wires (n1-n9, /in, /out, /vdd!, /gnd!)
+
+		// In the second Level H=1 (circuitMap_[1].structureMap_ contains 8 elements)
+		// 2x MosfetDifferentialPair + 2x MosfetCascodePair + 2x MosfetDiodeStack + 2xMosfetSimpleCurrentMirror  
+		// with 13 wires (circuitMap_[1].netMap_)
+
+
+		// In the Level H=2 (circuitMap_[2].structureMap_ contains 2 elements)
+		// 2x MosfetCascodeCurrentMirror
+		// with 7 wires (circuitMap_[2].netMap_)
+
+		// In the Level = H=3 (circuitMap_[3].structureMap_ contains 0 elements)
+		// with 0 wires (circuitMap_[3].netMap_)
 		std::map<const int, StructureCircuit*>  circuitMap_;
+
+		// empty at the time debugging
 		std::map<Core::InstanceId, StructureInstance*> instanceMap_;
+		
+		// circuitId_.name_ == "TOP"
 		Core::CircuitId circuitId_;
 };
 

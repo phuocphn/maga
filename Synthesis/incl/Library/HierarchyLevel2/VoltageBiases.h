@@ -79,12 +79,20 @@ namespace Synthesis
 			std::string toStr() const;
 
 		public:
+			// fixed 
 			static const Core::TerminalName IN_TERMINAL_;
 			static const Core::TerminalName SOURCE_TERMINAL_;
 			static const Core::TerminalName OUT_TERMINAL_;
+ 
 
+			// dash TODO: add description!
+			// OUT_TERMINAL ~ (OUTINPUT_TERMINAL + OUTSOURCE_TERMINAL)
 			static const Core::TerminalName INNER_TERMINAL_;
+
+			// OUTINPUT_TERMINAL: (out_2 in Figure 4.) The output terminal of the "output" transistor in which its drain terminal connects to INP signal 
 			static const Core::TerminalName OUTINPUT_TERMINAL_;
+
+			// OUTSOURCE_TERMINAL: (out_1 in Figure 4.) The output terminal of the "source" transistor in which its source terminal connects to SOURCE.
 			static const Core::TerminalName OUTSOURCE_TERMINAL_;
 
 		private:

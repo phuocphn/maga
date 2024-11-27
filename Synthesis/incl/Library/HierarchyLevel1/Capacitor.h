@@ -76,6 +76,10 @@ namespace Synthesis
 			static const Core::TerminalName PLUS_TERMINAL_;
 
 		private:
+			/**
+			 * @brief Construct empty circuit, undefied tech type and initialize the "circuitId" as Capacitor[1]
+			 * then create pin connections, and add terminals to the newly created circuit.
+			 */
 			void initializeCapacitor();
 
 			void addNetsToCircuit(Core::Circuit & circuit);

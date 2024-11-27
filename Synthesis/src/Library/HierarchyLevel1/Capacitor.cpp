@@ -92,6 +92,8 @@ namespace Synthesis {
 
     	createPinConnections(*circuit, device);
     	addTerminalsToCircuit(*circuit);
+
+		// reference private variable capactor_ to the newly created circuit.
 		capacitor_ = circuit;
 	}
 

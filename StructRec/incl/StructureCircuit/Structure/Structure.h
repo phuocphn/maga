@@ -74,10 +74,13 @@ namespace StructRec {
         void setPersistence(const int persistence);
         void addPin(const StructurePinType & pinType,  StructurePin * pin);
 
+        /// Get StructureId = Name + ID such as: MosfetNormalArray[1]
         StructureId getIdentifier() const;
         StructureName getStructureName();
         StructureName getParentStructureName() const;
         const StructureName getStructureName() const;
+
+        
         Core::TechType getTechType() const;
         int getPersistence() const;
         const StructurePin & findPin(const StructurePinType & pinType) const;
@@ -165,9 +168,31 @@ namespace StructRec {
         static const int MAX_PERSISTENCE_;
 
         int persistence_;
+
+        // for storing structure name (e.g.MosfetCascodeCurrentMirror[1], MosfetCascodePair[5], etc )
+        // the name can be access via `structureId_.name_` and id can access via `structureId_.id_`
         StructureId structureId_;
+
+        // techType="p" or techType="n"
         Core::TechType techType_;
+
+        // `StructurePinS` is a "super-class" that contains a dictionary of <key, value>
+        // where `key` s are StructurePinType (pinName_ and structureName_) objects.
+        // and `value` s are Structure (w/o "S") objects.
+        // This variable is mainly responsible for working with this block
+
+        // <pins>
+        // 	<pin name="Drain" net="/out"/>
+        // 	<pin name="Gate1" net="/n7"/>
+        // 	<pin name="Gate2" net="/n3"/>
+        // 	<pin name="Inner" net="/n4"/>
+        // 	<pin name="Source" net="/vdd!"/>
+        // </pins>
         StructurePins pins_;
+
+        // for storing reference to parent structures.
+        // for example, in case of MosfetCascodeCurrentMirror = MosfetDiodeStack + MosfetCascodePair
+        // an instance of MosfetCascodePair (let's call `m`) can access to its parent structure via `parents_`
         std::vector<Structure*> parents_;
     };
 }
