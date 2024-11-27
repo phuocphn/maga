@@ -2,4 +2,6 @@ docs/html/
 docs/latex/
 
 build/
+
+InputFileExamples/SynthesisSmallLibrary/Netlist/
 InputFileExamples/Synthesis/HspiceNetlist/
