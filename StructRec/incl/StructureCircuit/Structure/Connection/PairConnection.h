@@ -50,6 +50,12 @@
 namespace StructRec {
 
 	class CrossInstancePair;
+
+
+	/**
+	 * @brief This class is used for parsing/storing the following data: 
+	 * InputFileExamples/RuleGeneration/SymmetricalCascodeOpAmp/Items/SymmetricalCascodeOpAmp1.xml
+	 */
 	class PairConnection
 	{
 	public:
