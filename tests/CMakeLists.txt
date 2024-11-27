@@ -38,3 +38,9 @@ target_link_libraries(cmd_synthesis_hspice GTest::gtest_main Log Control Managed
 
 add_executable(cmd_synthesis_fbb cmd_synthesis_fbb.cpp)
 target_link_libraries(cmd_synthesis_fbb GTest::gtest_main Log Control ManagedComponents boost_program_options.a rt ) 
+
+add_executable(cmd_structure_recognition cmd_structure_recognition.cpp)
+target_link_libraries(cmd_structure_recognition GTest::gtest_main Log Control ManagedComponents boost_program_options.a rt ) 
+
+add_executable(cmd_toplibgen cmd_toplibgen.cpp)
+target_link_libraries(cmd_toplibgen GTest::gtest_main Log Control ManagedComponents boost_program_options.a rt ) 
