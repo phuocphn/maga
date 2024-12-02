@@ -598,6 +598,24 @@ namespace Core {
         }
         stream << std::endl;
     }
+    void Circuit::printBasicInfo(std::ostream& stream) const
+    {
+        stream << "Number of instances: " << getInstanceMap().size();
+        for(auto& it : getInstanceMap())
+		{
+            const Instance* instance = it.second;
+            instance->print(stream);
+            stream << std::endl;
+        }
+        
+        stream << "Terminals: ";
+        for(auto& it : getTerminalMap())
+        {
+            const Terminal* terminal = it.second;
+            stream << terminal << "; ";
+        }
+        stream << std::endl;
+    }
 
     void Circuit::printNets(std::ostream& stream) const
     {

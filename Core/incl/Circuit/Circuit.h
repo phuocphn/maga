@@ -141,14 +141,18 @@ namespace Core {
         bool everyGateNetIsNotConnectedToMoreThanOneDrainOfComponentWithSameTechType() const;
 
         std::string toStr() const;
-    private:
         void print(std::ostream& stream) const;
         void printSummary(std::ostream& stream) const;
+        void printBasicInfo(std::ostream& stream) const;
+
 
         void printTerminals(std::ostream& stream) const;
         void printNets(std::ostream& stream) const;
         void printDevices(std::ostream& stream) const;
         void printInstances(std::ostream& stream) const;
+
+
+    private:
 
         void eraseNets();
         void eraseDevices();
