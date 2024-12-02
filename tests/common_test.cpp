@@ -56,6 +56,18 @@
 #include "Synthesis/incl/CircuitSpecificationFile/CircuitSpecificationFile.h"
 
 
+
+
+#include "Synthesis/incl/Library/HierarchyLevel1/DeviceLevel.h"
+
+#include "Synthesis/incl/Library/HierarchyLevel3/Loads.h"
+#include "Synthesis/incl/Library/HierarchyLevel3/LoadParts.h"
+#include "Synthesis/incl/Library/HierarchyLevel3/Transconductances.h"
+#include "Synthesis/incl/Library/HierarchyLevel3/StageBiases.h"
+#include "Synthesis/incl/Library/HierarchyLevel2/StructuralLevel.h"
+
+
+
 class TestObject : public Core::Object {
     // TestObject inherits from Object to use its toStr method and overloaded operators.
     // Additional functionality can be added if required.
@@ -283,6 +295,140 @@ TEST (AutomaticSizing, CircuitInformation)
 
     std::cout << "Created [CircuitInformation] sucessfully!" << std::endl;
 }
+
+
+TEST (Synthesis, LoadPart)
+{   
+    AutomaticSizing::CircuitInformation * circuitInformation = new AutomaticSizing::CircuitInformation;
+    // Synthesis::CircuitSpecificationFile specificationFile = getLocalOptions().getCircuitSpecificationsFile();
+
+    Synthesis::CircuitSpecificationFile specificationFile;
+    specificationFile.setPath("InputFileExamples/Synthesis/CircuitSpecifications.xml");
+    specificationFile.setUseHSpiceLibrary(false);
+    specificationFile.parse(*circuitInformation);
+
+    // always use SHM
+    // AutomaticSizing::TechnologieFileSHM technologieFile = getLocalOptions().getTechnologieFileSHM();
+    AutomaticSizing::TechnologieFileSHM technologieFile;
+    technologieFile.setPath("InputFileExamples/Synthesis/TechnologieFile.xml");
+    technologieFile.parse(*circuitInformation);
+
+
+
+    //logDebug("Creating device level");
+    const Synthesis::DeviceLevel * deviceLevel = new Synthesis::DeviceLevel();
+    //logDebug("Creating Structural level");
+    const Synthesis::StructuralLevel * structuralLevel =  new Synthesis::StructuralLevel(*deviceLevel, *circuitInformation);
+    // std::cout << loadParts_->toStr() << std::endl;
+
+    Synthesis::LoadParts * loadParts_ = new Synthesis::LoadParts(*structuralLevel);
+    for(auto & loadPart : loadParts_->createLoadPartsPmosTwoTransistorCurrentBiasesDifferentSources())
+    {
+        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << loadPart->getCircuitIdentifier().toStr() << ": " << std::endl;
+        std::ostringstream oss;
+        loadPart->printTerminals(oss);
+        std::cout <<  oss.str();
+    }
+
+
+
+    for(auto & loadPart : loadParts_->createTwoTransistorsLoadPartsLoadPartsPmosVoltageBiases())
+    {
+        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << loadPart->getCircuitIdentifier().toStr() << ": " << std::endl;
+        std::ostringstream oss;
+        loadPart->printBasicInfo(oss);
+        std::cout <<  oss.str();
+    }
+
+    for(auto & loadPart : loadParts_->createFourTransistorsLoadPartsLoadPartsPmosVoltageBiases())
+    {
+        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << loadPart->getCircuitIdentifier().toStr() << ": " << std::endl;
+        std::ostringstream oss;
+        loadPart->printBasicInfo(oss);
+        std::cout <<  oss.str();
+    }
+
+
+    for(auto & loadPart : loadParts_->createLoadPartsPmosTwoTransistorCurrentBiasesDifferentSources())
+    {
+        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << loadPart->getCircuitIdentifier().toStr() << ": " << std::endl;
+        std::ostringstream oss;
+        loadPart->printBasicInfo(oss);
+        std::cout <<  oss.str();
+    }
+
+    for(auto & loadPart : loadParts_->createLoadPartsPmosFourTransistorCurrentBiases())
+    {
+        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << loadPart->getCircuitIdentifier().toStr() << ": " << std::endl;
+        std::ostringstream oss;
+        loadPart->printBasicInfo(oss);
+        std::cout <<  oss.str();
+    }
+
+
+    for(auto & loadPart : loadParts_->createLoadPartsPmosCurrentBiases())
+    {
+        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << loadPart->getCircuitIdentifier().toStr() << ": " << std::endl;
+        std::ostringstream oss;
+        loadPart->printBasicInfo(oss);
+        std::cout <<  oss.str();
+    }
+
+
+    for(auto & loadPart : loadParts_->createLoadPartsPmosVoltageBiases())
+    {
+        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << loadPart->getCircuitIdentifier().toStr() << ": " << std::endl;
+        std::ostringstream oss;
+        loadPart->printBasicInfo(oss);
+        std::cout <<  oss.str();
+    }
+
+
+    
+    for(auto & loadPart : loadParts_->createLoadPartsPmosMixed())
+    {
+        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << loadPart->getCircuitIdentifier().toStr() << ": " << std::endl;
+        std::ostringstream oss;
+        loadPart->printBasicInfo(oss);
+        std::cout <<  oss.str();
+    }
+
+
+
+    for(auto & loadPart : loadParts_->createLoadPartsPmosFourTransistorMixed())
+    {
+        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << loadPart->getCircuitIdentifier().toStr() << ": " << std::endl;
+        std::ostringstream oss;
+        loadPart->printBasicInfo(oss);
+        std::cout <<  oss.str();
+    }
+
+    // g.2
+    // std::vector<const Core::Circuit *> createLoadPartsPmosTwoTransistorCurrentBiasesDifferentSources() const; (1)
+    // std::vector<const Core::Circuit *> createLoadPartsNmosTwoTransistorCurrentBiasesDifferentSources() const; (1)
+
+
+    
+    // std::vector<const Core::Circuit *> createTwoTransistorsLoadPartsLoadPartsPmosVoltageBiases() const;
+    // std::vector<const Core::Circuit *> createTwoTransistorsLoadPartsLoadPartsNmosVoltageBiases() const;
+    // std::vector<const Core::Circuit *> createFourTransistorsLoadPartsLoadPartsPmosVoltageBiases() const;
+    // std::vector<const Core::Circuit *> createFourTransistorsLoadPartsLoadPartsNmosVoltageBiases() const;
+
+
+    // std::vector<const Core::Circuit *> createLoadPartsPmosFourTransistorCurrentBiases() const;
+    // std::vector<const Core::Circuit *> createLoadPartsNmosFourTransistorCurrentBiases() const;
+    // std::vector<const Core::Circuit *> createLoadPartsPmosCurrentBiases() const;
+    // std::vector<const Core::Circuit *> createLoadPartsNmosCurrentBiases() const;
+    // std::vector<const Core::Circuit *> createLoadPartsPmosVoltageBiases() const;
+    // std::vector<const Core::Circuit *> createLoadPartsNmosVoltageBiases() const;
+    // std::vector<const Core::Circuit *> createLoadPartsPmosMixed() const;
+    // std::vector<const Core::Circuit *> createLoadPartsNmosMixed() const;
+    // std::vector<const Core::Circuit *> createLoadPartsPmosFourTransistorMixed() const;
+    // std::vector<const Core::Circuit *> createLoadPartsNmosFourTransistorMixed() const;
+
+    std::cout << "Done!";
+}
+
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
