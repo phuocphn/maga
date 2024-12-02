@@ -69,17 +69,22 @@ namespace Synthesis {
 	const Core::TerminalName AnalogInverters::INNER_CURRENTBIASNMOS_TERMINAL_ = Core::TerminalName("InnerCurrentBiasNmos");
 	const Core::TerminalName AnalogInverters::INNER_CURRENTBIASPMOS_TERMINAL_ = Core::TerminalName("InnerCurrentBiasPmos");
 
+    // in Inverting Stage, "CurrentBiasNmos" will serve as Stage Bias
     const Core::InstanceName AnalogInverters::CURRENTBIASNMOS_ = Core::InstanceName("CurrentBiasNmos");
+
+    // in Inverting Stage, "CurrentBiasPmos" will serve as transconductance
 	const Core::InstanceName AnalogInverters::CURRENTBIASPMOS_ = Core::InstanceName("CurrentBiasPmos");
 			
 	const Core::NetId AnalogInverters::OUTPUT_NET_ = Core::NetName("output").createRootIdentifier();
 			
 	const Core::NetId AnalogInverters::SOURCE_CURRENTBIASNMOS_NET_ = Core::NetName("sourceCurrentBiasNmos").createRootIdentifier();
 	const Core::NetId AnalogInverters::SOURCE_CURRENTBIASPMOS_NET_ = Core::NetName("sourceCurrentBiasPmos").createRootIdentifier();
-			
+	
+    // for simple current bias
 	const Core::NetId AnalogInverters::IN_CURRENTBIASNMOS_NET_ = Core::NetName("inCurrentBiasNmos").createRootIdentifier();
 	const Core::NetId AnalogInverters::IN_CURRENTBIASPMOS_NET_ = Core::NetName("inCurrentBiasPmos").createRootIdentifier();
 
+    // for cascode current bias
 	const Core::NetId AnalogInverters::INSOURCE_CURRENTBIASNMOS_NET_ = Core::NetName("inSourceCurrentBiasNmos").createRootIdentifier();
 	const Core::NetId AnalogInverters::INOUTPUT_CURRENTBIASNMOS_NET_ = Core::NetName("inOutputCurrentBiasNmos").createRootIdentifier();
 	const Core::NetId AnalogInverters::INOUTPUT_CURRENTBIASPMOS_NET_ = Core::NetName("inOutputCurrentBiasPmos").createRootIdentifier();

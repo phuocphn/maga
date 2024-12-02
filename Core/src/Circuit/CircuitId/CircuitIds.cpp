@@ -38,16 +38,19 @@
 
 namespace Core {
 
+    // level 1
     const CircuitName CircuitIds::NORMALTRANSISTOR_ = CircuitName("NormalTransistor");
     const CircuitName CircuitIds::DIODETRANSISTOR_ = CircuitName("DiodeTransistor");
     const CircuitName CircuitIds::CAPACITOR_ = CircuitName("Capacitor");
 
+    // level 2
     const CircuitName CircuitIds::VOLTAGEBIAS_ = CircuitName("VoltageBias");
     const CircuitName CircuitIds::CURRENTBIAS_ = CircuitName("CurrentBias");
     const CircuitName CircuitIds::ANALOGINVERTER_ = CircuitName("AnalogInverter");
     const CircuitName CircuitIds::CURRENTMIRROR_ = CircuitName("CurrentMirror");
     const CircuitName CircuitIds::DIFFERENTIALPAIR_ = CircuitName("DifferentialPair");
-
+    
+    // level 3
     const CircuitName CircuitIds::LOADPART_= CircuitName("LoadPart");
     const CircuitName CircuitIds::VOLTAGEBIASLOADPART_= CircuitName("VoltageBiasLoadPart");
     const CircuitName CircuitIds::LOAD_ = CircuitName("Load");
@@ -55,10 +58,12 @@ namespace Core {
     const CircuitName CircuitIds::STAGEBIAS_ = CircuitName("StageBias");
     const CircuitName CircuitIds::TRANSCONDUCTANCE_ = CircuitName("Transconductance");
 
+    // level 4
     const  CircuitName CircuitIds::INVERTINGSTAGE_ = CircuitName("InvertingStage");
     const  CircuitName CircuitIds::FIRSTSTAGE_ = CircuitName("FirstStage");
     const  CircuitName CircuitIds::FEEDBACKSTAGE_ = CircuitName("NonInvertingStage");
-        
+    
+    // level 5
     const CircuitName CircuitIds::SINGLEOUTPUTOPAMP_ = CircuitName("one_stage_single_output_op_amp");
     const CircuitName CircuitIds::SINGLEOUTPUTTWOSTAGEOPAMP_ = CircuitName("two_stage_single_output_op_amp");
     const CircuitName CircuitIds::FULLYDIFFERENTIALOPAMP_ = CircuitName("one_stage_fully_differential_op_amp");

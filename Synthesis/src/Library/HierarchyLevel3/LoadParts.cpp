@@ -63,10 +63,11 @@ namespace Synthesis {
     const Core::TerminalName LoadParts::SOURCE2_TERMINAL_ = Core::TerminalName("Source2");
 
 	const Core::TerminalName LoadParts::INNER_TERMINAL_ = Core::TerminalName("Inner");
-
+    // in_1, in_2
 	const Core::TerminalName LoadParts::INNEROUTPUT_TERMINAL_ = Core::TerminalName("InnerOutput");
 	const Core::TerminalName LoadParts::INNERSOURCE_TERMINAL_ = Core::TerminalName("InnerSource");
 
+    // are ONLY used for voltage bias load parts.
     const Core::TerminalName LoadParts::OUTOUTPUT1_TERMINAL_ = Core::TerminalName("OutOutput1");
     const Core::TerminalName LoadParts::OUTOUTPUT2_TERMINAL_ = Core::TerminalName("OutOutput2");
 	const Core::TerminalName LoadParts::OUTSOURCE1_TERMINAL_ = Core::TerminalName("OutSource1");
@@ -87,9 +88,11 @@ namespace Synthesis {
 
 	const Core::NetId LoadParts::INNER_NET_ = Core::NetName("inner").createRootIdentifier();
 
+    // are used to connect "cascoded" current bias and voltage bias
 	const Core::NetId LoadParts::INNEROUTPUT_NET_ = Core::NetName("innerOutput").createRootIdentifier();
 	const Core::NetId LoadParts::INNERSOURCE_NET_ = Core::NetName("innerSource").createRootIdentifier();
 
+    // are ONLY used for voltage bias load parts.
     const Core::NetId LoadParts::OUTOUTPUT1_NET_ = Core::NetName("outOutput1").createRootIdentifier();
 	const Core::NetId LoadParts::OUTOUTPUT2_NET_ = Core::NetName("outOutput2").createRootIdentifier();
 	const Core::NetId LoadParts::OUTSOURCE1_NET_ = Core::NetName("outSource1").createRootIdentifier();
@@ -182,7 +185,7 @@ namespace Synthesis {
         return loadParts;
     }
 
-
+    // g.2  1/2: P-Type
     std::vector<const Core::Circuit *> LoadParts::createLoadPartsPmosTwoTransistorCurrentBiasesDifferentSources() const
     {
     	int index = 1;
@@ -194,6 +197,7 @@ namespace Synthesis {
         return loadParts;
     }
 
+    // g.2  2/2: P-Type
 	std::vector<const Core::Circuit *> LoadParts::createLoadPartsNmosTwoTransistorCurrentBiasesDifferentSources() const
     {
 		int index = 1;
@@ -557,6 +561,7 @@ namespace Synthesis {
         return twoTransistorLoadPartsCurrentBiases;
     }
 
+    // g.2 (2 circuits only)
     std::vector<const Core::Circuit *> LoadParts::createTwoTransistorLoadPartsCurrentBiasesDifferentSources(
 						std::vector<const Core::Circuit *> oneTransistorCurrentBiases, int & index) const
     {
@@ -635,6 +640,7 @@ namespace Synthesis {
 		    {
 		        std::vector<const Core::Circuit*> threeTransistorLoadParts;
 
+                // voltage bias: 1 trans + current bias: 2 trans
 		        for(auto & voltageBias : oneTransistorVoltageBiases )
 		        {
 		            for(auto & currentBias : twoTransistorCurrentBiases)
@@ -699,7 +705,7 @@ namespace Synthesis {
 						std::vector<const Core::Circuit* > twoTransistorVoltageBiases, int & index) const
     {
         std::vector<const Core::Circuit*> fourTransistorLoadPartsVoltageBiases;
-
+        // voltage bias: 2 trans + voltage bias: 2 trans
         for(auto & voltageBias : twoTransistorVoltageBiases )
         {
             Core::Instance & voltageBiasInstance1 = createInstance(*voltageBias, TRANSISTORSTACK1_);
@@ -741,7 +747,7 @@ namespace Synthesis {
 								std::vector<const Core::Circuit* > twoTransistorCurrentBiases, int & index) const
 		    {
 		        std::vector<const Core::Circuit*> fourTransistorLoadParts;
-
+                // voltage bias: 2 trans +  current bias: 2 trans
 		        for(auto & voltageBias : twoTransistorVoltageBiases )
 		        {
 		            for(auto & currentBias : twoTransistorCurrentBiases)

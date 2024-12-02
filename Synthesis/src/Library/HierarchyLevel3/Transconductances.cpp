@@ -65,15 +65,25 @@ namespace Synthesis {
 	const Core::TerminalName Transconductances::OUT1PMOS_TERMINAL_ = Core::TerminalName("Out1Pmos");
 	const Core::TerminalName Transconductances::OUT2PMOS_TERMINAL_ = Core::TerminalName("Out2Pmos");
 
+    // for "SimpleTransconductance"
 	const Core::TerminalName Transconductances::SOURCE_TERMINAL_ = Core::TerminalName("Source");
+
+    // used in "FeedbackTransconductance"
     const Core::TerminalName Transconductances::SOURCE1_TERMINAL_ = Core::TerminalName("Source1");
     const Core::TerminalName Transconductances::SOURCE2_TERMINAL_ = Core::TerminalName("Source2");
+
+    // used in "ComplementaryTransconductance"
 	const Core::TerminalName Transconductances::SOURCENMOS_TERMINAL_ = Core::TerminalName("SourceNmos");
 	const Core::TerminalName Transconductances::SOURCEPMOS_TERMINAL_ = Core::TerminalName("SourcePmos");
 
+    // used in "SimpleTransconductance"
     const Core::InstanceName Transconductances::DIFFERENTIALPAIR_ = Core::InstanceName("DifferentialPair");
+
+    // used in "FeedbackTransconductance"
 	const Core::InstanceName Transconductances::DIFFERENTIALPAIR1_ = Core::InstanceName("DifferentialPair1");
 	const Core::InstanceName Transconductances::DIFFERENTIALPAIR2_ = Core::InstanceName("DifferentialPair2");
+
+    // used in "ComplementaryTransconductance"
 	const Core::InstanceName Transconductances::DIFFERENTIALPAIRNMOS_ = Core::InstanceName("DifferentialPairNmos");
 	const Core::InstanceName Transconductances::DIFFERENTIALPAIRPMOS_ = Core::InstanceName("DifferentialPairPmos");
 

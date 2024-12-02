@@ -54,29 +54,40 @@
 
 
 namespace Synthesis {
-
+	// out_1 and out_2 of Load
     const Core::TerminalName Loads::OUT1_TERMINAL_ = Core::TerminalName("Out1");
 	const Core::TerminalName Loads::OUT2_TERMINAL_ = Core::TerminalName("Out2");
 
 	const Core::TerminalName Loads::SOURCELOAD1_TERMINAL_ = Core::TerminalName("SourceLoad1");
 	const Core::TerminalName Loads::SOURCELOAD2_TERMINAL_ = Core::TerminalName("SourceLoad2");
 
+	
+	// used when GCC is included and use for LoadPart1 only!, connect to source1Terminal and source2Terminal if LoadPart 1 is CascodeLoadPart 
+	// or innearTransistorStack1 and innerTransistorStack2
 	const Core::TerminalName Loads::SOURCEGCC1_TERMINAL_ = Core::TerminalName("SourceGCC1");
 	const Core::TerminalName Loads::SOURCEGCC2_TERMINAL_ = Core::TerminalName("SourceGCC2");
 
+	// If LoadPart1 and LoadPart2 are Cascode (l_{p, cas}) // (g.2) then both have "inner" terminals and need to be connected outside via "innerLoad1" and "innerLoader"
 	const Core::TerminalName Loads::INNERLOAD1_TERMINAL_ = Core::TerminalName("innerLoad1");
 	const Core::TerminalName Loads::INNERLOAD2_TERMINAL_ = Core::TerminalName("InnerLoad2");
+
+	// use for LoadPart 1 only. "innGCC" is connected to "inner" in Cascode (l_{p, cas}) // (g.2) or innerOutput
 	const Core::TerminalName Loads::INNERGCC_TERMINAL_ = Core::TerminalName("InnerGCC");
 	const Core::TerminalName Loads::INNERBIASGCC_TERMINAL_ = Core::TerminalName("InnerBiasGCC");
+
+	// innerSource/innerOutput of LoadPart 1 and LoadPart 2
 	const Core::TerminalName Loads::INNERSOURCELOAD1_TERMINAL_ = Core::TerminalName("InnerSourceLoad1");			
 	const Core::TerminalName Loads::INNEROUTPUTLOAD1_TERMINAL_ = Core::TerminalName("InnerOutputLoad1");
 	const Core::TerminalName Loads::INNERSOURCELOAD2_TERMINAL_ = Core::TerminalName("InnerSourceLoad2");
 	const Core::TerminalName Loads::INNEROUTPUTLOAD2_TERMINAL_ = Core::TerminalName("InnerOutputLoad2");
+
+	// innerTracksistorStack comming out from LOADPART 1 and LOADPART2
 	const Core::TerminalName Loads::INNERTRANSISTORSTACK1LOAD1_TERMINAL_ = Core::TerminalName("InnerTransistorStack1Load1");
 	const Core::TerminalName Loads::INNERTRANSISTORSTACK2LOAD1_TERMINAL_ = Core::TerminalName("InnerTransistorStack2Load1");
 	const Core::TerminalName Loads::INNERTRANSISTORSTACK1LOAD2_TERMINAL_ = Core::TerminalName("InnerTransistorStack1Load2");
 	const Core::TerminalName Loads::INNERTRANSISTORSTACK2LOAD2_TERMINAL_ = Core::TerminalName("InnerTransistorStack2Load2");
 
+	// only appears when both transistor stacks in LOADPART1_ are voltage biases.
 	const Core::TerminalName Loads::OUTOUTPUT1LOAD1_TERMINAL_ = Core::TerminalName("OutOutput1Load1");
 	const Core::TerminalName Loads::OUTOUTPUT2LOAD1_TERMINAL_ = Core::TerminalName("OutOutput2Load1");
 	const Core::TerminalName Loads::OUTSOURCE1LOAD1_TERMINAL_ = Core::TerminalName("OutSourceLoad1");
@@ -84,6 +95,10 @@ namespace Synthesis {
 
     const Core::InstanceName Loads::LOADPART1_ = Core::InstanceName("LoadPart1");
 	const Core::InstanceName Loads::LOADPART2_ = Core::InstanceName("LoadPart2");
+
+
+
+	// **** NET *********
 			
 	const Core::NetId Loads::OUT1_NET_ = Core::NetName("out1").createRootIdentifier();
 	const Core::NetId Loads::OUT2_NET_ = Core::NetName("out2").createRootIdentifier();
@@ -91,22 +106,32 @@ namespace Synthesis {
 	const Core::NetId Loads::SOURCELOAD1_NET_ = Core::NetName("sourceLoad1").createRootIdentifier();
 	const Core::NetId Loads::SOURCELOAD2_NET_ = Core::NetName("sourceLoad2").createRootIdentifier();
 
+	// used when GCC is included and use for LoadPart1 only!, connect to source1Terminal and source2Terminal if LoadPart 1 is CascodeLoadPart 
+	// or innearTransistorStack1 and innerTransistorStack2
 	const Core::NetId Loads::SOURCEGCC1_NET_ = Core::NetName("sourceGCC1").createRootIdentifier();
 	const Core::NetId Loads::SOURCEGCC2_NET_ = Core::NetName("sourceGCC2").createRootIdentifier();
 
+	// If LoadPart1 and LoadPart2 are Cascode (l_{p, cas}) // (g.2) then both have "inner" terminals and need to be connected outside via "innerLoad1" and "innerLoader"
 	const Core::NetId Loads::INNERLOAD1_NET_ = Core::NetName("innerLoad1").createRootIdentifier();
 	const Core::NetId Loads::INNERLOAD2_NET_ = Core::NetName("innerLoad2").createRootIdentifier();
-	const Core::NetId Loads::INNERGCC_NET_ = Core::NetName("innerGCC").createRootIdentifier();
-	const Core::NetId Loads::INNERBIASGCC_NET_ = Core::NetName("innerBiasGCC").createRootIdentifier();
+
+	// use for LoadPart 1 only. "innGCC" is connected to "inner" in Cascode (l_{p, cas}) // (g.2) or innerOutput
+	const Core::NetId Loads::INNERGCC_NET_ = Core::NetName("innerGCC").createRootIdentifier();	
+	const Core::NetId Loads::INNERBIASGCC_NET_ = Core::NetName("innerBiasGCC").createRootIdentifier(); // connect to innerSource of LoadPart1
+
+	// innerSource/innerOutput of LoadPart 1 and LoadPart 2
 	const Core::NetId Loads::INNERSOURCELOAD1_NET_ = Core::NetName("innerSourceLoad1").createRootIdentifier();			
 	const Core::NetId Loads::INNEROUTPUTLOAD1_NET_ = Core::NetName("innerOutputLoad1").createRootIdentifier();
 	const Core::NetId Loads::INNERSOURCELOAD2_NET_ = Core::NetName("innerSourceLoad2").createRootIdentifier();
 	const Core::NetId Loads::INNEROUTPUTLOAD2_NET_ = Core::NetName("innerOutputLoad2").createRootIdentifier();
+
+	// innerTracksistorStack comming out from LOADPART 1 and LOADPART2
 	const Core::NetId Loads::INNERTRANSISTORSTACK1LOAD1_NET_ = Core::NetName("innerTransistorStack1Load1").createRootIdentifier();
 	const Core::NetId Loads::INNERTRANSISTORSTACK2LOAD1_NET_ = Core::NetName("innerTransistorStack2Load1").createRootIdentifier();
 	const Core::NetId Loads::INNERTRANSISTORSTACK1LOAD2_NET_ = Core::NetName("innerTransistorStack1Load2").createRootIdentifier();
 	const Core::NetId Loads::INNERTRANSISTORSTACK2LOAD2_NET_ = Core::NetName("innerTransistorStack2Load2").createRootIdentifier();
 
+	// only appears when both transistor stacks in LOADPART1_ are voltage biases.
 	const Core::NetId Loads::OUTOUTPUT1LOAD1_NET_ = Core::NetName("outOutput1Load1").createRootIdentifier();
 	const Core::NetId Loads::OUTOUTPUT2LOAD1_NET_ = Core::NetName("outOutput2Load1").createRootIdentifier();
 	const Core::NetId Loads::OUTSOURCE1LOAD1_NET_ = Core::NetName("outSource1Load1").createRootIdentifier();

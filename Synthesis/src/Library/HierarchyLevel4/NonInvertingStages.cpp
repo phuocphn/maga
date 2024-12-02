@@ -60,41 +60,55 @@ namespace Synthesis {
 	const Core::TerminalName NonInvertingStages::OUT1_TERMINAL_ = Core::TerminalName("Out1");
 	const Core::TerminalName NonInvertingStages::OUT2_TERMINAL_ = Core::TerminalName("Out2");
 
+	// used in SimpleTransconductanceNonInvertingStage
 	const Core::TerminalName NonInvertingStages::SOURCETRANSCONDUCTANCE_TERMINAL_ = Core::TerminalName("SourceTransconductance");
+
+	// used in FeedbackTransconductanceNonInvertingStage
 	const Core::TerminalName NonInvertingStages::SOURCETRANSCONDUCTANCE1_TERMINAL_ = Core::TerminalName("SourceTransconductance1");
 	const Core::TerminalName NonInvertingStages::SOURCETRANSCONDUCTANCE2_TERMINAL_ = Core::TerminalName("SourceTransconductance2");
 	const Core::TerminalName NonInvertingStages::INNERTRANSCONDUCTANCE_TERMINAL_ = Core::TerminalName("InnerTransconductance");
+
+	// used in ComplementaryTransconductanceNonInvertingStage
 	const Core::TerminalName NonInvertingStages::SOURCETRANSCONDUCTANCEPMOS_TERMINAL_ = Core::TerminalName("SourceTransconductancePmos");
 	const Core::TerminalName NonInvertingStages::SOURCETRANSCONDUCTANCENMOS_TERMINAL_ = Core::TerminalName("SourceTransconductanceNmos");
-
+	
+	// used in SimpleTransconductanceNonInvertingStage/FeedbackTransconductanceNonInvertingStage/ComplementaryTransconductanceNonInvertingStage
 	const Core::TerminalName NonInvertingStages::SOURCENMOS_TERMINAL_ = Core::TerminalName("SourceNmos");
 	const Core::TerminalName NonInvertingStages::SOURCEPMOS_TERMINAL_ = Core::TerminalName("SourcePmos");
 
-	const Core::TerminalName NonInvertingStages::INPUTSTAGEBIAS_TERMINAL_ = Core::TerminalName("InputStageBias");
-	const Core::TerminalName NonInvertingStages::INSOURCESTAGEBIAS_TERMINAL_ = Core::TerminalName("InSourceStageBias");
-	const Core::TerminalName NonInvertingStages::INOUTPUTSTAGEBIAS_TERMINAL_ = Core::TerminalName("InOutputStageBias");
-	const Core::TerminalName NonInvertingStages::INNERSTAGEBIAS_TERMINAL_ = Core::TerminalName("InnerStageBias");
-	const Core::TerminalName NonInvertingStages::INNERSTAGEBIAS1_TERMINAL_ = Core::TerminalName("InnerStageBias1");
-	const Core::TerminalName NonInvertingStages::INNERSTAGEBIAS2_TERMINAL_ = Core::TerminalName("InnerStageBias2");
+	// used in SimpleTransconductanceNonInvertingStage/FeedbackTransconductanceNonInvertingStage (addStageBiasNets)
+	const Core::TerminalName NonInvertingStages::INPUTSTAGEBIAS_TERMINAL_ = Core::TerminalName("InputStageBias"); // # case 1
+	const Core::TerminalName NonInvertingStages::INSOURCESTAGEBIAS_TERMINAL_ = Core::TerminalName("InSourceStageBias"); // # case 2
+	const Core::TerminalName NonInvertingStages::INOUTPUTSTAGEBIAS_TERMINAL_ = Core::TerminalName("InOutputStageBias");// # case 2
+	const Core::TerminalName NonInvertingStages::INNERSTAGEBIAS_TERMINAL_ = Core::TerminalName("InnerStageBias");// # case 2
 
-	const Core::TerminalName NonInvertingStages::INPUTSTAGEBIASPMOS_TERMINAL_ = Core::TerminalName("InputStageBiasPmos");
-	const Core::TerminalName NonInvertingStages::INSOURCESTAGEBIASPMOS_TERMINAL_ = Core::TerminalName("InSourceStageBiasPmos");
-	const Core::TerminalName NonInvertingStages::INOUTPUTSTAGEBIASPMOS_TERMINAL_ = Core::TerminalName("InOutputStageBiasPmos");
-	const Core::TerminalName NonInvertingStages::INNERSTAGEBIASPMOS_TERMINAL_ = Core::TerminalName("InnerStageBiasPmos");
+	const Core::TerminalName NonInvertingStages::INNERSTAGEBIAS1_TERMINAL_ = Core::TerminalName("InnerStageBias1");// # case 2
+	const Core::TerminalName NonInvertingStages::INNERSTAGEBIAS2_TERMINAL_ = Core::TerminalName("InnerStageBias2");// # case 2
 
-	const Core::TerminalName NonInvertingStages::INPUTSTAGEBIASNMOS_TERMINAL_ = Core::TerminalName("InputStageBiasNmos");
-	const Core::TerminalName NonInvertingStages::INSOURCESTAGEBIASNMOS_TERMINAL_ = Core::TerminalName("InSourceStageBiasNmos");
-	const Core::TerminalName NonInvertingStages::INOUTPUTSTAGEBIASNMOS_TERMINAL_ = Core::TerminalName("InOutputStageBiasNmos");
-	const Core::TerminalName NonInvertingStages::INNERSTAGEBIASNMOS_TERMINAL_ = Core::TerminalName("InnerStageBiasNmos");
+	
+	
+	const Core::TerminalName NonInvertingStages::INPUTSTAGEBIASPMOS_TERMINAL_ = Core::TerminalName("InputStageBiasPmos"); //# case 1: getDeviceNamesOfFlatCircuit(stageBiasPmos.getMaster()).size() == 1
+	const Core::TerminalName NonInvertingStages::INSOURCESTAGEBIASPMOS_TERMINAL_ = Core::TerminalName("InSourceStageBiasPmos"); // #case 2
+	const Core::TerminalName NonInvertingStages::INOUTPUTSTAGEBIASPMOS_TERMINAL_ = Core::TerminalName("InOutputStageBiasPmos"); // #case 2
+	const Core::TerminalName NonInvertingStages::INNERSTAGEBIASPMOS_TERMINAL_ = Core::TerminalName("InnerStageBiasPmos"); // #case 2
 
-	const Core::TerminalName NonInvertingStages::SOURCEGCC1_TERMINAL_ = Core::TerminalName("SourceGCC1");
-	const Core::TerminalName NonInvertingStages::SOURCEGCC2_TERMINAL_ = Core::TerminalName("SourceGCC2");
+	const Core::TerminalName NonInvertingStages::INPUTSTAGEBIASNMOS_TERMINAL_ = Core::TerminalName("InputStageBiasNmos"); //# case 1:
+	const Core::TerminalName NonInvertingStages::INSOURCESTAGEBIASNMOS_TERMINAL_ = Core::TerminalName("InSourceStageBiasNmos"); // #case 2
+	const Core::TerminalName NonInvertingStages::INOUTPUTSTAGEBIASNMOS_TERMINAL_ = Core::TerminalName("InOutputStageBiasNmos"); // #case 2
+	const Core::TerminalName NonInvertingStages::INNERSTAGEBIASNMOS_TERMINAL_ = Core::TerminalName("InnerStageBiasNmos"); // #case 2
+
+
+
+
+
+	const Core::TerminalName NonInvertingStages::SOURCEGCC1_TERMINAL_ = Core::TerminalName("SourceGCC1"); 	// addLoadPart1Nets.if-case#2
+	const Core::TerminalName NonInvertingStages::SOURCEGCC2_TERMINAL_ = Core::TerminalName("SourceGCC2");	// addLoadPart1Nets.if-case#2
 
 	const Core::TerminalName NonInvertingStages::INNERLOAD1_TERMINAL_ = Core::TerminalName("InnerLoad1");
 	const Core::TerminalName NonInvertingStages::INNERLOAD2_TERMINAL_ = Core::TerminalName("InnerLoad2");
-	const Core::TerminalName NonInvertingStages::INNERGCC_TERMINAL_ = Core::TerminalName("InnerGCC");
-	const Core::TerminalName NonInvertingStages::INNERBIASGCC_TERMINAL_ = Core::TerminalName("InnerBiasGCC");
-	const Core::TerminalName NonInvertingStages::INNERSOURCELOAD1_TERMINAL_ = Core::TerminalName("InnerSourceLOad1");			
+	const Core::TerminalName NonInvertingStages::INNERGCC_TERMINAL_ = Core::TerminalName("InnerGCC");			// addLoadPart1Nets.if-case#2
+	const Core::TerminalName NonInvertingStages::INNERBIASGCC_TERMINAL_ = Core::TerminalName("InnerBiasGCC"); 	// addLoadPart1Nets.if-case#2
+	const Core::TerminalName NonInvertingStages::INNERSOURCELOAD1_TERMINAL_ = Core::TerminalName("InnerSourceLOad1");			 //?
 	const Core::TerminalName NonInvertingStages::INNEROUTPUTLOAD1_TERMINAL_ = Core::TerminalName("InnerOutputLoad1");
 	const Core::TerminalName NonInvertingStages::INNERSOURCELOAD2_TERMINAL_ = Core::TerminalName("InnerSourceLoad2");
 	const Core::TerminalName NonInvertingStages::INNEROUTPUTLOAD2_TERMINAL_ = Core::TerminalName("InnerOutputLoad2");
@@ -103,6 +117,8 @@ namespace Synthesis {
 	const Core::TerminalName NonInvertingStages::INNERTRANSISTORSTACK1LOAD2_TERMINAL_ = Core::TerminalName("InnerTransistorStack1Load2");
 	const Core::TerminalName NonInvertingStages::INNERTRANSISTORSTACK2LOAD2_TERMINAL_ = Core::TerminalName("InnerTransistorStack2Load2");
 
+	// used in ComplementaryTransconductanceNonInvertingStage only
+	// ***********************************************************************
 	const Core::TerminalName NonInvertingStages::INNERSOURCELOADNMOS_TERMINAL_ = Core::TerminalName("InnerSourceLoadNmos");			
 	const Core::TerminalName NonInvertingStages::INNEROUTPUTLOADNMOS_TERMINAL_ = Core::TerminalName("InnerOutputLoadNmos");
 	const Core::TerminalName NonInvertingStages::INNERSOURCELOADPMOS_TERMINAL_ = Core::TerminalName("InnerSourceLoadPmos");
@@ -111,19 +127,28 @@ namespace Synthesis {
 	const Core::TerminalName NonInvertingStages::INNERTRANSISTORSTACK2LOADNMOS_TERMINAL_ = Core::TerminalName("InnerTransistorStack2LoadNmos");
 	const Core::TerminalName NonInvertingStages::INNERTRANSISTORSTACK1LOADPMOS_TERMINAL_ = Core::TerminalName("InnerTransistorStack1LoadPmos");
 	const Core::TerminalName NonInvertingStages::INNERTRANSISTORSTACK2LOADPMOS_TERMINAL_ = Core::TerminalName("InnerTransistorStack2LoadPmos");
+	// ***********************************************************************
 
-	const Core::TerminalName NonInvertingStages::OUTOUTPUT1LOAD1_TERMINAL_ = Core::TerminalName("OutOutput1Load1");
-	const Core::TerminalName NonInvertingStages::OUTOUTPUT2LOAD1_TERMINAL_ = Core::TerminalName("OutOutput2Load1");
-	const Core::TerminalName NonInvertingStages::OUTSOURCE1LOAD1_TERMINAL_ = Core::TerminalName("OutSource1Load1");
-    const Core::TerminalName NonInvertingStages::OUTSOURCE2LOAD1_TERMINAL_ = Core::TerminalName("OutSource2Load1");
+	// used in SimpleTransconductanceNonInvertingStage/FeedbackTransconductanceNonInvertingStage/ComplementaryTransconductanceNonInvertingStage
+	// if both are voltage bias
+	const Core::TerminalName NonInvertingStages::OUTOUTPUT1LOAD1_TERMINAL_ = Core::TerminalName("OutOutput1Load1"); // addLoadPart1Nets.if-case#1
+	const Core::TerminalName NonInvertingStages::OUTOUTPUT2LOAD1_TERMINAL_ = Core::TerminalName("OutOutput2Load1"); // addLoadPart1Nets.if-case#1
+	const Core::TerminalName NonInvertingStages::OUTSOURCE1LOAD1_TERMINAL_ = Core::TerminalName("OutSource1Load1"); // addLoadPart1Nets.if-case#1
+    const Core::TerminalName NonInvertingStages::OUTSOURCE2LOAD1_TERMINAL_ = Core::TerminalName("OutSource2Load1"); // addLoadPart1Nets.if-case#1
+
+
+
+
+
+
 
     const Core::InstanceName NonInvertingStages::LOAD_ = Core::InstanceName("Load");
 	const Core::InstanceName NonInvertingStages::TRANSCONDUCTANCE_ = Core::InstanceName("Transconductance");
-	const Core::InstanceName NonInvertingStages::STAGEBIAS_ = Core::InstanceName("StageBias");
-	const Core::InstanceName NonInvertingStages::STAGEBIAS1_ = Core::InstanceName("StageBias1");
-	const Core::InstanceName NonInvertingStages::STAGEBIAS2_ = Core::InstanceName("StageBias2");
-	const Core::InstanceName NonInvertingStages::STAGEBIASNMOS_ = Core::InstanceName("StageBiasNmos");
-	const Core::InstanceName NonInvertingStages::STAGEBIASPMOS_ = Core::InstanceName("StageBiasPmos");
+	const Core::InstanceName NonInvertingStages::STAGEBIAS_ = Core::InstanceName("StageBias"); // for SimpleTransconductanceNonInvertingStages
+	const Core::InstanceName NonInvertingStages::STAGEBIAS1_ = Core::InstanceName("StageBias1"); // for FeedbackTransconductanceNonInvertingStages
+	const Core::InstanceName NonInvertingStages::STAGEBIAS2_ = Core::InstanceName("StageBias2"); // for FeedbackTransconductanceNonInvertingStages
+	const Core::InstanceName NonInvertingStages::STAGEBIASNMOS_ = Core::InstanceName("StageBiasNmos"); // for ComplementaryTransconductanceNonInvertingStages
+	const Core::InstanceName NonInvertingStages::STAGEBIASPMOS_ = Core::InstanceName("StageBiasPmos"); // for ComplementaryTransconductanceNonInvertingStages
 
 	const Core::NetId NonInvertingStages::IN1_NET_ = Core::NetName("in1").createRootIdentifier();
 	const Core::NetId NonInvertingStages::IN2_NET_ = Core::NetName("in2").createRootIdentifier();
@@ -131,9 +156,13 @@ namespace Synthesis {
 	const Core::NetId NonInvertingStages::OUT2_NET_ = Core::NetName("out2").createRootIdentifier();
 
 	const Core::NetId NonInvertingStages::SOURCETRANSCONDUCTANCE_NET_ = Core::NetName("sourceTransconductance").createRootIdentifier();
+
+	// use in FeedbackTransconductanceNonInvertingStage
 	const Core::NetId NonInvertingStages::SOURCETRANSCONDUCTANCE1_NET_ = Core::NetName("sourceTransconductance1").createRootIdentifier();
 	const Core::NetId NonInvertingStages::SOURCETRANSCONDUCTANCE2_NET_ = Core::NetName("sourceTransconductance2").createRootIdentifier();
 	const Core::NetId NonInvertingStages::INNERTRANSCONDUCTANCE_NET_ = Core::NetName("innerTransconductance").createRootIdentifier();
+
+
 	const Core::NetId NonInvertingStages::SOURCETRANSCONDUCTANCEPMOS_NET_ = Core::NetName("sourceTransconductancePmos").createRootIdentifier();
 	const Core::NetId NonInvertingStages::SOURCETRANSCONDUCTANCENMOS_NET_ = Core::NetName("sourceTransconductanceNmos").createRootIdentifier();
 
@@ -168,6 +197,8 @@ namespace Synthesis {
 	const Core::NetId NonInvertingStages::INNEROUTPUTLOAD1_NET_ = Core::NetName("innerOutputLoad1").createRootIdentifier();
 	const Core::NetId NonInvertingStages::INNERSOURCELOAD2_NET_ = Core::NetName("innerSourceLoad2").createRootIdentifier();
 	const Core::NetId NonInvertingStages::INNEROUTPUTLOAD2_NET_ = Core::NetName("innerOutputLoad2").createRootIdentifier();
+
+
 	const Core::NetId NonInvertingStages::INNERTRANSISTORSTACK1LOAD1_NET_ = Core::NetName("innerTransistorStack1Load1").createRootIdentifier();
 	const Core::NetId NonInvertingStages::INNERTRANSISTORSTACK2LOAD1_NET_ = Core::NetName("innerTransistorStack2Load1").createRootIdentifier();
 	const Core::NetId NonInvertingStages::INNERTRANSISTORSTACK1LOAD2_NET_ = Core::NetName("innerTransistorStack1Load2").createRootIdentifier();
