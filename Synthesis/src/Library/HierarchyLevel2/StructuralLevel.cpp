@@ -56,16 +56,16 @@ namespace Synthesis {
                 differentialPair_(nullptr),
                 analogInverters_(nullptr)
             {
-    			logDebug("Creating voltage biases");
+    			//logDebug("Creating voltage biases");
                 voltageBiases_ = new VoltageBiases(deviceLevel);
-                logDebug("Creating current biases");
+                //logDebug("Creating current biases");
                 currentBiases_ = new CurrentBiases(deviceLevel);
-                logDebug("Creating differential pairs");
+                //logDebug("Creating differential pairs");
                 differentialPair_ = new DifferentialPair(deviceLevel);
 
                 if(!circuitInformation.getCircuitParameter().isComplementary())
                 {
-                	logDebug("Creating analog inverters");
+                	//logDebug("Creating analog inverters");
                 	analogInverters_ = new AnalogInverters(*this);
                 }
             }

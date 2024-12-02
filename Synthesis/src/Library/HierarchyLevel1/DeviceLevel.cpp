@@ -52,12 +52,12 @@ namespace Synthesis {
             normalTransistor_(nullptr),
             diodeTransistor_(nullptr)
         {
-            logDebug("Create Normal transistor");
+            //logDebug("Create Normal transistor");
             normalTransistor_ = new NormalTransistor;
-            logDebug("Create diode transistor");
+            //logDebug("Create diode transistor");
             diodeTransistor_ = new DiodeTransistor;
 
-            logDebug("Create capacitor");
+            //logDebug("Create capacitor");
             capacitor_ = new Capacitor;
 
             
