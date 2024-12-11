@@ -83,6 +83,12 @@ namespace Synthesis
 		    std::vector<const Core::Circuit*> createSimpleTwoStageOpAmps(const Core::Circuit& oneStageOpAmp, std::mutex &myMutex);
 		    std::vector<const Core::Circuit*> createSimpleTwoStageOpAmps(const Core::Circuit& oneStageOpAmp);
 
+
+		    std::vector<const Core::Circuit*> createSimpleThreeStageOpAmps(std::vector<const Core::Circuit*> oneStageOpAmps);
+		    std::vector<const Core::Circuit*> createSimpleThreeStageOpAmps(const Core::Circuit& oneStageOpAmp, std::mutex &myMutex);
+		    std::vector<const Core::Circuit*> createSimpleThreeStageOpAmps(const Core::Circuit& oneStageOpAmp, const Core::Circuit& twoStageOpAmp);
+
+
 		    std::vector<const Core::Circuit*> createFullyDifferentialTwoStageOpAmps(std::vector<const Core::Circuit*> oneStageOpAmps);
 		    std::vector<const Core::Circuit*> createFullyDifferentialTwoStageOpAmps(const Core::Circuit & oneStageOpAmp, std::mutex &myMutex);
 		    std::vector<const Core::Circuit*> createFullyDifferentialTwoStageOpAmps(const Core::Circuit & oneStageOpAmp);
@@ -103,6 +109,7 @@ namespace Synthesis
 
 			static const Core::InstanceName FIRSTSTAGE_;
 
+
 		private:
             const AmplificationStageLevel & getAmplificationStageLevel() const;
             const CurrentBiases & getCurrentBiases() const;
@@ -114,6 +121,10 @@ namespace Synthesis
 
 			const Core::Circuit& createSimpleOpAmp(int & index, Core::Instance & firstStage, 
 													Core::Instance * secondStage = nullptr);
+
+			const Core::Circuit& createSimpleOpAmp_Ext(int & index, Core::Instance & firstStage, 
+													Core::Instance& secondStage, Core::Instance * thirdStage=nullptr);
+
 			const Core::Circuit& createFullyDifferentialOpAmp(int & index, Core::Instance & firstStage, Core::Instance & feedbackStage,
 													Core::Instance * secondStage1 = nullptr, Core::Instance * secondStage2 = nullptr);
 			const Core::Circuit& createComplementaryOpAmp(int & index, Core::Instance & firstStage);
@@ -122,10 +133,14 @@ namespace Synthesis
 			
 			void addTerminalNets(std::vector<Core::NetId> & netNames, std::map<Core::TerminalName, Core::NetId> & terminalToNetMap,
 											Core::Circuit & opAmp) const;	
-			void addFirstStageToSecondStageNets(std::vector<Core::NetId> & netNames, const Core::Circuit & opAmp) const;									
+			void addFirstStageToSecondStageNets(std::vector<Core::NetId> & netNames, const Core::Circuit & opAmp) const;	
+			void addFirstStageToSecondStageNets_Ext3(std::vector<Core::NetId> & netNames, const Core::Circuit & opAmp) const;									
+
 			void addComplementarySecondStageNets(std::vector<Core::NetId> & netNames, Core::Circuit & opAmp) const;
 			
 			void connectInstanceTerminalsSimpleOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance * secondStage = nullptr) const;
+			void connectInstanceTerminalsSimpleOpAmp_Ext(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance & secondStage, Core::Instance* thirdStage=nullptr) const;
+
 			void connectInstanceTerminalsFullyDifferentialOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage, 
                                             Core::Instance & feedbackStage, Core::Instance * secondStage1 = nullptr, Core::Instance * secondStage2 = nullptr) const;
             void connectInstanceTerminalsComplementaryOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage) const;
@@ -134,6 +149,8 @@ namespace Synthesis
                                             Core::Instance stageBiasComplementarySecondStage) const;
 			void connectInstanceTerminalsCapacitors(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
 											Core::Instance * compensationCapacitor = nullptr) const;
+			void connectInstanceTerminalsCapacitors_Ext3(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
+											Core::Instance * compensationCapacitor1 = nullptr, Core::Instance * compensationCapacitor2 = nullptr) const;
 
 			void connectedLoadInstanceTerminalToFeedbackStage(Core::Circuit & opAmp, Core::Instance & firstStage) const;
 		
@@ -203,6 +220,12 @@ namespace Synthesis
 			static const Core::InstanceName SECONDSTAGE1_;
 			static const Core::InstanceName SECONDSTAGE2_;
 
+
+			static const Core::InstanceName THIRDSTAGE_;
+			static const Core::InstanceName THIRDSTAGE1_;
+			static const Core::InstanceName THIRDSTAGE2_;
+
+
 			static const Core::InstanceName LOADCAPACITOR_;
 			static const Core::InstanceName LOADCAPACITOR1_;
 			static const Core::InstanceName LOADCAPACITOR2_;
@@ -231,6 +254,9 @@ namespace Synthesis
             static const Core::NetId OUTFIRSTSTAGE_NET_;
 			static const Core::NetId OUT1FIRSTSTAGE_NET_;
 			static const Core::NetId OUT2FIRSTSTAGE_NET_;
+
+            static const Core::NetId OUTSECONDSTAGE_NET_;
+
 
 			static const Core::NetId OUTFEEDBACKSTAGE_NET_;
 

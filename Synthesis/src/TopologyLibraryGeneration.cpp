@@ -184,6 +184,7 @@ namespace Synthesis {
 			}
 			else
 			{
+				// simple op-amps goes here ....
 				oneStageOpAmps = library.getOpAmps().createSimpleOneStageOpAmps(caseNumber, indexSingleOutput);
 				symmetricalOpAmps = library.getOpAmps().createSymmetricalOpAmps(caseNumber, indexSymmetrical);
 			}
@@ -205,18 +206,53 @@ namespace Synthesis {
 						twoStageOpAmps = library.getOpAmps().createSimpleTwoStageOpAmps(*oneStageOpAmp);
 					}
 
+					// for(auto & twoStageOpAmp : twoStageOpAmps)
+					// {
+					// 	std::ostringstream oneStageOpAmpId;
+					// 	oneStageOpAmpId << oneStageOpAmp->getCircuitIdentifier().getId();
+					// 	const Core::Circuit & flatTwoStageOpAmp = createFlatCircuit(*twoStageOpAmp);
+					// 	writeHSpiceFile(flatTwoStageOpAmp, circuitParameter, oneStageOpAmpId.str());
+					// 	delete twoStageOpAmp;
+					// 	delete &flatTwoStageOpAmp;
+					// }
+
+
+					/******BEGIN: Generate 3-stage op-amps from 2-stage op-amps */
+					
 					for(auto & twoStageOpAmp : twoStageOpAmps)
 					{
-						std::ostringstream oneStageOpAmpId;
-						oneStageOpAmpId << oneStageOpAmp->getCircuitIdentifier().getId();
-						const Core::Circuit & flatTwoStageOpAmp = createFlatCircuit(*twoStageOpAmp);
-						writeHSpiceFile(flatTwoStageOpAmp, circuitParameter, oneStageOpAmpId.str());
+						std::vector<const Core::Circuit*> threeStageOpAmps;
+						if(circuitParameter.isFullyDifferential())
+						{
+							// twoStageOpAmps = library.getOpAmps().createFullyDifferentialTwoStageOpAmps(*oneStageOpAmp);
+							std::cout << "Not implement yet!";
+						}
+						else
+						{
+							threeStageOpAmps = library.getOpAmps().createSimpleThreeStageOpAmps(*oneStageOpAmp, *twoStageOpAmp);
+						}
 
+						for(auto & threeStageOpAmp : threeStageOpAmps)
+						{
+							std::ostringstream oneStageOpAmpId;
+							oneStageOpAmpId << oneStageOpAmp->getCircuitIdentifier().getId();
+							const Core::Circuit & flatTwoStageOpAmp = createFlatCircuit(*twoStageOpAmp);
+							writeHSpiceFile(flatTwoStageOpAmp, circuitParameter, oneStageOpAmpId.str());
 
+							const Core::Circuit & flatThreeStageOpAmp = createFlatCircuit(*threeStageOpAmp);
+							writeHSpiceFile(flatThreeStageOpAmp, circuitParameter, oneStageOpAmpId.str());
+
+							delete threeStageOpAmp;
+							delete &flatThreeStageOpAmp;
+							delete &flatTwoStageOpAmp;
+
+						}
 						delete twoStageOpAmp;
-
-						delete &flatTwoStageOpAmp;
 					}
+					
+					/******END: Generate 3-stage op-amps from 2-stage op-amps */
+
+
 				}
 
 				delete oneStageOpAmp;
@@ -233,6 +269,12 @@ namespace Synthesis {
 
 
 			caseNumber ++;
+			// break;
+			// delete &oneStageOpAmps;
+
+
+			// delete twoStageOpAmps;
+			// delete threeStageOpAmps;
 		} while (!oneStageOpAmps.empty() || !symmetricalOpAmps.empty());
 
 	}
