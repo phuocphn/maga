@@ -55,13 +55,17 @@ namespace Synthesis {
                 transconductances_(nullptr),
                 stageBiases_(nullptr)
             {
-                logDebug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create load parts");
+                // logDebug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create load parts");
+                std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create load parts";
                 loadParts_ = new LoadParts(structuralLevel);
-                logDebug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create transconductance");
+                // logDebug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create transconductance");
+                std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create transconductance";
                 transconductances_ = new Transconductances(structuralLevel, circuitInformation);
-                logDebug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create stage biases");
+                // logDebug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create stage biases");
+                std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create stage biases";
                 stageBiases_ = new StageBiases(structuralLevel);
-                logDebug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create loads");
+                // logDebug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create loads");
+                std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>Create loads";
                 loads_ = new  Loads(*this);
             }
 

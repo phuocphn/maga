@@ -56,10 +56,12 @@ namespace Synthesis {
         {
     		if(!circuitInformation.getCircuitParameter().isComplementary())
     		{
-    			logDebug(">>>>>>>>>>>>>>>>>>>>Create Inverting stages");
+    			// logDebug(">>>>>>>>>>>>>>>>>>>>Create Inverting stages");
+                std::cout << ">>>>>>>>>>>>>>>>>>>>Create Inverting stages";
     			invertingStages_ = new InvertingStages(structuralLevel);
     		}
-            logDebug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Create non Inverting stages");
+            // logDebug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Create non Inverting stages");
+            std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Create non Inverting stages";
             nonInvertingStages_ = new NonInvertingStages(amplificationStagesSubBlockLevel, circuitInformation);
          }
 

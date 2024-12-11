@@ -59,29 +59,45 @@ namespace Synthesis {
             opAmps_(nullptr),
             structRecLibrary_(nullptr)
     {
-        logDebug("Creating device level");
+        // logDebug("Creating device level");
+		std::cout << "Creating device level" << std::endl;
         deviceLevel_ = new DeviceLevel();
-        logDebug("Creating Structural level");
+        // logDebug("Creating Structural level");
+        std::cout << "Creating Structural level"<< std::endl;
+
         structuralLevel_ = new StructuralLevel(getDeviceLevel(), circuitInformation);
-        logDebug("Creating amplification stages sub block level");
+        // logDebug("Creating amplification stages sub block level");
+		std::cout << "Creating amplification stages sub block level"<< std::endl;
         amplificationStagesSubBlockLevel_ = new AmplificationStagesSubBlockLevel(getStructuralLevel(), circuitInformation);
-        logDebug("Creating amplification stage level");
+        // logDebug("Creating amplification stage level");
+		std::cout << "Creating amplification stage level"<< std::endl;
         amplificationStageLevel_ = new AmplificationStageLevel(getAmplificationStagesSubBlockLevel(), getStructuralLevel(), circuitInformation);
-        logDebug("Creating Op Amps");
+        // logDebug("Creating Op Amps");
+		std::cout << "Creating Op Amps"<< std::endl;
         opAmps_ = new OpAmps(getAmplificationStageLevel(), getStructuralLevel().getCurrentBiases(), getStructuralLevel().getVoltageBiases(), getDeviceLevel().getCapacitor());
 
     }
 	FunctionalBlockLibrary::~FunctionalBlockLibrary()
     {
-		logDebug("Delete device level");
+		// logDebug("Delete device level");
+		std::cout << "Delete device level"<< std::endl;
         delete deviceLevel_;
-        logDebug("Delete structural level");
+        // logDebug("Delete structural level");
+		std::cout << "Delete structural level"<< std::endl;
+
         delete structuralLevel_;
-        logDebug("Delete amplification stage subblock level");
+        // logDebug("Delete amplification stage subblock level");
+		std::cout << "Delete amplification stage subblock level"<< std::endl;
+
         delete amplificationStagesSubBlockLevel_;
-        logDebug("Delete amplification stage level");
+
+        // logDebug("Delete amplification stage level");
+		std::cout << "Delete amplification stage level"<< std::endl;
+
         delete amplificationStageLevel_;
-        logDebug("Delete op amps");
+        // logDebug("Delete op amps");
+		std::cout << "Delete op amps"<< std::endl;
+
         delete opAmps_;
     }
 
