@@ -66,6 +66,7 @@ namespace Core {
     // level 5
     const CircuitName CircuitIds::SINGLEOUTPUTOPAMP_ = CircuitName("one_stage_single_output_op_amp");
     const CircuitName CircuitIds::SINGLEOUTPUTTWOSTAGEOPAMP_ = CircuitName("two_stage_single_output_op_amp");
+    const CircuitName CircuitIds::SINGLEOUTPUTTHREESTAGEOPAMP_ = CircuitName("three_stage_single_output_op_amp");
     const CircuitName CircuitIds::FULLYDIFFERENTIALOPAMP_ = CircuitName("one_stage_fully_differential_op_amp");
     const CircuitName CircuitIds::FULLYDIFFERENTIALTWOSTAGEOPAMP_ = CircuitName("two_stage_fully_differential_op_amp");
     const CircuitName CircuitIds::COMPLEMENTARYOPAMP_ = CircuitName("complementary_op_amp");
@@ -210,6 +211,13 @@ namespace Core {
     CircuitId CircuitIds::simpleTwoStageOpAmp(int num)
     {
         Core::CircuitId circuitId = SINGLEOUTPUTTWOSTAGEOPAMP_.createIdentifier();
+        circuitId.setId(num);
+        return circuitId;
+    }
+
+    CircuitId CircuitIds::simpleThreeStageOpAmp(int num)
+    {
+        Core::CircuitId circuitId = SINGLEOUTPUTTHREESTAGEOPAMP_.createIdentifier();
         circuitId.setId(num);
         return circuitId;
     }
