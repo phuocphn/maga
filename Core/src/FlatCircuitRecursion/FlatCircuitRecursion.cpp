@@ -58,7 +58,9 @@ namespace Core {
 
     FlatCircuitRecursion::~FlatCircuitRecursion()
     {
-
+        // TODO: 
+        // delete flatCircuit_;
+        // delete circuitToNetsToInstancesConnectionsMap_;
     }
 
     Circuit* FlatCircuitRecursion::createNewFlatCopy(const Circuit& topCircuit)
@@ -148,6 +150,7 @@ namespace Core {
            flatDevice.setDeviceType(device->getDeviceType());
            flatDevice.setTechType(device->getTechType());
            connectComponent(circuit, *device, flatDevice);
+            // TODO: delete it
        }
    }
 
@@ -214,6 +217,8 @@ namespace Core {
                     
         	   }
            }
+           // TODO
+        //    delete it;
        }
     }
 

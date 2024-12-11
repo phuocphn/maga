@@ -612,7 +612,7 @@ namespace Synthesis {
         return *opAmp;
     }
 
-	
+
     const Core::Circuit& OpAmps::createFullyDifferentialOpAmp(int & index, Core::Instance & firstStage, Core::Instance & feedbackStage,
 								Core::Instance * secondStage1, Core::Instance * secondStage2)
     {
@@ -1901,6 +1901,7 @@ namespace Synthesis {
 
     		}
     	}
+        // TODO: delete flatCircuitRecursion
 
     }
 
@@ -2630,6 +2631,7 @@ namespace Synthesis {
 
     	if(gatePins.empty())
     	{
+            // TODO: delete gatePins
     		return false;
     	}
     	else
@@ -2644,6 +2646,7 @@ namespace Synthesis {
     				break;
     			}
     		}
+            // TODO: delete gatePins
     		return isNmos;
     	}
     }
@@ -2655,6 +2658,7 @@ namespace Synthesis {
 
     	if(gatePins.empty())
     	{
+            // TODO: delete gatePins
     		return false;
     	}
     	else
@@ -2669,6 +2673,7 @@ namespace Synthesis {
     				break;
     			}
     		}
+            // TODO: delete gatePins
     		return isPmos;
     	}
     }

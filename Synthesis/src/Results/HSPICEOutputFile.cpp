@@ -546,7 +546,7 @@ namespace Synthesis
 		std::ostringstream deviceInformation;
 
 		const Partitioning::Part & part = partitioningResult.getPart(device);
-		std::string circuitTypeInformation = createCircuitTypeInformation(partitioningResult);
+//		std::string circuitTypeInformation = createCircuitTypeInformation(partitioningResult);
 //		deviceInformation << circuitTypeInformation;
 
 		if(part.isTransconductancePart())
@@ -574,7 +574,6 @@ namespace Synthesis
 			const Partitioning::ResistorPart& resistor = static_cast<const Partitioning::ResistorPart&>(part);
 			deviceInformation << createResistorInformation(partitioningResult, resistor);
 		}
-
 
 		return deviceInformation.str();
 	}

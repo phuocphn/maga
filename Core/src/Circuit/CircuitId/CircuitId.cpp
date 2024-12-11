@@ -67,6 +67,8 @@ namespace Core {
 
     void CircuitId::operator =(const CircuitId& other)
     {
+        // TODO
+        delete circuitName_;
         circuitName_ = new CircuitName(*other.circuitName_);
         id_ = other.getId();
         techType_ = other.getTechType();
