@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
 
         if (argc == 1)
         { 
+            /* Enabling structuralreg consumes more memory usage, and should be disabled!
             argc = 11;
             char* argv_default[argc];
 
@@ -41,7 +42,23 @@ int main(int argc, char *argv[]) {
             argv_default[9] = "--HSPICE-netlist-dir";
             argv_default[10] = "InputFileExamples/TopologyLibraryGeneration/NetlistsWithLabels";
 
-            
+            */
+
+            /* synthesis w/o structural reg-realted settings */
+            argc = 7;
+            char* argv_default[argc];
+
+            argv_default[0] = "acst";
+            argv_default[1] = "--log-level-console";
+            argv_default[2] = "DEBUG";
+
+            argv_default[3] = "--analysis";
+            argv_default[4] = "toplibgen";
+
+            // --HSPICE-netlist-dir InputFileExamples/TopologyLibraryGeneration/NetlistsWithLabels
+            argv_default[5] = "--HSPICE-netlist-dir";
+            argv_default[6] = "InputFileExamples/TopologyLibraryGeneration/NetlistsWithoutLabels";
+
             control.run(argc,argv_default);
 
         }
