@@ -32,13 +32,13 @@ int main(int argc, char *argv[]) {
             argv_default[6] = "StructRec/xml/AnalogLibrary.xml";
 
             argv_default[7] = "--device-types-file";
-            argv_default[8] = "InputFileExamples/Synthesis/deviceTypes.xcat";
+            argv_default[8] = "examples/Synthesis/deviceTypes.xcat";
 
             argv_default[9] = "--xml-technologie-file";
-            argv_default[10] = "InputFileExamples/Synthesis/TechnologieFile.xml";
+            argv_default[10] = "examples/Synthesis/TechnologieFile.xml";
 
             argv_default[11] = "--xml-circuit-information-file";
-            argv_default[12] = "InputFileExamples/Synthesis/CircuitSpecifications.xml";
+            argv_default[12] = "examples/Synthesis/CircuitSpecifications.xml";
 
             argv_default[13] = "--transistor-model";
             argv_default[14] = "SHM";
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
             argv_default[16] = "1mum";
 
             argv_default[17] = "--HSPICE-netlist-dir";
-            argv_default[18] = "InputFileExamples/Synthesis/HspiceNetlist";
+            argv_default[18] = "examples/Synthesis/HspiceNetlist";
 
             control.run(argc,argv_default);
 

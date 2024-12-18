@@ -30,23 +30,23 @@ int main(int argc, char *argv[]) {
             
             // --circuit-netlist input.ckt 
             argv_default[5] = "--circuit-netlist";
-            argv_default[6] = "InputFileExamples/StructureRecognition/input.ckt";
+            argv_default[6] = "examples/StructureRecognition/input.ckt";
 
             // --device-types-file deviceTypes.xcat 
             argv_default[7] = "--device-types-file";
-            argv_default[8] = "InputFileExamples/StructureRecognition/deviceTypes.xcat";
+            argv_default[8] = "examples/StructureRecognition/deviceTypes.xcat";
 
             // --hspice-mapping-file HSpiceMapping.xcat 
             argv_default[9] = "--hspice-mapping-file";
-            argv_default[10] = "InputFileExamples/StructureRecognition/HSpiceMapping.xcat";
+            argv_default[10] = "examples/StructureRecognition/HSpiceMapping.xcat";
 
             // --hspice-supplynet-file supplyNets.xcat 
             argv_default[11] = "--hspice-supplynet-file";
-            argv_default[12] = "InputFileExamples/StructureRecognition/supplyNets.xcat";
+            argv_default[12] = "examples/StructureRecognition/supplyNets.xcat";
 
             // --output-file output.xml 
             argv_default[13] = "--output-file";
-            argv_default[14] = "InputFileExamples/StructureRecognition/output.xml";
+            argv_default[14] = "examples/StructureRecognition/output.xml";
 
             // --xml-structrec-library-file {file path to acst}/acst/StructRec/xml/AnalogLibrary.xml 
             argv_default[15] = "--xml-structrec-library-file";
