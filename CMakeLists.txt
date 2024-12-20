@@ -48,7 +48,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 add_definitions(-D_GLIBCXX_USE_CXX17_ABI=1)
 set(COMPONENTS Log Control Core HSpice StructRec  AutomaticSizing GecodeExtensions
-	Partitioning Synthesis)
+	Partitioning Synthesis src/pymaga)
 set(BINARY_NAME acst)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -114,7 +114,7 @@ comp_def_function(ANALYSIS)
 
 
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS} -rdynamic -Wall -Wextra -Wformat=2  -Werror=return-type -Wold-style-cast -Wno-reorder -Xlinker -export-dynamic") # -pg")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS} -rdynamic -Wall -Wextra -Wformat=2  -Werror=return-type -Wold-style-cast -Wno-reorder -Xlinker -export-dynamic -g -fPIC") # -pg")
 
 
 
