@@ -183,15 +183,15 @@ namespace Synthesis {
     	auto start = std::chrono::high_resolution_clock::now();
 
 		std::vector<Circuit*> oneStageOpAmps;
-		logDebug("Create simple op amps;")
+		std::cout << "Create simple op amps;" << std::endl;
 		std::vector<const Core::Circuit *> opAmpCircuits = getOpAmps().createSimpleOneStageOpAmps(caseNumber, index);
-		logDebug("Finishing creating simple op amps");
+		std::cout << "Finishing creating simple op amps" << std::endl;
 
 		auto end = std::chrono::high_resolution_clock::now();
 		auto diff = end - start;
 		int timeParaMinutes = std::chrono::duration_cast<std::chrono::minutes>(diff).count();
 		int timeParaSeconds = std::chrono::duration_cast<std::chrono::seconds>(diff).count() - timeParaMinutes * 60;
-		logDebug("\nRuntime Create simple op amps: " << timeParaMinutes <<"min " << timeParaSeconds << "s");
+		std::cout << "\nRuntime Create simple op amps: " << timeParaMinutes <<"min " << timeParaSeconds << "s" << std::endl;
         
 		for(auto & circuit : opAmpCircuits)
 		{
@@ -214,7 +214,7 @@ namespace Synthesis {
 		auto diff = end - start;
 		int timeParaMinutes = std::chrono::duration_cast<std::chrono::minutes>(diff).count();
 		int timeParaSeconds = std::chrono::duration_cast<std::chrono::seconds>(diff).count() - timeParaMinutes * 60;
-		logDebug("\nRuntime Create FullyDifferential: " << timeParaMinutes <<"min " << timeParaSeconds << "s");
+		std::cout << "\nRuntime Create FullyDifferential: " << timeParaMinutes <<"min " << timeParaSeconds << "s" << std::endl;
 
 		for(auto & circuit : opAmpCircuits)
 		{
@@ -237,7 +237,7 @@ namespace Synthesis {
 		auto diff = end - start;
 		int timeParaMinutes = std::chrono::duration_cast<std::chrono::minutes>(diff).count();
 		int timeParaSeconds = std::chrono::duration_cast<std::chrono::seconds>(diff).count() - timeParaMinutes * 60;
-		logDebug("\nRuntime Create Complementary: " << timeParaMinutes <<"min " << timeParaSeconds << "s");
+		std::cout << "\nRuntime Create Complementary: " << timeParaMinutes <<"min " << timeParaSeconds << "s" << std::endl;
 
 		for(auto & circuit : opAmpCircuits)
 		{

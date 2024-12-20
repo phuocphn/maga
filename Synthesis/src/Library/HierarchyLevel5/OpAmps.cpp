@@ -149,9 +149,9 @@ namespace Synthesis {
         std::vector<const Core::Circuit*> simpleOpAmps;
         for(auto & firstStage : getAmplificationStageLevel().getNonInvertingStages().createSimpleNonInvertingStages(caseNumber))
         {
-        	logDebug("Create op amp num " << index);
+        	std::cout << "Create op amp num " << index << std::endl;
             const Core::Circuit & opAmp = createSimpleOpAmp(index, createInstance(*firstStage, FIRSTSTAGE_));
-            logDebug("finishing op amp num " << index);
+        	std::cout << "finishing op amp num " << index << std::endl;
             simpleOpAmps.push_back(&opAmp);
             index++;
         }

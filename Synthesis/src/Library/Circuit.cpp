@@ -79,7 +79,7 @@ namespace Synthesis
 
 	void Circuit::initialize(const Core::Circuit & circuit, StructRec::Library & structRecLibrary)
 	{
-		logDebug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Initialize circuit:" << circuit.getCircuitIdentifier() << " >>>>>>>>>>>>>>>>>");
+		std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>> Initialize circuit:" << circuit.getCircuitIdentifier() << " >>>>>>>>>>>>>>>>>" << std::endl;
 		if(circuit.hasInstances())
 		{
 			setHierarchicalCircuit(circuit);
@@ -91,11 +91,11 @@ namespace Synthesis
 		{
 			setFlatCircuit(circuit);
 		}
-		logDebug("Create Structure recognition results");
+		std::cout << "Create Structure recognition results" << std::endl;
 		structRecResults_ = & createStructRecResult(structRecLibrary);
-		logDebug("Create Partitioning results");
+		std::cout << "Create Partitioning results" << std::endl;
 		partitioningResults_ = & createPartitioningResult();
-		logDebug("Finish creating partitioning results");
+		std::cout << "Finish creating partitioning results" << std::endl;
 
 	}
 
