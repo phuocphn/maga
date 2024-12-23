@@ -142,7 +142,7 @@ namespace Synthesis {
 			oss << opAmp->toStr() << std::endl;
 		}
 		oss << std::endl;
-
+		/*
 		oss << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> COMPLEMENTARY OP AMPS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 		for(auto & opAmp : createComplementaryOpAmps(caseNumber, amountOfOpAmps))
 		{
@@ -174,7 +174,7 @@ namespace Synthesis {
 			oss << opAmp->toStr() << std::endl;
 		}
 		oss <<std::endl;
-
+		*/
 		return oss.str();
 	}
 
