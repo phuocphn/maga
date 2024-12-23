@@ -48,6 +48,8 @@ target_link_libraries(cmd_toplibgen GTest::gtest_main Log Control ManagedCompone
 add_executable(cmd_automaticsizing cmd_automaticsizing.cpp)
 target_link_libraries(cmd_automaticsizing GTest::gtest_main Log Control ManagedComponents boost_program_options.a rt ) 
 
+add_executable(cmd_partitioning cmd_partitioning.cpp)
+target_link_libraries(cmd_partitioning GTest::gtest_main Log Control ManagedComponents boost_program_options.a rt ) 
 
 add_executable(valgrind_test valgrind_test.cpp)
 target_link_libraries(valgrind_test Partitioning AutomaticSizing GTest::gtest_main Log  StructRec Synthesis Control ManagedComponents boost_program_options.a rt ) 
