@@ -279,19 +279,19 @@ namespace Synthesis {
 
 	}
 
-	void TopologyLibraryGeneration::writeHSpiceFile(const Core::Circuit &  circuit, const AutomaticSizing::CircuitParameter & circuitParameter, std::string oneStageOpAmpId)
+	void TopologyLibraryGeneration::writeHSpiceFile(const Core::Circuit &  circuit, const AutomaticSizing::CircuitParameter & circuitParameter, std::string fileNamePrefx)
 	{
 		std::ostringstream opAmpId;
 		std::string opAmpName = circuit.getCircuitIdentifier().getName();
 		int opAmpNum = circuit.getCircuitIdentifier().getId();
 
-		if(oneStageOpAmpId == "empty")
+		if(fileNamePrefx == "empty")
 		{
 			opAmpId << opAmpName << opAmpNum;
 		}
 		else
 		{
-			opAmpId << opAmpName << "_" << oneStageOpAmpId << "_" << opAmpNum;
+			opAmpId << opAmpName << "_" << fileNamePrefx << "_" << opAmpNum;
 		}
 
 		std::ostringstream stringFilePath;
