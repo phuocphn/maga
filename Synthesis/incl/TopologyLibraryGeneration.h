@@ -72,13 +72,13 @@ namespace Synthesis {
         void initialize();
         void compute();
         void write();
+		const Partitioning::Result * analyseCircuit(const Core::Circuit & circuit);
 
     private:
 		void createAllSimpleOpAmps();
 		void createAllFullyDifferentialOpAmps();
 		void createAllComplementaryOpAmps();
 
-		const Partitioning::Result * analyseCircuit(const Core::Circuit & circuit);
 		StructRec::Library * parseStructRecLibrary() const;
 		const StructRec::StructureCircuits * createStructRecResult(const Core::Circuit & circuit);
 		const Partitioning::Result * createPartitioningResult(const StructRec::StructureCircuits & strucRecResult) const;
