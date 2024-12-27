@@ -295,7 +295,41 @@ namespace Synthesis {
 
 		return twoStageOpAmps;
 	}
-		
+
+
+    std::vector<Circuit*> FunctionalBlockLibrary::createSimpleThreeStageOpAmps(std::vector<Circuit*> oneStageOpAmps) const
+    {
+ 
+        std::vector<const Core::Circuit *> hierarchicalOneStageOpAmpCircuits = extractHierachicalOneStageOpAmpCircuits(oneStageOpAmps);
+        std::vector<const Core::Circuit *> twoStageOpAmpCircuits = getOpAmps().createSimpleTwoStageOpAmps(hierarchicalOneStageOpAmpCircuits);
+        std::vector<const Core::Circuit *> threeStageOpAmpCircuits; 
+        
+        std::vector<Circuit*> threeStageOpAmps;
+
+		for(auto & oneStageOpAmp : hierarchicalOneStageOpAmpCircuits)
+		{	
+			for(auto & twoStageOpAmp : twoStageOpAmpCircuits)
+			{
+				threeStageOpAmpCircuits = getOpAmps().createSimpleThreeStageOpAmps(*oneStageOpAmp, *twoStageOpAmp);
+				for (auto & circuit : threeStageOpAmpCircuits)
+				{
+					Circuit * opAmp = new Circuit;
+					opAmp->initialize(*circuit, getStructRecLibrary());
+					threeStageOpAmps.push_back(opAmp);
+				}
+			}
+		} 
+		return threeStageOpAmps;
+    }
+
+    std::vector<Circuit*> FunctionalBlockLibrary::createSimpleThreeStageOpAmps(const Circuit & oneStageOpAmp, std::mutex &myMutex) const
+	{
+		// this function is not properly implemented yet!
+		// TODO: use `std::mutex` for generating SimpleThreeStageOpAmps.
+        std::vector<Circuit*> threeStageOpAmps;
+		return threeStageOpAmps;
+	}
+
     std::vector<Circuit*> FunctionalBlockLibrary::createFullyDifferentialTwoStageOpAmps(std::vector<Circuit*> oneStageOpAmps) const
     {
         std::vector<Circuit*> twoStageOpAmps;

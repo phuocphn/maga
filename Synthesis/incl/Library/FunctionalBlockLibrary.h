@@ -78,6 +78,12 @@ namespace Synthesis {
 		std::vector<Circuit*> createSymmetricalOpAmps(int caseNumber, int & amountOfOpAmps) const;
 		std::vector<Circuit*> createSimpleTwoStageOpAmps(std::vector<Circuit*> oneStageOpAmps) const;
 		std::vector<Circuit*> createSimpleTwoStageOpAmps(const Circuit & oneStageOpAmp, std::mutex &myMutex) const;
+
+		// this method is used in OpAmpSizing.cpp (as a step in cmd_synthesis)
+		std::vector<Circuit*> createSimpleThreeStageOpAmps(std::vector<Circuit*> oneStageOpAmps) const;
+		std::vector<Circuit*> createSimpleThreeStageOpAmps(const Circuit & oneStageOpAmp, std::mutex &myMutex) const;
+
+
 		std::vector<Circuit*> createFullyDifferentialTwoStageOpAmps(std::vector<Circuit*> oneStageOpAmps) const;
 		std::vector<Circuit*> createFullyDifferentialTwoStageOpAmps(const Circuit &  oneStageOpAmp, std::mutex &myMutex) const;
 
