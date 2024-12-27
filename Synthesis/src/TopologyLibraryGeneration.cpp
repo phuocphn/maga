@@ -64,6 +64,74 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+/** TODO: Use src/pymaga/AcstUtility.h */
+// #include "Partitioning/incl/Results/Result.h"
+// #include "src/pymaga/AcstUtility.h"
+
+#include "Control/incl/File/OutputFile.h"
+#include "Core/incl/DeviceTypeRegister/DeviceTypesFile.h"
+
+
+#include "StructRec/incl/Library/Library.h"
+#include "StructRec/incl/LibraryFile/LibraryFile.h"
+
+
+#include "StructRec/incl/LibraryFile/LibraryFile.h"
+#include "StructRec/incl/LibraryFile/ArrayLibraryParser.h"
+#include "StructRec/incl/LibraryFile/PairLibraryParser.h"
+#include "StructRec/incl/Library/Library.h"
+#include "StructRec/incl/Library/ArrayLibrary.h"
+#include "StructRec/incl/Library/PairLibrary.h"
+#include "StructRec/incl/StructureCore.h"
+
+
+#include "StructRec/incl/LibraryFile/ArrayLibraryParser.h"
+#include "StructRec/incl/LibraryFile/ArrayLibraryItemParser.h"
+#include "StructRec/incl/Library/ArrayLibrary.h"
+#include "StructRec/incl/Library/LibraryItem/ArrayLibraryItem/ArrayLibraryItem.h"
+#include "Core/incl/DeviceTypeRegister/DeviceTypeRegister.h"
+#include "Control/incl/FileSystemPath.h"
+#include "Core/incl/Common/BacktraceAssert.h"
+
+#include "HSpice/incl/InputFile/InputFile.h"
+#include "HSpice/incl/InputFile/SupplyNet/SupplyNetFile.h"
+#include "Core/incl/DeviceTypeRegister/DeviceTypeRegister.h"
+#include "Partitioning/incl/Results/Result.h"
+
+#include "StructRec/incl/Results/Result.h"
+
+const Partitioning::Result * getPartitioningResult(const Core::Circuit & circuit)
+{	
+    // create structRecResult
+    // const StructRec::StructureCircuits * structRecResults = createStructRecResult(circuit);
+    std::string libFilePath = "StructRec/xml/AnalogLibrary.xml";
+    std::string deviceFilePath = "examples/SynthesisSmallLibrary/deviceTypes.xcat";
+
+    StructRec::LibraryFile structRecLibraryFile;
+    structRecLibraryFile.setPath(libFilePath);
+
+    // create device register
+    Core::DeviceTypesFile deviceTypesFile; 
+    deviceTypesFile.setPath(deviceFilePath);
+    Core::DeviceTypeRegister * deviceTypeRegister = deviceTypesFile.parse();
+
+    structRecLibraryFile.setDeviceTypeRegister(*deviceTypeRegister);
+    StructRec::Library* structRecLibrary = structRecLibraryFile.parse();
+
+    StructRec::Result* result = structRecLibrary->recognize(circuit);
+    // setStructRecResult(*result);
+    delete structRecLibrary;
+    const StructRec::StructureCircuits * structRecResults = &result->getTopLevelResults();
+
+    //const Partitioning::Result * partitioningResult = createPartitioningResult(*structRecResults);
+    Partitioning::Partitioning * partitioning = new Partitioning::Partitioning;
+    const Partitioning::Result * partitioningResult = & partitioning->compute(*structRecResults);
+
+    delete partitioning;
+    return partitioningResult;
+}
+
+
 namespace Synthesis {
 
 	TopologyLibraryGeneration::TopologyLibraryGeneration() :
@@ -221,6 +289,23 @@ namespace Synthesis {
 					
 					for(auto & twoStageOpAmp : twoStageOpAmps)
 					{
+
+						/*** BEGIN_TWO_STAGE_OPAMPS_EXPORTING: write hspice netlist / partitioning result for two-stage opamps */
+						std::ostringstream oneStageOpAmpId;
+						oneStageOpAmpId << oneStageOpAmp->getCircuitIdentifier().getId();
+						const Core::Circuit & flatTwoStageOpAmp = createFlatCircuit(*twoStageOpAmp);
+						writeHSpiceFile(flatTwoStageOpAmp, circuitParameter, oneStageOpAmpId.str());
+
+						std::ostringstream twoStageOpAmpFilePath;
+						twoStageOpAmpFilePath << "outputs/PartitionResult/" << flatTwoStageOpAmp.getCircuitIdentifier().getName() << "_" << oneStageOpAmpId.str() << "_" << flatTwoStageOpAmp.getCircuitIdentifier().getId();
+						Control::OutputFile outputFile;
+						outputFile.setPath(twoStageOpAmpFilePath.str());
+						const Partitioning::Result * partioningTwoStageOpAmpResult = getPartitioningResult(flatTwoStageOpAmp);
+						partioningTwoStageOpAmpResult->writeXmlPartitioningResult(outputFile);	
+						delete partioningTwoStageOpAmpResult;		
+						/*** END_TWO_STAGE_OPAMPS_EXPORTING */
+
+
 						std::vector<const Core::Circuit*> threeStageOpAmps;
 						if(circuitParameter.isFullyDifferential())
 						{
@@ -234,19 +319,27 @@ namespace Synthesis {
 
 						for(auto & threeStageOpAmp : threeStageOpAmps)
 						{
-							std::ostringstream oneStageOpAmpId;
-							oneStageOpAmpId << oneStageOpAmp->getCircuitIdentifier().getId();
-							const Core::Circuit & flatTwoStageOpAmp = createFlatCircuit(*twoStageOpAmp);
-							writeHSpiceFile(flatTwoStageOpAmp, circuitParameter, oneStageOpAmpId.str());
 
+							/*** BEGIN_THREE_STAGE_OPAMPS_EXPORTING: write hspice netlist / partitioning result for two-stage opamps */
+							std::ostringstream spiceFilePath;
+							spiceFilePath << oneStageOpAmpId.str() << "_" << twoStageOpAmp->getCircuitIdentifier().getId();
 							const Core::Circuit & flatThreeStageOpAmp = createFlatCircuit(*threeStageOpAmp);
-							writeHSpiceFile(flatThreeStageOpAmp, circuitParameter, oneStageOpAmpId.str());
+							writeHSpiceFile(flatThreeStageOpAmp, circuitParameter, spiceFilePath.str());
+
+							std::ostringstream threeStageOpAmpFilePath;
+							threeStageOpAmpFilePath << "outputs/PartitionResult/" << threeStageOpAmp->getCircuitIdentifier().getName() << "_" << oneStageOpAmpId.str() << "_" << twoStageOpAmp->getCircuitIdentifier().getId() << "_" << threeStageOpAmp->getCircuitIdentifier().getId();
+							outputFile.setPath(threeStageOpAmpFilePath.str());
+							const Partitioning::Result * partioningThreeStageOpAmpResult =  getPartitioningResult(flatThreeStageOpAmp);
+							partioningThreeStageOpAmpResult->writeXmlPartitioningResult(outputFile);	
+							delete partioningThreeStageOpAmpResult;	
+							/*** END_THREE_STAGE_OPAMPS_EXPORTING */
+
 
 							delete threeStageOpAmp;
 							delete &flatThreeStageOpAmp;
-							delete &flatTwoStageOpAmp;
 
 						}
+						delete &flatTwoStageOpAmp;
 						delete twoStageOpAmp;
 					}
 					
