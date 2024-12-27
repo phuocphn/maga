@@ -53,6 +53,7 @@
 #include "HSpice/incl/InputFile/SubCircuitParser/InstantiatedSubCircuitMap.h"
 #include "Log/incl/LogMacros.h"
 #include <sstream>
+#include <iostream>
 
 namespace HSpice {
     namespace InputFile {
@@ -92,7 +93,7 @@ namespace HSpice {
         Core::Circuit* InputFile::readNewCircuit()
         {
             setAllSupplyNetIdentifers();
-            logDebug("Reading HSpice-Netlist...");
+            std::cout << "Reading HSpice-Netlist..." << std::endl;
 
             readCompleteFile();
             preProcessLineContinuation();
@@ -100,7 +101,7 @@ namespace HSpice {
             parseEachLine();
 
             Core::TopCircuit * topCircuit = createNewTopCircuit();
-            logTrace("+++++Global Nets: " << globalNetIdentifiers_);
+            std::cout << "+++++Global Nets: " << globalNetIdentifiers_ << std::endl;
             GlobalNetMap globalNetMap = globalNetIdentifiers_.addNetsToCircuit(*topCircuit);
 
             InstantiatedSubCircuitMap instantiatedSubCircuitMap;
