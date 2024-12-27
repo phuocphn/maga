@@ -111,7 +111,7 @@ namespace Synthesis
 	void HSPICEOutputFile::write(const Core::Circuit & circuit, const Partitioning::Result * partitioningResult)
 	{
 		outputFile_ = new Control::OutputFile;
-		logDebug("Path the out put file is written to " << getPath());
+		logDebug("Netlist saved to: " << getPath());
 
 		outputFile_->setPath(getPath());
 		outputFile_->open();
@@ -127,7 +127,7 @@ namespace Synthesis
 		}
 		getOutputFile() << "\n";
 
-		logDebug("Write Devices");
+		// logDebug("Write Devices");
 		writeDevices(circuit, partitioningResult);
 		getOutputFile() << ".end "  << getId() << "\n\n";
 		outputFile_->close();
