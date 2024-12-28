@@ -71,7 +71,7 @@ namespace Synthesis
 			delete circuitInformation_;
 		delete hierarchicalCircuit_;
 		delete flatCircuit_;
-		delete structRecResults_;
+		// delete structRecResults_;
 		delete partitioningResults_;
 
 

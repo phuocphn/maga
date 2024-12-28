@@ -58,7 +58,13 @@ namespace AutomaticSizing {
 
 	CircuitInformation::~CircuitInformation()
 	{
-		delete circuitParameter_;
+		// using Pybind11 with an overlap between the python gc and the cpp destructor lead to freeing the same circuitParameter_ twice
+		// temporary fix: disable `delete circuitParameter_;` 
+		// TODO: use smart point or " return_value_policy::copy"?
+		// references: 
+		// [QUESTION] : segfault error due to pybind11 object and C++ pointer ownership conflict · Issue #2452 · pybind/pybind11 https://github.com/pybind/pybind11/issues/2452
+
+		// delete circuitParameter_;
 		delete nmosEKV_;
 		delete pmosEKV_;
 		delete nmosSHM_;
