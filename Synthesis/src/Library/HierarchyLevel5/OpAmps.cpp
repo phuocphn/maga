@@ -313,25 +313,26 @@ namespace Synthesis {
     }
 
 
-    /***********3-stage op-amps */
+    /***********simple single-output three stage op-amps */
 
-    std::vector<const Core::Circuit*> OpAmps::createSimpleThreeStageOpAmps(std::vector<const Core::Circuit*> oneStageOpAmps)
+    std::vector<const Core::Circuit*> OpAmps::createSimpleThreeStageOpAmps(std::vector<const Core::Circuit*> twoStageOpAmps)
     {
-        // std::vector<const Core::Circuit*> twoStageOpAmps;
-        // int index=1;
-        // for(auto & oneStageOpAmp : oneStageOpAmps)
-        // {
-        //     const Core::Circuit & firstStage = oneStageOpAmp->findInstance(createInstanceId(FIRSTSTAGE_)).getMaster();
-        //     for(auto & secondStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
-        //     {
-        //         const Core::Circuit & opAmp = createSimpleOpAmp(index, createInstance(firstStage, FIRSTSTAGE_), &createInstance(*secondStage, SECONDSTAGE_));
-        //         twoStageOpAmps.push_back(&opAmp);
-        //         index++;
-        //     }
-        // }
+        std::vector<const Core::Circuit*> threeStageOpAmps;
+        int index = 1;
+        for (auto & twoStageOpAmp: twoStageOpAmps){
+            const Core::Circuit & firstStage = twoStageOpAmp->findInstance(createInstanceId(FIRSTSTAGE_)).getMaster();
+            const Core::Circuit & secondStage = twoStageOpAmp->findInstance(createInstanceId(SECONDSTAGE_)).getMaster();
+
+
+            for(auto & thirdStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+            {
+                const Core::Circuit & opAmp = createSimpleOpAmp_Ext(index, createInstance(firstStage, FIRSTSTAGE_), createInstance(secondStage, SECONDSTAGE_), &createInstance(*thirdStage, THIRDSTAGE_));
+                threeStageOpAmps.push_back(&opAmp);
+                index++;
+            }
+        }
         // return twoStageOpAmps;
-        std::vector<const Core::Circuit*>  out;
-        return out;
+        return threeStageOpAmps;
     }
 
 
@@ -383,7 +384,7 @@ namespace Synthesis {
         // return twoStageOpAmps;
         return threeStageOpAmps;
     }
-    /*********** 3-stage op-amps */
+    /***********simple single-output three stage op-amps */
 
 
 
