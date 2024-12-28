@@ -79,6 +79,7 @@ namespace Core {
         CircuitId simpleThreeStageOpAmp(int num=0);
         CircuitId fullyDifferentialOpAmp(int num=0);
         CircuitId fullyDifferentialTwoStageOpAmp(int num=0);
+        CircuitId fullyDifferentialThreeStageOpAmp(int num=0);
         CircuitId complementaryOpAmp(int num=0);
         CircuitId symmetricalOpAmp(int num=0);
 
@@ -113,6 +114,7 @@ namespace Core {
         static const CircuitName SINGLEOUTPUTTHREESTAGEOPAMP_;
         static const CircuitName FULLYDIFFERENTIALOPAMP_;
         static const CircuitName FULLYDIFFERENTIALTWOSTAGEOPAMP_;
+        static const CircuitName FULLYDIFFERENTIALTHREESTAGEOPAMP_;
         static const CircuitName SYMMETRICALOPAMP_;
         static const CircuitName COMPLEMENTARYOPAMP_;
 

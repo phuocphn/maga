@@ -92,6 +92,8 @@ namespace Synthesis
 		std::string getHSpiceNetlistDirectoryPath() const;
 
 		void testSimpleOrFullyDifferentialOpAmps();
+		void testSimpleOrFullyDifferentialOpAmps_Ext3();
+
 		void testSimpleOrFullyDifferentialOpAmpsLoop(const std::vector<Circuit*>& oneStageOpAmps, int startOffset, int maxCount, std::mutex &myMutex);
 		void testComplOrSymOpAmps();
 		void testComplOrSymOpAmpsLoop(const std::vector<Circuit*>& oneStageOpAmps, int startOffset, int maxCount);

@@ -93,6 +93,10 @@ namespace Synthesis
 		    std::vector<const Core::Circuit*> createFullyDifferentialTwoStageOpAmps(const Core::Circuit & oneStageOpAmp, std::mutex &myMutex);
 		    std::vector<const Core::Circuit*> createFullyDifferentialTwoStageOpAmps(const Core::Circuit & oneStageOpAmp);
 
+		    std::vector<const Core::Circuit*> createFullyDifferentialThreeStageOpAmps(std::vector<const Core::Circuit*> oneStageOpAmps);
+		    std::vector<const Core::Circuit*> createFullyDifferentialThreeStageOpAmps(const Core::Circuit & oneStageOpAmp, std::mutex &myMutex);
+		    std::vector<const Core::Circuit*> createFullyDifferentialThreeStageOpAmps(const Core::Circuit & oneStageOpAmp, const Core::Circuit& twoStageOpAmp);
+
 			std::string toStr() const;
 		public:
 			static const Core::TerminalName IN1_TERMINAL_;
@@ -127,6 +131,9 @@ namespace Synthesis
 
 			const Core::Circuit& createFullyDifferentialOpAmp(int & index, Core::Instance & firstStage, Core::Instance & feedbackStage,
 													Core::Instance * secondStage1 = nullptr, Core::Instance * secondStage2 = nullptr);
+			const Core::Circuit& createFullyDifferentialOpAmp_Ext3(int & index, Core::Instance & firstStage, Core::Instance & feedbackStage,
+													Core::Instance * secondStage1 = nullptr, Core::Instance * secondStage2 = nullptr, Core::Instance * thirdStage1 = nullptr, Core::Instance * thirdStage2 = nullptr);
+
 			const Core::Circuit& createComplementaryOpAmp(int & index, Core::Instance & firstStage);
             const Core::Circuit & createSymmetricalOpAmp(int & index, Core::Instance & firstStage, Core::Instance & secondStage,
 													Core::Instance & transconductanceComplementarySecondStage, Core::Instance & stageBiasComplementarySecondStage);
@@ -143,6 +150,8 @@ namespace Synthesis
 
 			void connectInstanceTerminalsFullyDifferentialOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage, 
                                             Core::Instance & feedbackStage, Core::Instance * secondStage1 = nullptr, Core::Instance * secondStage2 = nullptr) const;
+			void connectInstanceTerminalsFullyDifferentialOpAmp_Ext3(Core::Circuit & opAmp, Core::Instance & firstStage, 
+                                            Core::Instance & feedbackStage, Core::Instance * secondStage1 = nullptr, Core::Instance * secondStage2 = nullptr, Core::Instance * thirdStage1 = nullptr, Core::Instance * thirdStage2 = nullptr) const;
             void connectInstanceTerminalsComplementaryOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage) const;
             void connectInstanceTerminalsSymmetricalOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage, 
                                             Core::Instance &  secondStage, Core::Instance & transconductanceComplementarySecondStage,
@@ -254,6 +263,11 @@ namespace Synthesis
             static const Core::NetId OUTFIRSTSTAGE_NET_;
 			static const Core::NetId OUT1FIRSTSTAGE_NET_;
 			static const Core::NetId OUT2FIRSTSTAGE_NET_;
+
+            // static const Core::NetId OUTSECONDSTAGE_NET_;
+			static const Core::NetId OUT1SECONDSTAGE_NET_;
+			static const Core::NetId OUT2SECONDSTAGE_NET_;
+
 
             static const Core::NetId OUTSECONDSTAGE_NET_;
 

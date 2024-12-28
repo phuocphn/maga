@@ -309,8 +309,7 @@ namespace Synthesis {
 						std::vector<const Core::Circuit*> threeStageOpAmps;
 						if(circuitParameter.isFullyDifferential())
 						{
-							// twoStageOpAmps = library.getOpAmps().createFullyDifferentialTwoStageOpAmps(*oneStageOpAmp);
-							std::cout << "Not implement yet!";
+							threeStageOpAmps = library.getOpAmps().createFullyDifferentialThreeStageOpAmps(*oneStageOpAmp, *twoStageOpAmp);
 						}
 						else
 						{
