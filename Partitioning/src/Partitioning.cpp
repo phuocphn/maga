@@ -1162,7 +1162,10 @@ namespace Partitioning {
 			else if((hasSecondStageOutputConnection(netMinus, circuits) && hasFirstStageOutputConnection(netPlus, circuits))
 					|| (hasSecondStageOutputConnection(netPlus, circuits) && hasFirstStageOutputConnection(netMinus, circuits))
 					|| (hasThirdStageOutputConnection(netMinus, circuits) && hasSecondStageOutputConnection(netPlus, circuits))
-					|| (hasThirdStageOutputConnection(netPlus, circuits) && hasSecondStageOutputConnection(netMinus, circuits)))
+					|| (hasThirdStageOutputConnection(netPlus, circuits) && hasSecondStageOutputConnection(netMinus, circuits))
+					|| (hasThirdStageOutputConnection(netPlus, circuits) && hasFirstStageOutputConnection(netMinus, circuits))
+					|| (hasFirstStageOutputConnection(netPlus, circuits) && hasThirdStageOutputConnection(netMinus, circuits))
+					)
 			{
 				CapacitancePart * capPart = new CapacitancePart(getIdCapacitancePart());
 				capPart->setType("compensation");
@@ -2203,6 +2206,17 @@ namespace Partitioning {
 		const StructRec::StructurePinType gate4_2 = StructRec::StructurePinType("MosfetCascodedNMOSAnalogInverter", "InputNMOS1");
 		const StructRec::StructureName inverterName4 = StructRec::StructureName("MosfetCascodedNMOSAnalogInverter");
 
+
+		const StructRec::StructurePinType output5 = StructRec::StructurePinType("MosfetCascodePMOSAnalogInverterOneDiodeTransistor", "Output");
+		const StructRec::StructurePinType gate5_1 = StructRec::StructurePinType("MosfetCascodePMOSAnalogInverterOneDiodeTransistor", "InputPMOS1");
+		const StructRec::StructurePinType gate5_2 = StructRec::StructurePinType("MosfetCascodePMOSAnalogInverterOneDiodeTransistor", "InputNMOS1");
+		const StructRec::StructureName inverterName5 = StructRec::StructureName("MosfetCascodePMOSAnalogInverterOneDiodeTransistor");
+
+		const StructRec::StructurePinType output6 = StructRec::StructurePinType("MosfetCascodeNMOSAnalogInverterOneDiodeTransistor", "Output");
+		const StructRec::StructurePinType gate6_1 = StructRec::StructurePinType("MosfetCascodeNMOSAnalogInverterOneDiodeTransistor", "InputPMOS1");
+		const StructRec::StructurePinType gate6_2 = StructRec::StructurePinType("MosfetCascodeNMOSAnalogInverterOneDiodeTransistor", "InputNMOS1");
+		const StructRec::StructureName inverterName6 = StructRec::StructureName("MosfetCascodeNMOSAnalogInverterOneDiodeTransistor");
+
 		std::vector<const StructRec::Structure*> connectedStructures = circuits.findConnectedStructures(net.getIdentifier());
 		for(auto& it : connectedStructures)
 		{
@@ -2214,7 +2228,14 @@ namespace Partitioning {
 					|| (connectedStructure.getStructureName() == inverterName3 && connectedStructure.findNet(output3).getIdentifier() == net.getIdentifier()
 					&& (hasSecondStageOutputConnection(connectedStructure.findNet(gate3_1), circuits) ||hasSecondStageOutputConnection(connectedStructure.findNet(gate3_2), circuits )) )
 					|| (connectedStructure.getStructureName() == inverterName4 && connectedStructure.findNet(output4).getIdentifier() == net.getIdentifier()
-					&& (hasSecondStageOutputConnection(connectedStructure.findNet(gate4_1), circuits) ||hasSecondStageOutputConnection(connectedStructure.findNet(gate4_2), circuits )) ))
+					&& (hasSecondStageOutputConnection(connectedStructure.findNet(gate4_1), circuits) ||hasSecondStageOutputConnection(connectedStructure.findNet(gate4_2), circuits )) ) 
+					
+					|| (connectedStructure.getStructureName() == inverterName5 && connectedStructure.findNet(output5).getIdentifier() == net.getIdentifier()
+					&& (hasSecondStageOutputConnection(connectedStructure.findNet(gate5_1), circuits) ||hasSecondStageOutputConnection(connectedStructure.findNet(gate5_2), circuits )) ) 
+					
+					|| (connectedStructure.getStructureName() == inverterName6 && connectedStructure.findNet(output6).getIdentifier() == net.getIdentifier()
+					&& (hasSecondStageOutputConnection(connectedStructure.findNet(gate6_1), circuits) ||hasSecondStageOutputConnection(connectedStructure.findNet(gate6_2), circuits )) ) 
+					)
 			{
 				hasConnection = true;
 				break;
