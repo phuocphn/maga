@@ -79,6 +79,13 @@
 #include "Control/incl/FileSystemPath.h"
 #include "Core/incl/Common/BacktraceAssert.h"
 
+#include "HSpice/incl/InputFile/InputFile.h"
+#include "HSpice/incl/InputFile/SupplyNet/SupplyNetFile.h"
+#include "Core/incl/DeviceTypeRegister/DeviceTypeRegister.h"
+#include "Partitioning/incl/Results/Result.h"
+#include "StructRec/incl/Results/Result.h"
+
+#include "src/pymaga/AcstUtility.h"
 
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
@@ -86,6 +93,16 @@
 
 namespace py = pybind11;
 using namespace pybind11::literals;
+
+class DerivedHspiceOptions {
+public:
+    DerivedHspiceOptions()  {}
+};
+
+class CircuitAnalysis {
+    public:
+    CircuitAnalysis() {}
+};   
 
 PYBIND11_MODULE(pymaga, m) {
     m.doc() = "Python binding for the maga.";
@@ -130,8 +147,10 @@ PYBIND11_MODULE(pymaga, m) {
                 StructRec::Library* structRecLibrary = structRecLibraryFile.parse();
                 return structRecLibrary;
 
-            }, "Create a StructRec::Library given libFilePath and deviceFilePath");
-
+            }, "Create a StructRec::Library given libFilePath and deviceFilePath")
+        .def("recognize", [](StructRec::Library& self, Core::Circuit &circuit) {
+                return self.recognize(circuit);
+            }, "Run structure recognition");
 
     py::class_<Synthesis::FunctionalBlockLibrary>(m, "FunctionalBlockLibrary")
         .def(py::init<const AutomaticSizing::CircuitInformation&>(), py::arg("circuit_information"))
@@ -144,7 +163,79 @@ PYBIND11_MODULE(pymaga, m) {
             return self.toStr();
         });
 
-	#ifdef VERSION_INFO
+    
+    py::class_<Core::Circuit, std::shared_ptr<Core::Circuit>>(m, "Circuit")
+        .def(py::init<>())
+        .def("__repr__", [](Core::Circuit &self) {
+            return self.toStr();
+        });
+
+    py::class_<DerivedHspiceOptions>(m, "IOCore")
+        .def(py::init<>())
+        .def("readInCircuit", 
+            [](DerivedHspiceOptions& self, const std::string& circuitFilePath, 
+            const std::string& supplyNetFilePath, const std::string& mappingFilePath, 
+            const std::string& deviceFilePath) {
+                HSpice::InputFile::InputFile* hspiceInputFile = new HSpice::InputFile::InputFile();
+                hspiceInputFile->setPath(circuitFilePath);
+                
+                // Create and set supplyNetIdentifiers
+                HSpice::InputFile::SupplyNetIdentifiers supplyNetIds;
+                supplyNetIds.initializeEmpty();
+
+                HSpice::InputFile::SupplyNetFile supplyNetFile;
+                supplyNetFile.setPath(supplyNetFilePath);
+                supplyNetFile.setSupplyNetIdentifier(supplyNetIds);
+                supplyNetFile.parse();
+                hspiceInputFile->setSupplyNetIds(supplyNetIds);
+
+                // Set deviceTypeRegister
+                Core::DeviceTypesFile deviceTypesFile; 
+                deviceTypesFile.setPath(deviceFilePath);
+                Core::DeviceTypeRegister* deviceTypeRegister = deviceTypesFile.parse();
+                hspiceInputFile->setDeviceTypeRegister(*deviceTypeRegister);
+
+                // Create deviceLineMapper
+                HSpice::DeviceLineMappingFile deviceLineMappingFile;
+                deviceLineMappingFile.setPath(mappingFilePath);
+                HSpice::DeviceLineMapper* deviceLineMapper = deviceLineMappingFile.parse();
+                hspiceInputFile->setDeviceLineMapper(*deviceLineMapper);
+
+                // Core::Circuit& circuit = *hspiceInputFile->readNewCircuit();
+                            std::shared_ptr<Core::Circuit> circuit = 
+                std::make_shared<Core::Circuit>(*hspiceInputFile->readNewCircuit());
+                delete hspiceInputFile;
+                return circuit; // Python owns the shared_ptr
+            },
+            py::arg("circuit_filepath"), 
+            py::arg("supplynet_filepath"), 
+            py::arg("mapping_filepath"), 
+            py::arg("devicetype_filepath"),
+            "Read Hspice circuit and convert to a Core::Circuit object.", py::return_value_policy::take_ownership);
+
+    py::class_<Partitioning::Result>(m, "PartitioningResult")
+        .def(py::init<>())
+        .def("__repr__", [](Partitioning::Result &self) {
+            return self.toStr();
+        });
+	
+    py::class_<StructRec::Result>(m, "StructRecResult")
+        .def(py::init<>())
+        .def("__repr__", [](StructRec::Result &self) {
+            return self.toStr();
+        });
+
+    py::class_<CircuitAnalysis>(m, "CircuitAnalysis")
+        .def(py::init<>())
+        .def("getPartitioningResult", 
+            [](CircuitAnalysis& self, const Core::Circuit & circuit) {
+                return getPartitioningResult(circuit);
+            },
+            "Read Hspice circuit and return Partition::Result object.", py::return_value_policy::take_ownership);
+
+    
+    
+    #ifdef VERSION_INFO
 	m.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);
 	#else
 	m.attr("__version__") = "dev";

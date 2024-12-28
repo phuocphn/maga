@@ -58,6 +58,7 @@
 #include "Core/incl/Common/BacktraceAssert.h"
 #include "Log/incl/LogMacros.h"
 
+#include "src/pymaga/AcstUtility.h"
 
 namespace Synthesis
 {
@@ -124,8 +125,11 @@ namespace Synthesis
 		else
 		{
 
-			logDebug("testSimpleOpAmps");
-			testSimpleOrFullyDifferentialOpAmps();
+			//logDebug("testSimpleOpAmps");
+			//testSimpleOrFullyDifferentialOpAmps();
+
+			logDebug("testSimpleOrFullyDifferentialOpAmps with three-stage opamps included!");
+			testSimpleOrFullyDifferentialOpAmps_Ext3();
 
 			logDebug("testSymmetricalOpAmps");
 			testComplOrSymOpAmps();
@@ -188,6 +192,101 @@ namespace Synthesis
 
 		} while (!oneStageOpAmps.empty());
 	}
+
+
+	void OpAmpSizing::testSimpleOrFullyDifferentialOpAmps_Ext3()
+	{
+		std::vector<Circuit*> oneStageOpAmps;
+		std::vector<Circuit*> twoStageOpAmps;
+		std::vector<Circuit*> threeStageOpAmps;
+
+
+		int caseNumber = 1;
+		int index = 1;
+		do
+		{
+			if (getCircuitInformation().getCircuitParameter().isComplementary())
+			{
+				// oneStageOpAmps = getLibrary().createComplementaryOpAmps(caseNumber, index);
+				std::cout << "something wrong!, this func is  used for simple and fully differential opamps only !" << std::endl;
+			}
+			else if(getCircuitInformation().getCircuitParameter().isFullyDifferential())
+			{
+				oneStageOpAmps = getLibrary().createFullyDifferentialOneStageOpAmps(caseNumber, index);
+			}
+			else
+			{
+				oneStageOpAmps =  getLibrary().createSimpleOneStageOpAmps(caseNumber, index);
+			}
+
+			if(!getCircuitInformation().getCircuitParameter().isComplementary())
+			{
+				if(getCircuitInformation().getCircuitParameter().isFullyDifferential())
+				{
+					// twoStageOpAmps = getLibrary().createFullyDifferentialTwoStageOpAmps(*oneStageOpAmps);
+					std::cout << "getLibrary().createFullyDifferentialThreeStageOpAmps(oneStageOpAmps) is not implemented !" << std::endl;
+				}
+				else
+				{
+					threeStageOpAmps = getLibrary().createSimpleThreeStageOpAmps(oneStageOpAmps);
+				}
+			}	
+
+
+			for(auto & threeStageOpAmp : threeStageOpAmps)
+			{
+				std::ostringstream oneStageOpAmpId;
+				oneStageOpAmpId << threeStageOpAmp->getFlatCircuit().getCircuitIdentifier().getId();
+
+
+
+
+/***** */
+				// std::ostringstream oneStageOpAmpId;
+				// oneStageOpAmpId << threeStageOpAmp->getFlatCircuit().getCircuitIdentifier().getId();
+				
+				std::ostringstream fileName;
+				fileName << threeStageOpAmp->getFlatCircuit().getCircuitIdentifier().getId() << "___input__";
+
+				Core::Circuit circuit = threeStageOpAmp->getFlatCircuit();
+				const Partitioning::Result *partitioningResult = getPartitioningResult(circuit);
+
+				
+				std::ostringstream opAmpId;
+				std::string opAmpName = circuit.getCircuitIdentifier().getName();
+				int opAmpNum = circuit.getCircuitIdentifier().getId();
+				opAmpId << opAmpName << opAmpNum;
+				std::string stringFilePath(getHSpiceNetlistDirectoryPath() + "/" + fileName.str() + ".ckt");
+				HSPICEOutputFile outputFile;
+				outputFile.setPath(stringFilePath);
+				outputFile.setId(opAmpId.str());
+				outputFile.write(circuit, partitioningResult);
+				delete partitioningResult;
+				// delete flatCircuitRecursion;
+				// delete circuit;
+
+
+
+/***** */
+
+
+
+				Circuit * passedThreeStageOpAmp = &testCircuit(*threeStageOpAmp);
+				if(passedThreeStageOpAmp != nullptr)
+				{
+					if(passedThreeStageOpAmp->fulfillsAllSpecifications())
+					{
+						writeHSpiceFile(*passedThreeStageOpAmp, oneStageOpAmpId.str());
+					}
+					delete passedThreeStageOpAmp;
+				}
+			}
+
+			caseNumber++;
+
+		} while (!threeStageOpAmps.empty());
+	}
+
 
 
 	void OpAmpSizing::testSimpleOrFullyDifferentialOpAmpsLoop(const std::vector<Circuit*>& oneStageOpAmps, int startOffset, int maxCount, std::mutex &myMutex)
