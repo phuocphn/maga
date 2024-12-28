@@ -84,9 +84,9 @@ namespace Synthesis
 		void sizeOpAmpGroup();
 
 		const AutomaticSizing::CircuitInformation & getCircuitInformation() const;
+		const FunctionalBlockLibrary & getLibrary() const;
 
 	private:
-		const FunctionalBlockLibrary & getLibrary() const;
 		std::string getTransistorModel() const;
 		std::string getDefinition() const;
 		std::string getHSpiceNetlistDirectoryPath() const;
