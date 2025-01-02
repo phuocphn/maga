@@ -78,6 +78,7 @@ namespace Synthesis
 		    std::vector<const Core::Circuit*> createFullyDifferentialOneStageOpAmps(int caseNumber, int & index);
 		    std::vector<const Core::Circuit*> createComplementaryOpAmps(int caseNumber, int & index);
 		    std::vector<const Core::Circuit*> createSymmetricalOpAmps(int caseNumber, int & index);
+		    std::vector<const Core::Circuit*> createSymmetricalThreeStageOpAmps(int caseNumber, int & index);
 
 		    std::vector<const Core::Circuit*> createSimpleTwoStageOpAmps(std::vector<const Core::Circuit*> oneStageOpAmps);
 		    std::vector<const Core::Circuit*> createSimpleTwoStageOpAmps(const Core::Circuit& oneStageOpAmp, std::mutex &myMutex);
@@ -137,7 +138,8 @@ namespace Synthesis
 			const Core::Circuit& createComplementaryOpAmp(int & index, Core::Instance & firstStage);
             const Core::Circuit & createSymmetricalOpAmp(int & index, Core::Instance & firstStage, Core::Instance & secondStage,
 													Core::Instance & transconductanceComplementarySecondStage, Core::Instance & stageBiasComplementarySecondStage);
-			
+			const Core::Circuit & createSymmetricalOpAmp_Ext3(int & index, Core::Instance & firstStage, Core::Instance & secondStage,
+													Core::Instance & transconductanceComplementarySecondStage, Core::Instance & stageBiasComplementarySecondStage, Core::Instance & thirdStage);
 			void addTerminalNets(std::vector<Core::NetId> & netNames, std::map<Core::TerminalName, Core::NetId> & terminalToNetMap,
 											Core::Circuit & opAmp) const;	
 			void addFirstStageToSecondStageNets(std::vector<Core::NetId> & netNames, const Core::Circuit & opAmp) const;	
@@ -156,6 +158,10 @@ namespace Synthesis
             void connectInstanceTerminalsSymmetricalOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage, 
                                             Core::Instance &  secondStage, Core::Instance & transconductanceComplementarySecondStage,
                                             Core::Instance stageBiasComplementarySecondStage) const;
+
+			void connectInstanceTerminalsSymmetricalOpAmp_Ext3(Core::Circuit & opAmp, Core::Instance & firstStage, 
+                                            Core::Instance &  secondStage, Core::Instance & transconductanceComplementarySecondStage,
+                                            Core::Instance stageBiasComplementarySecondStage, Core::Instance & thirdStage) const;
 			void connectInstanceTerminalsCapacitors(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
 											Core::Instance * compensationCapacitor = nullptr) const;
 			void connectInstanceTerminalsCapacitors_Ext3(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 

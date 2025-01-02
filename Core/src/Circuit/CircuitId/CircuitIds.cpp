@@ -72,6 +72,7 @@ namespace Core {
     const CircuitName CircuitIds::FULLYDIFFERENTIALTHREESTAGEOPAMP_ = CircuitName("three_stage_fully_differential_op_amp");
     const CircuitName CircuitIds::COMPLEMENTARYOPAMP_ = CircuitName("complementary_op_amp");
     const CircuitName CircuitIds::SYMMETRICALOPAMP_ = CircuitName("symmetrical_op_amp");
+    const CircuitName CircuitIds::SYMMETRICALTHREESTAGEOPAMP_ = CircuitName("three_stage_symmetrical_op_amp");
 
      CircuitIds::CircuitIds()
      {
@@ -259,6 +260,12 @@ namespace Core {
     }
 
 
+    CircuitId CircuitIds::symmetricalThreeStageOpAmp(int num)
+    {
+        Core::CircuitId circuitId = SYMMETRICALTHREESTAGEOPAMP_.createIdentifier();
+        circuitId.setId(num);
+        return circuitId;
+    }
 
 
 }

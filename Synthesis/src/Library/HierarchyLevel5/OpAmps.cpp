@@ -508,6 +508,71 @@ namespace Synthesis {
 
 
 
+    /*** extended: symmetrical complementary three-stage op-amps */
+      std::vector<const Core::Circuit*> OpAmps::createSymmetricalThreeStageOpAmps(int caseNumber, int & index)
+    {
+        std::vector<const Core::Circuit*> symmetricalOpAmps;
+
+        for(auto & firstStage : getAmplificationStageLevel().getNonInvertingStages().createSymmetricalNonInvertingStages(caseNumber))
+        {
+
+			if(firstStage->getCircuitIdentifier().getTechType() == Core::TechType::p())
+			{
+	            for(auto & secondStage : getAmplificationStageLevel().getInvertingStages().getInvertingStagesNmosTransconductance())
+	            {
+	                const Core::Circuit & load = firstStage->findInstance(createInstanceId(NonInvertingStages::LOAD_)).getMaster();
+	                const Core::Circuit & transconductanceSecondStage = getSecondStageTransconductance(*secondStage);
+
+	                if(getDeviceNamesOfFlatCircuit(transconductanceSecondStage).size() >= (0.5 * getDeviceNamesOfFlatCircuit(load).size()))
+	                {
+	                    std::vector<const Core::Circuit*> complementarySecondStageStageBiases = findComplementarySecondStageStageBiases(*secondStage);
+
+	                    for(auto & complementarySecondStageBias :complementarySecondStageStageBiases)
+	                    {
+                            for(auto & thirdStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+                            {
+                                const Core::Circuit & opAmp = createSymmetricalOpAmp_Ext3(index, createInstance(*firstStage, FIRSTSTAGE_),
+                                                createInstance(*secondStage, SECONDSTAGE_), createInstance(transconductanceSecondStage, TRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_),
+                                                createInstance(*complementarySecondStageBias, STAGEBIASCOMPLEMENTARYSECONDSTAGE_), createInstance(*thirdStage, THIRDSTAGE_));
+                                symmetricalOpAmps.push_back(&opAmp);
+                                index++;
+                            }
+	                    }
+	                }
+	            }
+			}
+			else
+			{
+	            for(auto & secondStage : getAmplificationStageLevel().getInvertingStages().getInvertingStagesPmosTransconductance())
+	            {
+	                const Core::Circuit & load = firstStage->findInstance(createInstanceId(NonInvertingStages::LOAD_)).getMaster();
+
+	                const Core::Circuit & transconductanceSecondStage = getSecondStageTransconductance(*secondStage);
+
+	                if(getDeviceNamesOfFlatCircuit(transconductanceSecondStage).size() >= (0.5 * getDeviceNamesOfFlatCircuit(load).size()))
+	                {
+	                    std::vector<const Core::Circuit*> complementarySecondStageStageBiases = findComplementarySecondStageStageBiases(*secondStage);
+
+	                    for(auto & complementarySecondStageBias :complementarySecondStageStageBiases)
+	                    {
+                            for(auto & thirdStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+                            {
+                                const Core::Circuit & opAmp = createSymmetricalOpAmp_Ext3(index, createInstance(*firstStage, FIRSTSTAGE_),
+                                                createInstance(*secondStage, SECONDSTAGE_), createInstance(transconductanceSecondStage, TRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_),
+                                                createInstance(*complementarySecondStageBias, STAGEBIASCOMPLEMENTARYSECONDSTAGE_), createInstance(*thirdStage, THIRDSTAGE_));
+                                symmetricalOpAmps.push_back(&opAmp);
+                                index++;
+                            }
+	                    }
+	                }
+	            }
+			}
+        }
+
+        return symmetricalOpAmps;
+    }  
+
+
     std::string OpAmps::toStr() const
     {
         std::ostringstream oss;
@@ -921,6 +986,62 @@ namespace Synthesis {
         return *opAmp;
     }
 			
+    /** extended: symmetrical complementary opamps */
+        const Core::Circuit & OpAmps::createSymmetricalOpAmp_Ext3(int & index, Core::Instance & firstStage, Core::Instance & secondStage,
+                                 Core::Instance & transconductanceComplementarySecondStage, Core::Instance & stageBiasComplementarySecondStage, Core::Instance & thirdStage)
+    {
+        Core::Circuit * opAmp = new Core::Circuit;
+        
+        std::vector<Core::NetId> netNames;
+        std::map<Core::TerminalName, Core::NetId> terminalToNetMap;
+		        
+        opAmp->addInstance(firstStage);
+        firstStage.setCircuit(*opAmp);
+
+        opAmp->addInstance(secondStage);
+        secondStage.setCircuit(*opAmp);
+
+        opAmp->addInstance(thirdStage);
+        thirdStage.setCircuit(*opAmp);
+
+        opAmp->addInstance(transconductanceComplementarySecondStage);
+        transconductanceComplementarySecondStage.setCircuit(*opAmp);
+
+        opAmp->addInstance(stageBiasComplementarySecondStage);
+        stageBiasComplementarySecondStage.setCircuit(*opAmp);
+
+        Core::Instance & loadCapacitor = getCapacitor().createNewCapacitorInstance(LOADCAPACITOR_);
+        opAmp->addInstance(loadCapacitor);
+        loadCapacitor.setCircuit(*opAmp);
+
+
+        Core::CircuitIds circuitIds;
+        Core::CircuitId opAmpId = circuitIds.symmetricalThreeStageOpAmp(index);
+        opAmpId.setTechType(firstStage.getMaster().getCircuitIdentifier().getTechType());
+        opAmp->setCircuitIdentifier(opAmpId);
+
+        addTerminalNets(netNames, terminalToNetMap,*opAmp);
+        addComplementarySecondStageNets( netNames, * opAmp);
+        
+        netNames.push_back(OUTSECONDSTAGE_NET_);
+		addNetsToCircuit(*opAmp, netNames);
+        addTerminalsToCircuit(*opAmp, terminalToNetMap);
+
+        setSupplyNets(*opAmp);
+		
+		addNetsToCircuit(*opAmp, netNames);
+        addTerminalsToCircuit(*opAmp, terminalToNetMap);
+
+        connectInstanceTerminalsSymmetricalOpAmp_Ext3(*opAmp, firstStage, secondStage, transconductanceComplementarySecondStage, stageBiasComplementarySecondStage, thirdStage);
+        connectInstanceTerminalsCapacitors(*opAmp, loadCapacitor);
+
+        buildAndConnectedBias(*opAmp);
+
+        return *opAmp;
+    }
+    
+    
+    /***** */
 	void OpAmps::addTerminalNets(std::vector<Core::NetId> & netNames, std::map<Core::TerminalName, Core::NetId> & terminalToNetMap,
 								Core::Circuit & opAmp) const
     {
@@ -1424,6 +1545,136 @@ namespace Synthesis {
         }
     }
 
+
+    /*** extended: symmetrical complementary */
+    void OpAmps::connectInstanceTerminalsSymmetricalOpAmp_Ext3(Core::Circuit & opAmp, Core::Instance & firstStage, 
+                                            Core::Instance &  secondStage, Core::Instance & transconductanceComplementarySecondStage,
+                                            Core::Instance stageBiasComplementarySecondStage, Core::Instance &  thirdStage) const
+    {
+
+        const Core::Circuit & load = firstStage.getMaster().findInstance(createInstanceId(NonInvertingStages::LOAD_)).getMaster();
+
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::IN1_TERMINAL_, IN1_NET_);
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::IN2_TERMINAL_, IN2_NET_);
+
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_);
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::SOURCENMOS_TERMINAL_, SOURCENMOS_NET_);
+
+        connectInstanceTerminal(opAmp, secondStage, InvertingStages::SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_);
+        connectInstanceTerminal(opAmp, secondStage, InvertingStages::SOURCENMOS_TERMINAL_, SOURCENMOS_NET_);
+
+        if(transconductanceComplementarySecondStage.getMaster().getCircuitIdentifier().getTechType().isN())
+        {
+            connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::SOURCE_TERMINAL_, SOURCENMOS_NET_);
+            connectInstanceTerminal(opAmp, stageBiasComplementarySecondStage, VoltageBiases::SOURCE_TERMINAL_, SOURCEPMOS_NET_);
+        }
+        else
+        {
+            connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::SOURCE_TERMINAL_, SOURCEPMOS_NET_);
+            connectInstanceTerminal(opAmp, stageBiasComplementarySecondStage, VoltageBiases::SOURCE_TERMINAL_, SOURCENMOS_NET_);
+        }
+
+        connectInstanceTerminal(opAmp, secondStage, InvertingStages::OUTPUT_TERMINAL_, OUTSECONDSTAGE_NET_); // OUT_NET_);
+
+        connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::OUT_TERMINAL_, INNERCOMPLEMENTARYSECONDSTAGE_NET_);
+        connectInstanceTerminal(opAmp, stageBiasComplementarySecondStage, VoltageBiases::IN_TERMINAL_, INNERCOMPLEMENTARYSECONDSTAGE_NET_);
+        
+
+
+
+        connectInstanceTerminal(opAmp, thirdStage, InvertingStages::SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_); //ok
+        connectInstanceTerminal(opAmp, thirdStage, InvertingStages::SOURCENMOS_TERMINAL_, SOURCENMOS_NET_); //ok
+        connectInstanceTerminal(opAmp, thirdStage, InvertingStages::OUTPUT_TERMINAL_, OUT_NET_); // ok
+
+        
+        const Core::Circuit & transconductanceThirdStage = getSecondStageTransconductance(thirdStage.getMaster());
+        if(getDeviceNamesOfFlatCircuit(transconductanceThirdStage).size() == 1)
+        {
+            connectInstanceTerminal(opAmp, thirdStage, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUTSECONDSTAGE_NET_);
+        }
+        else
+        {
+            connectInstanceTerminal(opAmp, thirdStage, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUTSECONDSTAGE_NET_);
+        }
+
+
+
+
+        // green
+        if(getDeviceNamesOfFlatCircuit(load).size() == 2  
+                   && getDeviceNamesOfFlatCircuit(transconductanceComplementarySecondStage.getMaster()).size() == 1)
+        {
+            connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUT1_TERMINAL_, OUTFIRSTSTAGE_NET_);
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUTFIRSTSTAGE_NET_);
+
+            connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUT2_TERMINAL_, INTRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
+            connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::IN_TERMINAL_, INTRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
+        }
+        else if(getDeviceNamesOfFlatCircuit(load).size() == 2  
+                   && getDeviceNamesOfFlatCircuit(transconductanceComplementarySecondStage.getMaster()).size() == 2)
+        {
+            // orange
+            connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUT1_TERMINAL_, OUTFIRSTSTAGE_NET_);
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUTFIRSTSTAGE_NET_);
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::INOUTPUTTRANSCONDUCTANCE_TERMINAL_, INOUTPUTTRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
+
+            connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUT2_TERMINAL_, INSOURCETRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
+            connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::INSOURCE_TERMINAL_, INSOURCETRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
+            connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::INOUTPUT_TERMINAL_, INOUTPUTTRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
+        }
+        else
+        {
+            //blue
+            connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUTSOURCE1LOAD1_TERMINAL_, OUT1FIRSTSTAGE_NET_);
+            connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUTOUTPUT1LOAD1_TERMINAL_, OUT2FIRSTSTAGE_NET_);
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUT1FIRSTSTAGE_NET_);
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::INOUTPUTTRANSCONDUCTANCE_TERMINAL_, OUT2FIRSTSTAGE_NET_);
+
+            connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUTSOURCE2LOAD1_TERMINAL_, INSOURCETRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
+            connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::INSOURCE_TERMINAL_, INSOURCETRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
+
+            const Core::Circuit & transistorStackLoad = load.findInstance(createInstanceId(Loads::LOADPART1_)).getMaster().findInstance(createInstanceId(LoadParts::TRANSISTORSTACK1_)).getMaster();
+            if(transistorStackLoad.getGateNetsNotConnectedToADrain().size() == 1)
+            {
+            	 connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUTOUTPUT2LOAD1_TERMINAL_, OUT2FIRSTSTAGE_NET_);
+            	 connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::INOUTPUT_TERMINAL_, OUT2FIRSTSTAGE_NET_);
+
+            }
+            else
+            {
+            	 connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUTOUTPUT2LOAD1_TERMINAL_, INOUTPUTTRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
+            	 connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::INOUTPUT_TERMINAL_, INOUTPUTTRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
+            }
+         }
+
+        // purple
+        if(getDeviceNamesOfFlatCircuit(stageBiasComplementarySecondStage.getMaster()).size() == 1)
+        {
+            connectInstanceTerminal(opAmp, stageBiasComplementarySecondStage, VoltageBiases::OUT_TERMINAL_, INSTAGEBIASCOMPLEMENTARYSECONDSTAGE_NET_);
+              
+            const Core::Circuit & stageBiasSecondStage = getSecondStageStageBias(secondStage.getMaster());
+            if(getDeviceNamesOfFlatCircuit(stageBiasSecondStage).size() == 1)
+            {
+                connectInstanceTerminal(opAmp, secondStage, InvertingStages::INSTAGEBIAS_TERMINAL_,  INSTAGEBIASCOMPLEMENTARYSECONDSTAGE_NET_);
+            }
+            else
+            {
+                connectInstanceTerminal(opAmp, secondStage, InvertingStages::INSOURCESTAGEBIAS_TERMINAL_,  INSTAGEBIASCOMPLEMENTARYSECONDSTAGE_NET_);
+                if(!isSingleDiodeTransistor(stageBiasComplementarySecondStage.getMaster()))
+                {
+                   connectInstanceTerminal(opAmp, secondStage, InvertingStages::INOUTPUTSTAGEBIAS_TERMINAL_,  INNERCOMPLEMENTARYSECONDSTAGE_NET_); 
+                }
+            }
+        }
+        else
+        {
+            connectInstanceTerminal(opAmp, stageBiasComplementarySecondStage, VoltageBiases::OUTSOURCE_TERMINAL_, INSOURCESTAGEBIASCOMPLEMENTARYSECONDSTAGE_NET_);
+            connectInstanceTerminal(opAmp, stageBiasComplementarySecondStage, VoltageBiases::OUTINPUT_TERMINAL_, INOUTPUTSTAGEBIASCOMPLEMENTARYSECONDSTAGE_NET_);
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::INSOURCESTAGEBIAS_TERMINAL_,  INSOURCESTAGEBIASCOMPLEMENTARYSECONDSTAGE_NET_);
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::INOUTPUTSTAGEBIAS_TERMINAL_,  INOUTPUTSTAGEBIASCOMPLEMENTARYSECONDSTAGE_NET_);    
+        }
+    }
+    /** extended: symmetrical complementary opamps */
 
     void OpAmps::connectedLoadInstanceTerminalToFeedbackStage(Core::Circuit & opAmp, Core::Instance & firstStage) const
     {
