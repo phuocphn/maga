@@ -217,12 +217,22 @@ PYBIND11_MODULE(pymaga, m) {
         .def(py::init<>())
         .def("__repr__", [](Partitioning::Result &self) {
             return self.toStr();
+        })
+        .def("writeXmlPartitioningResult", [](Partitioning::Result &self, const std::string& filePath) {
+            Control::OutputFile outputFile1;
+            outputFile1.setPath(filePath);
+            return self.writeXmlPartitioningResult(outputFile1);
         });
 	
     py::class_<StructRec::Result>(m, "StructRecResult")
         .def(py::init<>())
         .def("__repr__", [](StructRec::Result &self) {
             return self.toStr();
+        })
+        .def("writeXml", [](StructRec::Result &self, const std::string& filePath) {
+            Control::OutputFile outputFile1;
+            outputFile1.setPath(filePath);
+            return self.writeXml(outputFile1);
         });
 
     py::class_<CircuitAnalysis>(m, "CircuitAnalysis")
