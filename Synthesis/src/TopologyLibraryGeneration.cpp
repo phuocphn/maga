@@ -252,9 +252,13 @@ namespace Synthesis {
 			}
 			else
 			{
-				// simple op-amps goes here ....
+				// case #1: simple op-amps goes here ....
 				oneStageOpAmps = library.getOpAmps().createSimpleOneStageOpAmps(caseNumber, indexSingleOutput);
 				symmetricalOpAmps = library.getOpAmps().createSymmetricalOpAmps(caseNumber, indexSymmetrical);
+
+				// case #2: generate symmetrical three-stage opamps directly
+				// in this case, do not initialize oneStageOpAmps
+				//symmetricalOpAmps = library.getOpAmps().createSymmetricalThreeStageOpAmps(caseNumber, indexSymmetrical);
 			}
 
 			for(auto & oneStageOpAmp : oneStageOpAmps)
