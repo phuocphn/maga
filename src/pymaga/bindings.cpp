@@ -177,6 +177,9 @@ PYBIND11_MODULE(pymaga, m) {
 
     py::class_<Synthesis::DeviceLevel>(m, "DeviceLevel")
         .def(py::init<>());
+    
+    py::class_<Synthesis::Capacitor>(m, "Capacitor")
+        .def(py::init<>());
 
     py::class_<Synthesis::StructuralLevel>(m, "StructuralLevel")
         .def(py::init<const Synthesis::DeviceLevel&, const AutomaticSizing::CircuitInformation &>());  
