@@ -75,6 +75,7 @@ namespace Synthesis
 			const Core::Circuit &  getComplementaryTransconductance() const;
 
 			std::string toStr() const;
+			void initializeAllTransconductances(const StructuralLevel & structuralLevel);
 
 		public:
 			static const Core::TerminalName INPUT1_TERMINAL_;

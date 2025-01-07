@@ -231,7 +231,22 @@ namespace Synthesis {
 			complementaryTransconductance_ = &createComplementaryTransconductance(differentialPairPmos, differentialPairNmos, index);
         }
     }
-	
+
+    void Transconductances::initializeAllTransconductances(const StructuralLevel & structuralLevel)
+    {
+        int index = 1;
+        const Core::Circuit & differentialPairPmos = structuralLevel.getDifferentialPair().getDifferentialPairPmos();
+        const Core::Circuit & differentialPairNmos = structuralLevel.getDifferentialPair().getDifferentialPairNmos();
+
+        simpleTransconductancePmos_ = &createSimpleTransconductance(differentialPairPmos, index);
+        simpleTransconductanceNmos_ = &createSimpleTransconductance(differentialPairNmos, index);
+
+        feedbackTransconductancePmos_ = &createFeedbackTransconductance(differentialPairPmos, index);
+        feedbackTransconductanceNmos_ = &createFeedbackTransconductance(differentialPairNmos, index);
+		
+        complementaryTransconductance_ = &createComplementaryTransconductance(differentialPairPmos, differentialPairNmos, index);
+    }
+
     const Core::Circuit & Transconductances::createSimpleTransconductance(const Core::Circuit & differentialPair, int & index)
     {
         Core::Circuit * transconductance = new Core::Circuit;
