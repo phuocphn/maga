@@ -569,20 +569,23 @@ namespace Synthesis {
 
 		int caseNumber = 1;
 		std::vector<const Core::Circuit*> nonInvertingStages;
-		do
+		if (0)
 		{
-			nonInvertingStages = createSimpleNonInvertingStages(caseNumber);
-			for(auto & stage : nonInvertingStages)
+			do
 			{
-				oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;
-				Core::Circuit * flatCircuit = flatCircuitRecursion->createNewFlatCopy(*stage);
-				oss << stage->toStr() << std::endl;
-				oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
-				oss << flatCircuit->toStr() << std::endl;
-				delete flatCircuit;
-			}
-        	caseNumber++;
-		} while (!nonInvertingStages.empty());
+				nonInvertingStages = createSimpleNonInvertingStages(caseNumber);
+				for(auto & stage : nonInvertingStages)
+				{
+					oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;
+					Core::Circuit * flatCircuit = flatCircuitRecursion->createNewFlatCopy(*stage);
+					oss << stage->toStr() << std::endl;
+					oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+					oss << flatCircuit->toStr() << std::endl;
+					delete flatCircuit;
+				}
+				caseNumber++;
+			} while (!nonInvertingStages.empty());
+		}
 
 		caseNumber = 1;
 		do
@@ -600,62 +603,64 @@ namespace Synthesis {
         	caseNumber++;
 		} while (!nonInvertingStages.empty());
 
-       	oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FEEDBACK STAGE" << std::endl;
-        oss << "PMOS TRANSCONDUCTANCE" << std::endl;
-        for(auto & stage : feedbackNonInvertingStagesPmosTransconductance_)
-        {
-			oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;      
-            Core::Circuit * flatCircuit = flatCircuitRecursion->createNewFlatCopy(*stage);
-            oss << stage->toStr() << std::endl;
-            oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
-            oss << flatCircuit->toStr() << std::endl;
-            delete flatCircuit;
-        }
-
-        oss << "NMOS TRANSCONDUCTANCE" << std::endl;
-        for(auto & stage : feedbackNonInvertingStagesNmosTransconductance_)
-        {
-            oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;      
-            Core::Circuit * flatCircuit = flatCircuitRecursion->createNewFlatCopy(*stage);
-            oss << stage->toStr() << std::endl;
-            oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
-            oss << flatCircuit->toStr() << std::endl;
-            delete flatCircuit;
-        }
-
-		caseNumber = 1;
-		do
-		{
-			nonInvertingStages = createFullyDifferentialNonInvertingStages(caseNumber);
-			for(auto & stage : nonInvertingStages)
+		if (0) {
+			oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FEEDBACK STAGE" << std::endl;
+			oss << "PMOS TRANSCONDUCTANCE" << std::endl;
+			for(auto & stage : feedbackNonInvertingStagesPmosTransconductance_)
 			{
-				oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;
+				oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;      
 				Core::Circuit * flatCircuit = flatCircuitRecursion->createNewFlatCopy(*stage);
 				oss << stage->toStr() << std::endl;
 				oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 				oss << flatCircuit->toStr() << std::endl;
 				delete flatCircuit;
 			}
-        	caseNumber++;
-		} while (!nonInvertingStages.empty());
 
-		caseNumber = 1;
-		do
-		{
-			nonInvertingStages = createSymmetricalNonInvertingStages(caseNumber);
-			for(auto & stage : nonInvertingStages)
+			oss << "NMOS TRANSCONDUCTANCE" << std::endl;
+			for(auto & stage : feedbackNonInvertingStagesNmosTransconductance_)
 			{
-				oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;
+				oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;      
 				Core::Circuit * flatCircuit = flatCircuitRecursion->createNewFlatCopy(*stage);
 				oss << stage->toStr() << std::endl;
 				oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 				oss << flatCircuit->toStr() << std::endl;
 				delete flatCircuit;
 			}
-        	caseNumber++;
-		} while (!nonInvertingStages.empty());
 
-		delete flatCircuitRecursion;
+			caseNumber = 1;
+			do
+			{
+				nonInvertingStages = createFullyDifferentialNonInvertingStages(caseNumber);
+				for(auto & stage : nonInvertingStages)
+				{
+					oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;
+					Core::Circuit * flatCircuit = flatCircuitRecursion->createNewFlatCopy(*stage);
+					oss << stage->toStr() << std::endl;
+					oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+					oss << flatCircuit->toStr() << std::endl;
+					delete flatCircuit;
+				}
+				caseNumber++;
+			} while (!nonInvertingStages.empty());
+
+			caseNumber = 1;
+			do
+			{
+				nonInvertingStages = createSymmetricalNonInvertingStages(caseNumber);
+				for(auto & stage : nonInvertingStages)
+				{
+					oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;
+					Core::Circuit * flatCircuit = flatCircuitRecursion->createNewFlatCopy(*stage);
+					oss << stage->toStr() << std::endl;
+					oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+					oss << flatCircuit->toStr() << std::endl;
+					delete flatCircuit;
+				}
+				caseNumber++;
+			} while (!nonInvertingStages.empty());
+
+			delete flatCircuitRecursion;
+		}
         return oss.str();
     }
 

@@ -181,14 +181,14 @@ namespace Synthesis {
         oss << "Feedback: " << std::endl;
         oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << feedbackTransconductancePmos_->getCircuitIdentifier().toStr() << ": " << std::endl;      
         Core::Circuit * flatCircuitFeedbackTransconductancePmos = flatCircuitRecursion->createNewFlatCopy(*feedbackTransconductancePmos_);
-        oss << simpleTransconductancePmos_->toStr() << std::endl;
+        oss << feedbackTransconductancePmos_->toStr() << std::endl;
         oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
         oss << flatCircuitFeedbackTransconductancePmos->toStr() << std::endl;
         delete flatCircuitFeedbackTransconductancePmos;
 
         oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << feedbackTransconductanceNmos_->getCircuitIdentifier().toStr() << ": " << std::endl;      
         Core::Circuit * flatCircuitFeedbackTransconductanceNmos = flatCircuitRecursion->createNewFlatCopy(*feedbackTransconductanceNmos_);
-        oss << simpleTransconductanceNmos_->toStr() << std::endl;
+        oss << feedbackTransconductanceNmos_->toStr() << std::endl;
         oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
         oss << flatCircuitFeedbackTransconductanceNmos->toStr() << std::endl;
         delete flatCircuitFeedbackTransconductanceNmos;
