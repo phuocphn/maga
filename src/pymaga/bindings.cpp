@@ -129,6 +129,9 @@ PYBIND11_MODULE(pymaga, m) {
         .def(py::init<>())
         .def("setFullyDifferential", [](AutomaticSizing::CircuitParameter& self, bool flag) {
             self.setFullyDifferential(flag);
+        })
+        .def("setComplementary", [](AutomaticSizing::CircuitParameter& self, bool flag) {
+            self.setComplementary(flag);
         }); 
 
     py::class_<StructRec::Library>(m, "StructRec")
@@ -161,7 +164,13 @@ PYBIND11_MODULE(pymaga, m) {
         "Set the StructRec::Library reference")
         .def("__repr__", [](Synthesis::FunctionalBlockLibrary &self) {
             return self.toStr();
-        });
+        })
+        .def("getStructuralLevel", [](Synthesis::FunctionalBlockLibrary &self) {
+            return self.getStructuralLevel();
+        }, py::return_value_policy::take_ownership)
+        .def("getDeviceLevel", [](Synthesis::FunctionalBlockLibrary &self) {
+            return self.getDeviceLevel();
+        }, py::return_value_policy::take_ownership);
 
     
     py::class_<Core::Circuit, std::shared_ptr<Core::Circuit>>(m, "Circuit")
