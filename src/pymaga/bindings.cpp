@@ -85,6 +85,26 @@
 #include "Partitioning/incl/Results/Result.h"
 #include "StructRec/incl/Results/Result.h"
 
+#include "Synthesis/incl/Library/HierarchyLevel1/DeviceLevel.h"
+#include "Synthesis/incl/Library/HierarchyLevel1/Capacitor.h"
+#include "Synthesis/incl/Library/HierarchyLevel2/StructuralLevel.h"
+#include "Synthesis/incl/Library/HierarchyLevel2/DifferentialPair.h"
+#include "Synthesis/incl/Library/HierarchyLevel2/CurrentBiases.h"
+#include "Synthesis/incl/Library/HierarchyLevel2/VoltageBiases.h"
+#include "Synthesis/incl/Library/HierarchyLevel2/AnalogInverters.h"
+#include "Synthesis/incl/Library/HierarchyLevel3/AmplificationStagesSubBlockLevel.h"
+#include "Synthesis/incl/Library/HierarchyLevel3/Transconductances.h"
+#include "Synthesis/incl/Library/HierarchyLevel3/Loads.h"
+#include "Synthesis/incl/Library/HierarchyLevel3/LoadParts.h"
+#include "Synthesis/incl/Library/HierarchyLevel3/StageBiases.h"
+#include "Synthesis/incl/Library/HierarchyLevel4/AmplificationStageLevel.h"
+#include "Synthesis/incl/Library/HierarchyLevel4/InvertingStages.h"
+#include "Synthesis/incl/Library/HierarchyLevel4/NonInvertingStages.h"
+#include "Synthesis/incl/Library/HierarchyLevel5/OpAmps.h"
+#include "Core/incl/Circuit/Circuit.h"
+#include "Core/incl/Circuit/CircuitId/CircuitIds.h"
+#include "Core/incl/Circuit/Net/NetId/NetName.h"
+#include "Core/incl/Circuit/Instance/InstanceTerminal.h"
 #include "src/pymaga/AcstUtility.h"
 
 #define STRINGIFY(x) #x
@@ -154,6 +174,89 @@ PYBIND11_MODULE(pymaga, m) {
         .def("recognize", [](StructRec::Library& self, Core::Circuit &circuit) {
                 return self.recognize(circuit);
             }, "Run structure recognition");
+
+    py::class_<Synthesis::DeviceLevel>(m, "DeviceLevel")
+        .def(py::init<>());
+
+    py::class_<Synthesis::StructuralLevel>(m, "StructuralLevel")
+        .def(py::init<const Synthesis::DeviceLevel&, const AutomaticSizing::CircuitInformation &>());  
+
+    // level 2
+    py::class_<Synthesis::DifferentialPair>(m, "DifferentialPair")
+        .def(py::init<const Synthesis::DeviceLevel&>())
+        .def("__repr__", [](Synthesis::DifferentialPair &self) {
+            return self.toStr();
+        });
+    py::class_<Synthesis::CurrentBiases>(m, "CurrentBiases")
+        .def(py::init<const Synthesis::DeviceLevel&>())
+        .def("__repr__", [](Synthesis::CurrentBiases &self) {
+            return self.toStr();
+        });
+    py::class_<Synthesis::VoltageBiases>(m, "VoltageBiases")
+        .def(py::init<const Synthesis::DeviceLevel&>())
+        .def("__repr__", [](Synthesis::VoltageBiases &self) {
+            return self.toStr();
+        });
+    py::class_<Synthesis::AnalogInverters>(m, "AnalogInverters")
+        .def(py::init<Synthesis::StructuralLevel&>())
+        .def("__repr__", [](Synthesis::AnalogInverters &self) {
+            return self.toStr();
+        });
+
+
+    // level 3
+    py::class_<Synthesis::AmplificationStagesSubBlockLevel>(m, "AmplificationStagesSubBlockLevel")
+        .def(py::init<const Synthesis::StructuralLevel&, const AutomaticSizing::CircuitInformation &>());  
+
+    py::class_<Synthesis::Transconductances>(m, "Transconductances")
+        .def(py::init<const Synthesis::StructuralLevel&, const AutomaticSizing::CircuitInformation &>())
+        .def("__repr__", [](Synthesis::Transconductances &self) {
+            return self.toStr();
+        })
+        .def("initializeAllTransconductances", [](Synthesis::Transconductances &self, const Synthesis::StructuralLevel & structuralLevel) {
+            return self.initializeAllTransconductances(structuralLevel);
+        });
+
+    py::class_<Synthesis::LoadParts>(m, "LoadParts")
+        .def(py::init<const Synthesis::StructuralLevel&>())
+        .def("__repr__", [](Synthesis::LoadParts &self) {
+            return self.toStr();
+        });
+
+    py::class_<Synthesis::StageBiases>(m, "StageBiases")
+        .def(py::init<const Synthesis::StructuralLevel&>())
+        .def("__repr__", [](Synthesis::StageBiases &self) {
+            return self.toStr();
+        });
+
+    py::class_<Synthesis::Loads>(m, "Loads")
+        .def(py::init<Synthesis::AmplificationStagesSubBlockLevel&>())
+        .def("__repr__", [](Synthesis::Loads &self) {
+            return self.toStr();
+        });
+
+
+    // level 4
+    py::class_<Synthesis::AmplificationStageLevel>(m, "AmplificationStageLevel")
+        .def(py::init<const Synthesis::AmplificationStagesSubBlockLevel & ,
+                        const Synthesis::StructuralLevel & , const AutomaticSizing::CircuitInformation & >());
+
+    py::class_<Synthesis::NonInvertingStages>(m, "NonInvertingStages")
+        .def(py::init<const Synthesis::AmplificationStagesSubBlockLevel &, const AutomaticSizing::CircuitInformation &>())
+        .def("__repr__", [](Synthesis::NonInvertingStages &self) {
+            return self.toStr();
+        });
+
+    py::class_<Synthesis::InvertingStages>(m, "InvertingStages")
+        .def(py::init<const Synthesis::StructuralLevel &>())
+        .def("__repr__", [](Synthesis::InvertingStages &self) {
+            return self.toStr();
+        });
+
+    // level 5
+    py::class_<Synthesis::OpAmps>(m, "OpAmps")
+        .def(py::init<const Synthesis::AmplificationStageLevel &, const Synthesis::CurrentBiases &, 
+            const Synthesis::VoltageBiases & , const Synthesis::Capacitor & >());
 
     py::class_<Synthesis::FunctionalBlockLibrary>(m, "FunctionalBlockLibrary")
         .def(py::init<const AutomaticSizing::CircuitInformation&>(), py::arg("circuit_information"))
