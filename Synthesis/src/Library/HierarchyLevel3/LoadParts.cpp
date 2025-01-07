@@ -388,67 +388,67 @@ namespace Synthesis {
 			switch(caseNumber)
 			{
 			case 1: {
-				loadParts = createTwoTransistorsLoadPartsLoadPartsPmosVoltageBiases();
+				loadParts = createTwoTransistorsLoadPartsLoadPartsPmosVoltageBiases(); //  [V] VOLTAGE BIASES (exact 2 transistors), total generated ciruits: 1
 				break;
 			}
 			case 2: {
-				loadParts = createFourTransistorsLoadPartsLoadPartsPmosVoltageBiases();
+				loadParts = createFourTransistorsLoadPartsLoadPartsPmosVoltageBiases(); //  [V] VOLTAGE BIASES (exact 4 transistors), total generated ciruits: 3
 				break;
 			}
 			case 3: {
-				loadParts = createTwoTransistorsLoadPartsLoadPartsNmosVoltageBiases();
+				loadParts = createTwoTransistorsLoadPartsLoadPartsNmosVoltageBiases(); //  [V] VOLTAGE BIASES (exact 2 transistors), total generated ciruits: 1
 				break;
 			}
 			case 4: {
-				loadParts = createFourTransistorsLoadPartsLoadPartsNmosVoltageBiases();
+				loadParts = createFourTransistorsLoadPartsLoadPartsNmosVoltageBiases(); //  [V] VOLTAGE BIASES (exact 4 transistors), total generated ciruits: 3
 				break;
 			}
 			case 5: {
-				loadParts = createLoadPartsPmosTwoTransistorCurrentBiasesDifferentSources();
+				loadParts = createLoadPartsPmosTwoTransistorCurrentBiasesDifferentSources();  //total generated ciruits: 1
 				break;
 			}
 			case 6: {
-				loadParts = createLoadPartsNmosTwoTransistorCurrentBiasesDifferentSources();
+				loadParts = createLoadPartsNmosTwoTransistorCurrentBiasesDifferentSources(); // total generated ciruits: 1
 				break;
 			}
 			case 7: {
-				loadParts = createLoadPartsPmosFourTransistorCurrentBiases();
+				loadParts = createLoadPartsPmosFourTransistorCurrentBiases(); //  [I] CURRENT BIASES
 				break;
 			}
 			case 8: {
-				loadParts = createLoadPartsNmosFourTransistorCurrentBiases();
+				loadParts = createLoadPartsNmosFourTransistorCurrentBiases(); //  [I] CURRENT BIASES
 				break;
 			}
 			case 9: {
-				loadParts = createLoadPartsPmosCurrentBiases();
+				loadParts = createLoadPartsPmosCurrentBiases(); //  [I] CURRENT BIASES
 				break;
 			}
 			case 10: {
-				loadParts = createLoadPartsNmosCurrentBiases();
+				loadParts = createLoadPartsNmosCurrentBiases(); //  [I] CURRENT BIASES
 				break;
 			}
 			case 11: {
-				loadParts = createLoadPartsPmosVoltageBiases();
+				loadParts = createLoadPartsPmosVoltageBiases(); //  [V] VOLTAGE BIASES (include 2 or 4 transistors)
 				break;
 			}
 			case 12: {
-				loadParts = createLoadPartsNmosVoltageBiases();
+				loadParts = createLoadPartsNmosVoltageBiases(); //  [V] VOLTAGE BIASES (include 2 or 4 transistors)
 				break;
 			}
 			case 13: {
-				loadParts = createLoadPartsPmosMixed();
+				loadParts = createLoadPartsPmosMixed();     // [V+I] VOLTAGE BIASES + CURRENT BIASES (include 2, 3, 4 transistors)
 				break;
 			}
 			case 14: {
-				loadParts = createLoadPartsNmosMixed();
+				loadParts = createLoadPartsNmosMixed();     // [V+I] VOLTAGE BIASES + CURRENT BIASES (include 2, 3, 4 transistors)
 				break;
 			}
 			case 15: {
-				loadParts = createLoadPartsPmosFourTransistorMixed();
+				loadParts = createLoadPartsPmosFourTransistorMixed(); // [V+I] VOLTAGE BIASES + CURRENT BIASES (exact 4 transistors)
 				break;
 			}
 			case 16: {
-				loadParts = createLoadPartsNmosFourTransistorMixed();
+				loadParts = createLoadPartsNmosFourTransistorMixed(); // [V+I] VOLTAGE BIASES + CURRENT BIASES (exact 4 transistors)
 				break;
 			}
 			case 17: {
@@ -470,6 +470,7 @@ namespace Synthesis {
 	            oss << flatCircuit->toStr() << std::endl;
 	            delete flatCircuit;
 	        }
+            // oss << "caseNumber: " << caseNumber << " number generated loadParts: " << loadParts.size() << std::endl;
         	caseNumber++;
 		} while (!loadParts.empty());
 

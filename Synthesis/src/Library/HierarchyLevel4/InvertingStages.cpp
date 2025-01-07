@@ -176,6 +176,9 @@ namespace Synthesis {
             if(!sourceTransistorIsDiodeTransistor(currentBiasPmos.getMaster()))
             {
                 const Core::Circuit & invertingStage = createInvertingStagePmosTransconductance(createInstance(*analogInverter, ANALOGINVERTER_), index);
+                // TODO: this condition is always true for all cases, consider to remove this IF statement
+                // assert (invertingStage.everyGateNetIsNotConnectedToMoreThanOneDrainOfComponentWithSameTechType() == true);
+
                 if(invertingStage.everyGateNetIsNotConnectedToMoreThanOneDrainOfComponentWithSameTechType())
                 {
                     invertingStages.push_back(&invertingStage);
@@ -200,6 +203,10 @@ namespace Synthesis {
             if(!sourceTransistorIsDiodeTransistor(currentBiasNmos.getMaster()))
             {
                 const Core::Circuit & invertingStage = createInvertingStageNmosTransconductance(createInstance(*analogInverter, ANALOGINVERTER_), index);
+                
+                // TODO: this condition is always true for all cases, consider to remove this IF statement
+                // assert (invertingStage.everyGateNetIsNotConnectedToMoreThanOneDrainOfComponentWithSameTechType() == true);
+                
                 if(invertingStage.everyGateNetIsNotConnectedToMoreThanOneDrainOfComponentWithSameTechType())
                 {
                     invertingStages.push_back(&invertingStage);
