@@ -89,9 +89,11 @@ namespace Synthesis {
 
 		OpAmps & getOpAmps() const;
 
-	private:
 		const DeviceLevel & getDeviceLevel() const;
 		const StructuralLevel & getStructuralLevel() const;
+
+
+	private:
 		const AmplificationStagesSubBlockLevel & getAmplificationStagesSubBlockLevel() const;
 		const AmplificationStageLevel & getAmplificationStageLevel() const;
 
