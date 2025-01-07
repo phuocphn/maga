@@ -562,7 +562,8 @@ namespace Core {
 
     void Circuit::print(std::ostream& stream) const
     {
-        printSummary(stream);
+        // printSummary(stream);
+        stream << "[i] " << "#" << getDeviceMap().size() << " devices, " << "#" << getNetMap().size() << " nets, " << "#" << getInstanceMap().size() << " instances" << std::endl;
         printTerminals(stream);
         printNets(stream);
         printInstances(stream);
@@ -590,11 +591,11 @@ namespace Core {
 
     void Circuit::printTerminals(std::ostream& stream) const
     {
-        stream << "Terminals: ";
+        stream << "Circuit Terminals [" << getTerminalMap().size() << "]: ";
         for(auto& it : getTerminalMap())
         {
             const Terminal* terminal = it.second;
-            stream << terminal << "; ";
+            stream <<  "\n+" << terminal << ";";
         }
         stream << std::endl;
     }
@@ -612,7 +613,7 @@ namespace Core {
         for(auto& it : getTerminalMap())
         {
             const Terminal* terminal = it.second;
-            stream << terminal << "; ";
+            stream << "\n\t +" << terminal << "; ";
         }
         stream << std::endl;
     }
@@ -632,23 +633,37 @@ namespace Core {
     void Circuit::printDevices(std::ostream& stream) const
     {
         const int column = 0;
-        stream << "Components: " << std::endl;
-        for(auto& it : getDeviceMap())
+        if (getDeviceMap().size() > 0)
         {
-            const Device* component = it.second;
-            component->print(stream, column);
-            stream << std::endl;
+            stream << "Devices: " << std::endl;
+            for(auto& it : getDeviceMap())
+            {
+                const Device* component = it.second;
+                component->print(stream, column);
+                stream << std::endl;
+            }
+        }
+        else
+        {
+            stream << "Devices: (null)" << std::endl;
         }
     }
 
     void Circuit::printInstances(std::ostream& stream) const
     {
-        stream << "Instances:" << std::endl;
-        for(auto& it : getInstanceMap())
-		{
-            const Instance* instance = it.second;
-            instance->print(stream);
-            stream << std::endl;
+        if (getInstanceMap().size() > 0)
+        {
+            stream << "Instances:" << std::endl;
+            for(auto& it : getInstanceMap())
+            {
+                const Instance* instance = it.second;
+                instance->print(stream);
+                stream << std::endl;
+            }
+        }
+        else
+        {
+            stream << "Instances: (null)" << std::endl;
         }
     }
 

@@ -257,7 +257,7 @@ namespace Core {
     void Device::print(std::ostream & stream, const int & column) const
     {
         stream << spaces(column);
-        stream << getIdentifier();
+        stream << "\t Device ID: " <<  getIdentifier();
         stream << " (" << getDeviceType().getName() << "," << getTechType() << ") ";
         stream << propertyMap_ << " ";
 

@@ -204,10 +204,15 @@ namespace Core {
 
     void Instance::print(std::ostream& stream) const
     {
-        stream << getIdentifier() << std::endl;
+        stream << "{begin #instance =" << getIdentifier() << "}" << std::endl;
+        stream << "instance identifier: " << getIdentifier() << std::endl;
         printProperties(stream);
         printInstanceTerminals(stream);
+
+        stream << "{begin #master.circuit" << " uid=" << getIdentifier() <<  "}" << std::endl;
         stream << getMaster();
+        stream << "{end #master.circuit" << " uid=" << getIdentifier() <<  "}" << std::endl;
+        stream << "{end #instance  =" << getIdentifier() << "}" << std::endl;
     }
 
     void Instance::printProperties(std::ostream& stream) const

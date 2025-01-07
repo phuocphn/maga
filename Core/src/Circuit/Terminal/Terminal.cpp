@@ -89,7 +89,7 @@ namespace Core {
     std::string Terminal::toStr() const
     {
         std::stringstream stream;
-        stream << "(T: " <<identifier_ << ", " << "N: " << net_->getIdentifier() << ", IO: " << terminalType_ << ")";
+        stream << "(identifier: " <<identifier_ << ", " << "connected net: " << net_->getIdentifier() << ", type: " << terminalType_ << ")";
         return stream.str();
     }
 
