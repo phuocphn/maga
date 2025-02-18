@@ -833,6 +833,9 @@ namespace Synthesis {
     const Core::Circuit& OpAmps::createFullyDifferentialOpAmp_Ext3(int & index, Core::Instance & firstStage, Core::Instance & feedbackStage,
 								Core::Instance * secondStage1, Core::Instance * secondStage2, Core::Instance * thirdStage1, Core::Instance * thirdStage2)
     {
+        // TODO: consider moving these flags somewhere else.
+        bool enableZeroCompensation = true;
+    
         Core::Circuit * opAmp = new Core::Circuit;
         
         std::vector<Core::NetId> netNames;
@@ -855,6 +858,8 @@ namespace Synthesis {
         Core::Instance * compensationCapacitor1 = nullptr;
         Core::Instance * compensationCapacitor2 = nullptr;
 
+        Core::Instance * compensationResistor1 = nullptr;
+        Core::Instance * compensationResistor2 = nullptr;
 
         Core::CircuitIds circuitIds;
 
@@ -887,6 +892,16 @@ namespace Synthesis {
             opAmp->addInstance(*compensationCapacitor2);
             compensationCapacitor2->setCircuit(*opAmp);
             
+            if (enableZeroCompensation) 
+            {
+                compensationResistor1 = &resistor_->createNewResistorInstance(COMPENSATIONRESISTOR1_);
+                opAmp->addInstance(*compensationResistor1);
+                compensationResistor1->setCircuit(*opAmp);
+
+                compensationResistor2 = &resistor_->createNewResistorInstance(COMPENSATIONRESISTOR2_);
+                opAmp->addInstance(*compensationResistor2);
+                compensationResistor2->setCircuit(*opAmp);
+            }
         }
         else
         {
@@ -897,6 +912,13 @@ namespace Synthesis {
         
         addTerminalNets(netNames, terminalToNetMap,*opAmp);
         netNames.push_back(OUTFEEDBACKSTAGE_NET_);
+
+        if (enableZeroCompensation) 
+        {
+            netNames.push_back(RC_NET_);
+            netNames.push_back(RC1_NET_);
+            netNames.push_back(RC2_NET_);
+        }
 		
 		addNetsToCircuit(*opAmp, netNames); 
         addTerminalsToCircuit(*opAmp, terminalToNetMap);
@@ -904,10 +926,14 @@ namespace Synthesis {
         setSupplyNets(*opAmp);
 
         connectInstanceTerminalsFullyDifferentialOpAmp_Ext3(*opAmp, firstStage, feedbackStage, secondStage1, secondStage2, thirdStage1, thirdStage2);
-        connectInstanceTerminalsCapacitors_Ext3(*opAmp, loadCapacitor1, compensationCapacitor1, compensationCapacitor2);
-        
-        
-
+        if (enableZeroCompensation) 
+        {
+            connectInstanceTerminalsCapacitorsWithResistorInSeries(*opAmp, loadCapacitor1, compensationCapacitor1, compensationCapacitor2,compensationResistor1, compensationResistor2);
+        }
+        else
+        {
+            connectInstanceTerminalsCapacitors_Ext3(*opAmp, loadCapacitor1, compensationCapacitor1, compensationCapacitor2);
+        }
         buildAndConnectedBias(*opAmp);
 
         return *opAmp;
@@ -1807,6 +1833,63 @@ namespace Synthesis {
         
     }
 		
+
+    void OpAmps::connectInstanceTerminalsCapacitorsWithResistorInSeries(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
+            Core::Instance * compensationCapacitor1, Core::Instance * compensationCapacitor2, Core::Instance * compensationResistor1, Core::Instance * compensationResistor2) const
+    {
+        if(opAmp.hasInstance(createInstanceId(FEEDBACKSTAGE_)))
+        {
+            Core::Instance & loadCapacitor2 = opAmp.findInstance(createInstanceId(LOADCAPACITOR2_));
+            connectInstanceTerminal(opAmp, loadCapacitor, Capacitor::PLUS_TERMINAL_, OUT1_NET_);
+            connectInstanceTerminal(opAmp, loadCapacitor2, Capacitor::PLUS_TERMINAL_, OUT2_NET_);
+            connectInstanceTerminal(opAmp, loadCapacitor2, Capacitor::MINUS_TERMINAL_, SOURCENMOS_NET_);
+        }
+        else
+        {
+            connectInstanceTerminal(opAmp, loadCapacitor, Capacitor::PLUS_TERMINAL_, OUT_NET_);
+        }
+        connectInstanceTerminal(opAmp, loadCapacitor, Capacitor::MINUS_TERMINAL_, SOURCENMOS_NET_);
+
+        if(compensationCapacitor1 != nullptr)
+        {
+            if(opAmp.hasInstance(createInstanceId(FEEDBACKSTAGE_)))
+            {
+                // Core::Instance & compensationCapacitor2 = opAmp.findInstance(createInstanceId(COMPENSATIONCAPACITOR2_));
+                connectInstanceTerminal(opAmp, *compensationCapacitor1, Capacitor::PLUS_TERMINAL_, OUT1FIRSTSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *compensationCapacitor1, Capacitor::MINUS_TERMINAL_, RC1_NET_);
+                connectInstanceTerminal(opAmp, *compensationResistor1, Resistor::PLUS_TERMINAL_, RC1_NET_);
+                connectInstanceTerminal(opAmp, *compensationResistor1, Resistor::MINUS_TERMINAL_, OUT1_NET_);
+
+            }
+            else
+            {   
+                connectInstanceTerminal(opAmp, *compensationCapacitor1, Capacitor::PLUS_TERMINAL_, OUTFIRSTSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *compensationCapacitor1, Capacitor::MINUS_TERMINAL_, RC_NET_);
+                connectInstanceTerminal(opAmp, *compensationResistor1, Resistor::PLUS_TERMINAL_, RC_NET_);
+                connectInstanceTerminal(opAmp, *compensationResistor1, Resistor::MINUS_TERMINAL_, OUT_NET_);
+            }
+        }
+
+
+        if(compensationCapacitor2 != nullptr)
+        {
+            if(opAmp.hasInstance(createInstanceId(FEEDBACKSTAGE_)))
+            {
+                connectInstanceTerminal(opAmp, *compensationCapacitor2, Capacitor::PLUS_TERMINAL_, OUT2FIRSTSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *compensationCapacitor2, Capacitor::MINUS_TERMINAL_, RC2_NET_);
+                connectInstanceTerminal(opAmp, *compensationResistor2, Resistor::PLUS_TERMINAL_, RC2_NET_);
+                connectInstanceTerminal(opAmp, *compensationResistor2, Resistor::MINUS_TERMINAL_, OUT2_NET_);
+            }
+            else
+            {   
+                connectInstanceTerminal(opAmp, *compensationCapacitor2, Capacitor::PLUS_TERMINAL_, OUTSECONDSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *compensationCapacitor2, Capacitor::MINUS_TERMINAL_, RC_NET_);
+                connectInstanceTerminal(opAmp, *compensationResistor2, Resistor::PLUS_TERMINAL_, RC_NET_);
+                connectInstanceTerminal(opAmp, *compensationResistor2, Resistor::MINUS_TERMINAL_, OUT_NET_);
+            }         
+        }
+
+    }
 
     void OpAmps::buildAndConnectedBias(Core::Circuit & opAmp)
     {
