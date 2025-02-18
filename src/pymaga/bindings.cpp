@@ -107,6 +107,10 @@
 #include "Core/incl/Circuit/Instance/InstanceTerminal.h"
 #include "src/pymaga/AcstUtility.h"
 
+
+#include "Core/incl/Circuit/Instance/Instance.h"
+#include "Core/incl/Circuit/Terminal/TerminalId/TerminalName.h"
+
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
@@ -127,6 +131,9 @@ class CircuitAnalysis {
 PYBIND11_MODULE(pymaga, m) {
     m.doc() = "Python binding for the maga.";
     py::class_<AutomaticSizing::DesignAttributes>(m, "DesignAttributes")
+        .def(py::init<>()); 
+
+    py::class_<Core::Instance>(m, "Instance")
         .def(py::init<>()); 
 
 
