@@ -1441,13 +1441,13 @@ namespace Synthesis {
             const Core::Circuit & transconductanceThirdStage = getSecondStageTransconductance(thirdStage1->getMaster());
             if(getDeviceNamesOfFlatCircuit(transconductanceThirdStage).size() == 1)
             {
-                connectInstanceTerminal(opAmp, *thirdStage1, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUT1FIRSTSTAGE_NET_);
-                connectInstanceTerminal(opAmp, *thirdStage2, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUT2FIRSTSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *thirdStage1, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUT1SECONDSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *thirdStage2, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUT2SECONDSTAGE_NET_);
             }
             else
             {
-                connectInstanceTerminal(opAmp, *thirdStage1, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUT1FIRSTSTAGE_NET_);
-                connectInstanceTerminal(opAmp, *thirdStage2, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUT2FIRSTSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *thirdStage1, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUT1SECONDSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *thirdStage2, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUT2SECONDSTAGE_NET_);
             }  
 
 
