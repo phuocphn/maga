@@ -249,13 +249,22 @@ PYBIND11_MODULE(pymaga, m) {
     // level 4
     py::class_<Synthesis::AmplificationStageLevel>(m, "AmplificationStageLevel")
         .def(py::init<const Synthesis::AmplificationStagesSubBlockLevel & ,
-                        const Synthesis::StructuralLevel & , const AutomaticSizing::CircuitInformation & >());
+                        const Synthesis::StructuralLevel & , const AutomaticSizing::CircuitInformation & >())
+        .def("getNonInvertingStages", [](Synthesis::AmplificationStageLevel &self) {
+            return self.getNonInvertingStages();
+        })
+        .def("__repr__", [](Synthesis::AmplificationStageLevel &self) {
+            return self.toStr();
+        });
 
     py::class_<Synthesis::NonInvertingStages>(m, "NonInvertingStages")
         .def(py::init<const Synthesis::AmplificationStagesSubBlockLevel &, const AutomaticSizing::CircuitInformation &>())
         .def("__repr__", [](Synthesis::NonInvertingStages &self) {
             return self.toStr();
-        });
+        })
+        .def("createSimpleNonInvertingStages", [](Synthesis::NonInvertingStages &self, int caseNumber) {
+            return self.createSimpleNonInvertingStages(caseNumber);
+        }, py::arg("case_number"), py::return_value_policy::reference_internal);
 
     py::class_<Synthesis::InvertingStages>(m, "InvertingStages")
         .def(py::init<const Synthesis::StructuralLevel &>())
