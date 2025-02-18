@@ -275,7 +275,41 @@ PYBIND11_MODULE(pymaga, m) {
     // level 5
     py::class_<Synthesis::OpAmps>(m, "OpAmps")
         .def(py::init<const Synthesis::AmplificationStageLevel &, const Synthesis::CurrentBiases &, 
-            const Synthesis::VoltageBiases & , const Synthesis::Capacitor & >());
+            const Synthesis::VoltageBiases & , const Synthesis::Capacitor & >(),
+            
+            
+            py::keep_alive<1, 2>(),  // Keep AmplificationStageLevel alive
+            py::keep_alive<1, 3>(),  // Keep CurrentBiases alive
+            py::keep_alive<1, 4>(),  // Keep VoltageBiases alive
+            py::keep_alive<1, 5>())  // Keep Capacitor alive
+        // .def(py::init<std::shared_ptr<Synthesis::AmplificationStageLevel>, 
+        //           std::shared_ptr<Synthesis::CurrentBiases>, 
+        //           std::shared_ptr<Synthesis::VoltageBiases>, 
+        //           std::shared_ptr<Synthesis::Capacitor>>());
+
+        // .def("getAmplificationStageLevel", [](Synthesis::OpAmps &self) {
+        //     std::cout << "getin";
+        //     return self.getAmplificationStageLevel();
+        // }, py::return_value_policy::take_ownership)
+
+        .def("getAmplificationStageLevel", [](Synthesis::OpAmps &self) {
+            return py::cast(self.getAmplificationStageLevel());
+        }, py::return_value_policy::reference_internal)
+        .def("createInstance", [](Synthesis::OpAmps &self, const Core::Circuit & circuit, std::string instanceName) {
+            // const Core::InstanceName objInstanceName = Core::InstanceName(instanceName);
+            return py::cast(self.createInstance(circuit, Synthesis::OpAmps::FIRSTSTAGE_)); 
+            //py::cast(self.getAmplificationStageLevel());
+        }, py::return_value_policy::reference_internal)
+
+        .def("createSimpleOpAmp", [](Synthesis::OpAmps &self, int & index, Core::Instance & firstStage, 
+									Core::Instance * secondStage) {
+            return py::cast(self.createSimpleOpAmp(index, firstStage, nullptr));
+        }, py::return_value_policy::reference_internal)
+        .def("createSimpleOneStageOpAmps", [](Synthesis::OpAmps &self, int caseNumber, int & index) {
+            return py::cast(self.createSimpleOneStageOpAmps(caseNumber, index));
+        }, py::return_value_policy::reference_internal);
+
+
 
     py::class_<Synthesis::FunctionalBlockLibrary>(m, "FunctionalBlockLibrary")
         .def(py::init<const AutomaticSizing::CircuitInformation&>(), py::arg("circuit_information"))
