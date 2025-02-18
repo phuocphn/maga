@@ -34,7 +34,11 @@ def write_partitioning_result(circuit: pymaga.Circuit, save_path):
     partitioningResult.writeXmlPartitioningResult(save_path)
 
 
-def convert_(fname):
+def partition(
+    fname,
+    processed_dir="outputs/processed_circuits",
+    output_dir="outputs/res.partitioning",
+):
     with open(fname, "r") as f:
         netlist_data = "".join(f.readlines()[1:-2])
 
@@ -61,11 +65,11 @@ def convert_(fname):
     print(os.path.basename(fname))
 
     new_circuit_fname = os.path.join(
-        "outputs/TopologyGen_29_12_2024/FullyDifferentialOpAmps/",
+        processed_dir,
         os.path.basename(fname),
     )
     partitioning_fname = os.path.join(
-        "outputs/TopologyGen_29_12_2024/PartitioningResult/",
+        output_dir,
         os.path.basename(fname).replace(".ckt", ".xml"),
     )
     with open(new_circuit_fname, "w") as f:
@@ -80,12 +84,12 @@ def convert_(fname):
     try:
         write_partitioning_result(circuit, partitioning_fname)
     except:
-        with open("circuit_w_errors.txt", "a") as f:
-            f.write(new_circuit_fname + "\n")
-
+        print("error when passing circuit: ", fname)
+        pass
 
 if __name__ == "__main__":
+    INPUT_NETLIST_DIR = "outputs/TopologyGen/FullyDifferentialOpAmps/"
     pymaga_io = pymaga.IOCore()
 
-    for fname in glob.glob("outputs/TopologyGen_24_12_2024/FullyDifferentialOpAmps/*"):
-        convert_(fname)
+    for fname in glob.glob( os.path.join(INPUT_NETLIST_DIR, "*")):
+        partition(fname)

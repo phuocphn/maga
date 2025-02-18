@@ -18,7 +18,9 @@ def recognize(circuit: pymaga.Circuit, fname) -> pymaga.StructRecResult:
     print("[E] Structure Result".center(100, "*"))
 
 
-def process(fname):
+def process(
+    fname, processed_dir="outputs/processed_circuits", output_dir="outputs/structrec"
+):
     with open(fname, "r") as f:
         netlist_data = "".join(f.readlines()[1:-2])
 
@@ -43,11 +45,11 @@ def process(fname):
 """.strip()
 
     new_circuit_fname = os.path.join(
-        "outputs/TopologyGen_29_12_2024/SingleOutputOpAmps/",
+        processed_dir,
         os.path.basename(fname),
     )
-    partitioning_fname = os.path.join(
-        "outputs/TopologyGen_29_12_2024/StructRecResult/",
+    structrec_fname = os.path.join(
+        output_dir,
         os.path.basename(fname).replace(".ckt", ".xml"),
     )
     with open(new_circuit_fname, "w") as f:
@@ -59,12 +61,12 @@ def process(fname):
         mapping_filepath="examples/StructureRecognition/HSpiceMapping.xcat",
         devicetype_filepath="examples/StructureRecognition/deviceTypes.xcat",
     )
-    recognize(circuit, partitioning_fname)
+    recognize(circuit, structrec_fname)
+
 
 if __name__ == "__main__":
+    INPUT_NETLIST_DIR = "outputs/TopologyGen/FullyDifferentialOpAmps/"
     pymaga_io = pymaga.IOCore()
 
-    for fname in glob.glob(
-        "outputs/TopologyGen_24_12_2024/SingleOutputOpAmps/*"
-    ):
+    for fname in glob.glob(os.path.join(INPUT_NETLIST_DIR, "*")):
         process(fname)
