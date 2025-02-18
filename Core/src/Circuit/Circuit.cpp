@@ -407,6 +407,7 @@ namespace Core {
     	getInstanceMap().insert(InstanceMap::value_type(instance.getIdentifier(), & instance));
     }
 
+    // note: this function is not used anywhere 
     Instance& Circuit::addInstance(const InstanceId& instanceId)
     {
         Instance* instance = new Instance;
