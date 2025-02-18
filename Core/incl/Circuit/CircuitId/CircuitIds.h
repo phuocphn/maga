@@ -56,6 +56,7 @@ namespace Core {
         CircuitId normalTransistor(int num=0); 
         CircuitId diodeTransistor(int num=0);
         CircuitId capacitor(int num=0);
+        CircuitId resistor(int num=0);
 
         CircuitId voltageBias(int num=0);
         CircuitId currentBias(int num=0);
@@ -93,6 +94,7 @@ namespace Core {
         static const CircuitName NORMALTRANSISTOR_;
         static const CircuitName DIODETRANSISTOR_;
         static const CircuitName CAPACITOR_;
+        static const CircuitName RESISTOR_;
         
         static const CircuitName VOLTAGEBIAS_;
         static const CircuitName CURRENTBIAS_;

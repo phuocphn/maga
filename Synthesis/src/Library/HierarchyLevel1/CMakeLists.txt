@@ -42,6 +42,7 @@ entering_message()
 
 add_source(Synthesis 
 	Capacitor.cpp
+	Resistor.cpp
 	DeviceLevel.cpp
 	DiodeTransistor.cpp
 	NormalTransistor.cpp

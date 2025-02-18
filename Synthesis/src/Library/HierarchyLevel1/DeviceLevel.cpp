@@ -39,6 +39,7 @@
 #include "Synthesis/incl/Library/HierarchyLevel1/NormalTransistor.h"
 #include "Synthesis/incl/Library/HierarchyLevel1/DiodeTransistor.h"
 #include "Synthesis/incl/Library/HierarchyLevel1/Capacitor.h"
+#include "Synthesis/incl/Library/HierarchyLevel1/Resistor.h"
 
 #include "Core/incl/Common/BacktraceAssert.h"
 
@@ -60,11 +61,12 @@ namespace Synthesis {
             //logDebug("Create capacitor");
             capacitor_ = new Capacitor;
 
-            
+            resistor_ = new Resistor;
         }
 		
         DeviceLevel::~DeviceLevel()
         {
+            delete resistor_;
             delete capacitor_;
             delete diodeTransistor_;
             delete normalTransistor_;
@@ -86,6 +88,12 @@ namespace Synthesis {
         {
             assert(capacitor_ != nullptr);
             return *capacitor_;
+        }
+
+        const Resistor & DeviceLevel::getResistor() const
+        {
+            assert(resistor_ != nullptr);
+            return *resistor_;
         }
 
         std::string DeviceLevel::toStr() const

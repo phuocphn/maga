@@ -36,52 +36,65 @@
  *
  *************************************************************************************************/
 
-#ifndef SYNTHESIS_INCL_LIBRARY_HIERARCHYLEVEL1_DEVICELEVEL_H_
-#define SYNTHESIS_INCL_LIBRARY_HIERARCHYLEVEL1_DEVICELEVEL_H_
+#ifndef SYNTHESIS_INCL_LIBRARY_HIERARCHYLEVEL1_RESISTOR_H_
+#define SYNTHESIS_INCL_LIBRARY_HIERARCHYLEVEL1_RESISTOR_H_
 
-#include "Core/incl/Common/Object.h"
 
-namespace Synthesis {
+#include "Core/incl/Circuit/Device/DeviceId/DeviceId.h"
+#include "Core/incl/Circuit/Instance/InstanceId/InstanceName.h"
+#include "Core/incl/Circuit/Net/NetId/NetId.h"
+#include "Core/incl/Circuit/Terminal/TerminalId/TerminalName.h"
 
-	class NormalTransistor;
-	class DiodeTransistor;
-	class Capacitor;
-	class Resistor;
+#include "Synthesis/incl/Library/LibraryItem.h"
 
-	class DeviceLevel : public Core::Object
+
+namespace Core
+{
+	class Circuit;
+	class Instance;
+	class Device;
+}
+
+
+namespace Synthesis
+{
+
+
+	class Resistor : public LibraryItem
 	{
+		public:
+			Resistor();
+			~Resistor();
 
-	public:
-		DeviceLevel();
-		~DeviceLevel();
+			Core::Instance & createNewResistorInstance(Core::InstanceName instanceName) const;
+			const Core::Circuit & getResistorCircuit() const;
+			
+            std::string toStr() const;
 
-		const NormalTransistor & getNormalTransistor() const;
-		const DiodeTransistor & getDiodeTransistor() const;
-		const Capacitor & getCapacitor() const;
-		const Resistor & getResistor() const;
+		public:
+			static const Core::TerminalName MINUS_TERMINAL_;
+			static const Core::TerminalName PLUS_TERMINAL_;
 
-		std::string toStr() const;
+		private:
+			void initializeResistor();
 
-	private:
+			void addNetsToCircuit(Core::Circuit & circuit);
+			void createPinConnections(Core::Circuit & circuit, Core::Device & device);
+			void addTerminalsToCircuit(Core::Circuit & circuit);
 
-		NormalTransistor * normalTransistor_;
-		DiodeTransistor * diodeTransistor_;
-		Capacitor * capacitor_;
-		Resistor * resistor_;
+		private:
+			static const Core::DeviceId RESISTOR_DEVICEID_;
 
-
-
-
-
+			static const Core::NetId MINUS_NET_;
+			static const Core::NetId PLUS_NET_;
 
 
+
+			Core::Circuit * resistor_;
 
 	};
 
 
 
-
 }
-
-
-#endif /* SYNTHESIS_INCL_LIBRARY_HIERARCHYLEVEL1_DEVICELEVEL_H_ */
+#endif /* SYNTHESIS_INCL_LIBRARY_HIERARCHYLEVEL1_Capacitor_H_ */

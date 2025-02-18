@@ -66,6 +66,7 @@ namespace Synthesis
   class CurrentBiases;
   class VoltageBiases;
   class Capacitor;
+  class Resistor;
 
 	class OpAmps : public LibraryItem
 	{
@@ -114,21 +115,21 @@ namespace Synthesis
 
 			static const Core::InstanceName FIRSTSTAGE_;
 
-
-		private:
-            const AmplificationStageLevel & getAmplificationStageLevel() const;
+		public:
+		    const AmplificationStageLevel & getAmplificationStageLevel() const;
             const CurrentBiases & getCurrentBiases() const;
             const VoltageBiases & getVoltageBiases() const;
             const Capacitor & getCapacitor() const;
-
-            void addGateInstanceTerminalConnectedToADrain(const Core::InstanceTerminal & terminal);
-            bool isGateInstanceTerminalConnectedToADrain(const Core::InstanceTerminal & terminal) const;
 
 			const Core::Circuit& createSimpleOpAmp(int & index, Core::Instance & firstStage, 
 													Core::Instance * secondStage = nullptr);
 
 			const Core::Circuit& createSimpleOpAmp_Ext(int & index, Core::Instance & firstStage, 
 													Core::Instance& secondStage, Core::Instance * thirdStage=nullptr);
+		private:
+
+            void addGateInstanceTerminalConnectedToADrain(const Core::InstanceTerminal & terminal);
+            bool isGateInstanceTerminalConnectedToADrain(const Core::InstanceTerminal & terminal) const;
 
 			const Core::Circuit& createFullyDifferentialOpAmp(int & index, Core::Instance & firstStage, Core::Instance & feedbackStage,
 													Core::Instance * secondStage1 = nullptr, Core::Instance * secondStage2 = nullptr);
@@ -166,7 +167,9 @@ namespace Synthesis
 											Core::Instance * compensationCapacitor = nullptr) const;
 			void connectInstanceTerminalsCapacitors_Ext3(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
 											Core::Instance * compensationCapacitor1 = nullptr, Core::Instance * compensationCapacitor2 = nullptr) const;
-
+			void connectInstanceTerminalsCapacitorsWithResistorInSeries(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
+											Core::Instance * compensationCapacitor1 = nullptr, Core::Instance * compensationCapacitor2 = nullptr, Core::Instance * compensationResistor1 = nullptr, Core::Instance * compensationResistor2 = nullptr) const;
+											
 			void connectedLoadInstanceTerminalToFeedbackStage(Core::Circuit & opAmp, Core::Instance & firstStage) const;
 		
 			const Core::Circuit & getSecondStageTransconductance(const Core::Circuit & secondStage) const;
@@ -224,6 +227,9 @@ namespace Synthesis
 
 			bool isGateNetOfNmosTransistors(const Core::Net & flatNet) const;
 			bool isGateNetOfPmosTransistors(const Core::Net & flatNet) const;
+		public:
+			const Resistor * resistor_;
+
 		private:
 			Core::InstanceName createVoltageBiasInstanceName(int index, Core::TechType techType) const;
 			Core::InstanceName createCurrentBiasInstanceName(int index, Core::TechType techType) const;
@@ -248,6 +254,9 @@ namespace Synthesis
 			static const Core::InstanceName COMPENSATIONCAPACITOR1_;
 			static const Core::InstanceName COMPENSATIONCAPACITOR2_;
 
+			static const Core::InstanceName COMPENSATIONRESISTOR1_;
+			static const Core::InstanceName COMPENSATIONRESISTOR2_;
+
             static const Core::InstanceName FEEDBACKSTAGE_;
 
             static const std::string VOLTAGEBIAS_STRING_;
@@ -262,6 +271,11 @@ namespace Synthesis
             static const Core::NetId OUT_NET_;
 			static const Core::NetId OUT1_NET_;
 			static const Core::NetId OUT2_NET_;
+			
+			// nets for connecting between cap and resistor
+            static const Core::NetId RC_NET_;
+			static const Core::NetId RC1_NET_;
+			static const Core::NetId RC2_NET_;
 
 			static const Core::NetId SOURCEPMOS_NET_;
 			static const Core::NetId SOURCENMOS_NET_;

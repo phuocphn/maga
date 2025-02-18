@@ -42,6 +42,8 @@ namespace Core {
     const CircuitName CircuitIds::NORMALTRANSISTOR_ = CircuitName("NormalTransistor");
     const CircuitName CircuitIds::DIODETRANSISTOR_ = CircuitName("DiodeTransistor");
     const CircuitName CircuitIds::CAPACITOR_ = CircuitName("Capacitor");
+    const CircuitName CircuitIds::RESISTOR_ = CircuitName("Resistor");
+
 
     // level 2
     const CircuitName CircuitIds::VOLTAGEBIAS_ = CircuitName("VoltageBias");
@@ -104,6 +106,14 @@ namespace Core {
         circuitId.setId(num);
         return circuitId;
     }
+
+    CircuitId  CircuitIds::resistor(int num)
+    {
+        Core::CircuitId circuitId = RESISTOR_.createIdentifier();
+        circuitId.setId(num);
+        return circuitId;
+    }
+
 
     CircuitId  CircuitIds::voltageBias(int num)
     {

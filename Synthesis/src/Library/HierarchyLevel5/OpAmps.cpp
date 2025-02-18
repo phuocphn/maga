@@ -44,6 +44,8 @@
 #include "Synthesis/incl/Library/HierarchyLevel2/CurrentBiases.h"
 #include "Synthesis/incl/Library/HierarchyLevel2/VoltageBiases.h"
 #include "Synthesis/incl/Library/HierarchyLevel1/Capacitor.h"
+#include "Synthesis/incl/Library/HierarchyLevel1/Resistor.h"
+
 
 
 #include "Core/incl/Circuit/Circuit.h"
@@ -59,6 +61,7 @@
 #include "Core/incl/Common/BacktraceAssert.h"
 
 namespace Synthesis {
+    class Resistor;
 
     const Core::TerminalName OpAmps::IN1_TERMINAL_ = Core::TerminalName("In1");
 	const Core::TerminalName OpAmps::IN2_TERMINAL_ = Core::TerminalName("In2");
@@ -89,6 +92,9 @@ namespace Synthesis {
     const Core::InstanceName OpAmps::COMPENSATIONCAPACITOR1_ = Core::InstanceName("CompensationCapacitor1");
     const Core::InstanceName OpAmps::COMPENSATIONCAPACITOR2_ = Core::InstanceName("CompensationCapacitor2");
 
+    const Core::InstanceName OpAmps::COMPENSATIONRESISTOR1_ = Core::InstanceName("CompensationResistor1");
+    const Core::InstanceName OpAmps::COMPENSATIONRESISTOR2_ = Core::InstanceName("CompensationResistor2");
+
     const Core::InstanceName OpAmps::FEEDBACKSTAGE_ = Core::InstanceName("FeedbackStage");
 			
     const Core::InstanceName OpAmps::TRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_ = Core::InstanceName("TransconductanceComplementarySecondStage");
@@ -102,6 +108,10 @@ namespace Synthesis {
     const Core::NetId OpAmps::OUT_NET_ = Core::NetName("out").createRootIdentifier();
 	const Core::NetId OpAmps::OUT1_NET_ = Core::NetName("out1").createRootIdentifier();
 	const Core::NetId OpAmps::OUT2_NET_ = Core::NetName("out2").createRootIdentifier();
+
+    const Core::NetId OpAmps::RC_NET_ = Core::NetName("rc").createRootIdentifier();
+	const Core::NetId OpAmps::RC1_NET_ = Core::NetName("rc1").createRootIdentifier();
+	const Core::NetId OpAmps::RC2_NET_ = Core::NetName("rc2").createRootIdentifier();
 
     const Core::NetId OpAmps::SOURCEPMOS_NET_ = Core::NetName("sourcePmos").createRootIdentifier();
     const Core::NetId OpAmps::SOURCENMOS_NET_ = Core::NetName("sourceNmos").createRootIdentifier();
@@ -138,7 +148,7 @@ namespace Synthesis {
                         voltageBiases_(&voltageBiases),
                         capacitor_(&capacitor)
     {
-
+        resistor_ = new Synthesis::Resistor();
     }
 
 	OpAmps::~OpAmps()
