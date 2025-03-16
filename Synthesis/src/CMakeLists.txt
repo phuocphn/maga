@@ -50,5 +50,6 @@ add_source(Synthesis
 	SynthesisFactory.cpp
 	LocalOptionsTopologyLibraryGeneration.cpp
 	TopologyLibraryGeneration.cpp
+	TopoGen.cpp
 	TopologyLibraryGenerationFactory.cpp
 )

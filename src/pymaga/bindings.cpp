@@ -111,6 +111,8 @@
 #include "Core/incl/Circuit/Instance/Instance.h"
 #include "Core/incl/Circuit/Terminal/TerminalId/TerminalName.h"
 
+#include "Synthesis/incl/TopoGen.h"
+
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
@@ -408,8 +410,21 @@ PYBIND11_MODULE(pymaga, m) {
             },
             "Read Hspice circuit and return Partition::Result object.", py::return_value_policy::take_ownership);
 
-    
-    
+
+    py::class_<Synthesis::TopoGen>(m, "TopologyLibraryGeneration")
+            .def(py::init<>())
+            .def("createFlatCircuit", 
+                [](const Core::Circuit & circuit) {
+                    Synthesis::TopoGen* analysis = new Synthesis::TopoGen();
+                    return analysis->createFlatCircuit(circuit);
+                },
+                "create flat circuit from a hierarchial circuit", py::return_value_policy::take_ownership)
+            .def("createAllSimpleOpAmps", 
+                    [](Synthesis::TopoGen& self) {
+                        self.createAllSimpleOpAmps();
+            });
+
+
     #ifdef VERSION_INFO
 	m.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);
 	#else
