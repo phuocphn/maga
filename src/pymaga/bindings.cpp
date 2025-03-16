@@ -309,7 +309,10 @@ PYBIND11_MODULE(pymaga, m) {
         }, py::return_value_policy::reference_internal)
         .def("createSimpleOneStageOpAmps", [](Synthesis::OpAmps &self, int caseNumber, int & index) {
             return py::cast(self.createSimpleOneStageOpAmps(caseNumber, index));
-        }, py::return_value_policy::reference_internal);
+        }, 
+        py::arg("stage1_casenum"),
+        py::arg("start_index"),
+        py::return_value_policy::reference_internal);
 
 
 
