@@ -73,6 +73,7 @@ namespace Synthesis {
         void compute();
         void write();
 		const Partitioning::Result * analyseCircuit(const Core::Circuit & circuit);
+		const Core::Circuit & createFlatCircuit(const Core::Circuit & circuit) const;
 
     private:
 		void createAllSimpleOpAmps();
@@ -85,7 +86,6 @@ namespace Synthesis {
 
 
 		void createOpAmps(const FunctionalBlockLibrary & functionalBlockLibrary, const AutomaticSizing::CircuitParameter & circuitParameter);
-		const Core::Circuit & createFlatCircuit(const Core::Circuit & circuit) const;
 		void writeHSpiceFile(const Core::Circuit &  circuit, const AutomaticSizing::CircuitParameter & circuitParameter, std::string fileNamePrefx = "empty");
 
 		void setStructRecResult(StructRec::Result & strucRecResult);
