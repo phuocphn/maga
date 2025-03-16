@@ -1,6 +1,7 @@
 import pymaga
 import os
 import glob
+from pathlib import Path
 
 from loguru import logger
 
@@ -39,6 +40,9 @@ def partition(
     processed_dir="outputs/processed_circuits",
     output_dir="outputs/res.partitioning",
 ):
+    Path(processed_dir).mkdir(parents=True, exist_ok=True)
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+
     with open(fname, "r") as f:
         netlist_data = "".join(f.readlines()[1:-2])
 
@@ -83,13 +87,28 @@ def partition(
     )
     try:
         write_partitioning_result(circuit, partitioning_fname)
+        return True
     except:
         print("error when passing circuit: ", fname)
-        pass
+        return False
+
 
 if __name__ == "__main__":
     INPUT_NETLIST_DIR = "outputs/TopologyGen/FullyDifferentialOpAmps/"
+    ERROR_FILE = os.path.join(INPUT_NETLIST_DIR, "partitioning_errors.txt")
+    PROCCESSED_DIR = os.path.join(INPUT_NETLIST_DIR, "processed_circuits")
+    OUTPUT_DIR = os.path.join(INPUT_NETLIST_DIR, "res.partitioning")
     pymaga_io = pymaga.IOCore()
 
-    for fname in glob.glob( os.path.join(INPUT_NETLIST_DIR, "*")):
-        partition(fname)
+    os.system(ERROR_FILE)
+
+    for fname in glob.glob(os.path.join(INPUT_NETLIST_DIR, "*.ckt")):
+        ret = partition(
+            fname,
+            processed_dir=PROCCESSED_DIR,
+            output_dir=OUTPUT_DIR,
+        )
+
+        if not ret:
+            with open(ERROR_FILE, "a") as f:
+                f.write(fname + "\n")
