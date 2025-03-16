@@ -196,6 +196,11 @@ namespace Synthesis
 
 	void OpAmpSizing::testSimpleOrFullyDifferentialOpAmps_Ext3()
 	{
+		// note that, these methods `getLibrary().createFullyDifferentialOneStageOpAmps` , `getLibrary().createSimpleOneStageOpAmps`, `getLibrary().createComplementaryOpAmps` are defined in FunctionalBlockLibrary.cpp.
+		// these methods have similar name to methods defined in HL5/OpAmps.cpp, however the return type of these `getLibrary().create__` is std::vector<Synthesis::Circuit*>
+		// underly implementation, these `create__` methods from HL5/OpAmps.cpp are called to create Core::Circuit and then are converted to Synthesis::Circuit by using .initialize() method
+		// In addition, structRecResults_ and partitioningResults_ are performanced and store in each Synthesis::Circuit object.
+				
 		std::vector<Circuit*> oneStageOpAmps;
 		std::vector<Circuit*> twoStageOpAmps;
 		std::vector<Circuit*> threeStageOpAmps;
@@ -238,36 +243,6 @@ namespace Synthesis
 				std::ostringstream oneStageOpAmpId;
 				oneStageOpAmpId << threeStageOpAmp->getFlatCircuit().getCircuitIdentifier().getId();
 
-
-
-
-/***** */
-				// std::ostringstream oneStageOpAmpId;
-				// oneStageOpAmpId << threeStageOpAmp->getFlatCircuit().getCircuitIdentifier().getId();
-				
-				std::ostringstream fileName;
-				fileName << threeStageOpAmp->getFlatCircuit().getCircuitIdentifier().getId() << "___input__";
-
-				Core::Circuit circuit = threeStageOpAmp->getFlatCircuit();
-				const Partitioning::Result *partitioningResult = getPartitioningResult(circuit);
-
-				
-				std::ostringstream opAmpId;
-				std::string opAmpName = circuit.getCircuitIdentifier().getName();
-				int opAmpNum = circuit.getCircuitIdentifier().getId();
-				opAmpId << opAmpName << opAmpNum;
-				std::string stringFilePath(getHSpiceNetlistDirectoryPath() + "/" + fileName.str() + ".ckt");
-				HSPICEOutputFile outputFile;
-				outputFile.setPath(stringFilePath);
-				outputFile.setId(opAmpId.str());
-				outputFile.write(circuit, partitioningResult);
-				delete partitioningResult;
-				// delete flatCircuitRecursion;
-				// delete circuit;
-
-
-
-/***** */
 
 
 
