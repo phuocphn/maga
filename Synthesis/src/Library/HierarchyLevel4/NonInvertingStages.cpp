@@ -586,23 +586,24 @@ namespace Synthesis {
 				caseNumber++;
 			} while (!nonInvertingStages.empty());
 		}
-
-		caseNumber = 1;
-		do
+		if (0)
 		{
-			nonInvertingStages = createComplementaryNonInvertingStages(caseNumber);
-			for(auto & stage : nonInvertingStages)
+			caseNumber = 1;
+			do
 			{
-				oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;
-				Core::Circuit * flatCircuit = flatCircuitRecursion->createNewFlatCopy(*stage);
-				oss << stage->toStr() << std::endl;
-				oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
-				oss << flatCircuit->toStr() << std::endl;
-				delete flatCircuit;
-			}
-        	caseNumber++;
-		} while (!nonInvertingStages.empty());
-
+				nonInvertingStages = createComplementaryNonInvertingStages(caseNumber);
+				for(auto & stage : nonInvertingStages)
+				{
+					oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << stage->getCircuitIdentifier().toStr() << ": " << std::endl;
+					Core::Circuit * flatCircuit = flatCircuitRecursion->createNewFlatCopy(*stage);
+					oss << stage->toStr() << std::endl;
+					oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FLATCIRCUIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+					oss << flatCircuit->toStr() << std::endl;
+					delete flatCircuit;
+				}
+				caseNumber++;
+			} while (!nonInvertingStages.empty());
+		}
 		if (0) {
 			oss << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FEEDBACK STAGE" << std::endl;
 			oss << "PMOS TRANSCONDUCTANCE" << std::endl;
