@@ -161,9 +161,7 @@ namespace Synthesis {
         std::vector<const Core::Circuit*> simpleOpAmps;
         for(auto & firstStage : getAmplificationStageLevel().getNonInvertingStages().createSimpleNonInvertingStages(caseNumber))
         {
-        	std::cout << "Create op amp num " << index << std::endl;
             const Core::Circuit & opAmp = createSimpleOpAmp(index, createInstance(*firstStage, FIRSTSTAGE_));
-        	std::cout << "finishing op amp num " << index << std::endl;
             simpleOpAmps.push_back(&opAmp);
             index++;
         }
@@ -475,43 +473,37 @@ namespace Synthesis {
 
     std::vector<const Core::Circuit*> OpAmps::createFullyDifferentialThreeStageOpAmps(const Core::Circuit & oneStageOpAmp, const Core::Circuit & twoStageOpAmp)
     {
+        int impl_ver = 0;
+
         std::vector<const Core::Circuit*> threeStageOpAmps;
-        int index =1;
 
-        const Core::Circuit & firstStage = oneStageOpAmp.findInstance(createInstanceId(FIRSTSTAGE_)).getMaster();
-        const Core::Circuit & feedbackStage = oneStageOpAmp.findInstance(createInstanceId(FEEDBACKSTAGE_)).getMaster();
-        // const Core::Circuit & secondStage = twoStageOpAmp.findInstance(createInstanceId(SECONDSTAGE1_)).getMaster();
+        if (impl_ver == 0){
+            int index =1;
 
-        // for(auto & thridStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
-        // {
-        //    const Core::Circuit & opAmp = createFullyDifferentialOpAmp_Ext3(index, 
-        //                     createInstance(firstStage, FIRSTSTAGE_), createInstance(feedbackStage, FEEDBACKSTAGE_), 
-        //                     &createInstance(twoStageOpAmp.findInstance(createInstanceId(SECONDSTAGE1_)).getMaster(), SECONDSTAGE1_), &createInstance(twoStageOpAmp.findInstance(createInstanceId(SECONDSTAGE2_)).getMaster(), SECONDSTAGE2_), 
-        //                     &createInstance(secondStage, THIRDSTAGE1_), &createInstance(secondStage, THIRDSTAGE2_)
-        //    );
-        //    threeStageOpAmps.push_back(&opAmp);
-        //    index++;
-        // }
-        for(auto & secondStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
-        {
-           //const Core::Circuit & opAmp = createFullyDifferentialOpAmp(index, createInstance(firstStage, FIRSTSTAGE_), createInstance(feedbackStage, FEEDBACKSTAGE_), &createInstance(*secondStage, SECONDSTAGE1_), &createInstance(*secondStage, SECONDSTAGE2_));
-           //twoStageOpAmps.push_back(&opAmp);
-           //index++;
-            for(auto & thridStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+            const Core::Circuit & firstStage = oneStageOpAmp.findInstance(createInstanceId(FIRSTSTAGE_)).getMaster();
+            const Core::Circuit & feedbackStage = oneStageOpAmp.findInstance(createInstanceId(FEEDBACKSTAGE_)).getMaster();
+
+            for(auto & secondStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
             {
-               const Core::Circuit & opAmp = createFullyDifferentialOpAmp_Ext3(index, 
-                                createInstance(firstStage, FIRSTSTAGE_), createInstance(feedbackStage, FEEDBACKSTAGE_), 
-                                &createInstance(*secondStage, SECONDSTAGE1_), 
-                                &createInstance(*secondStage, SECONDSTAGE2_), 
-                                &createInstance(*thridStage, THIRDSTAGE1_), 
-                                &createInstance(*thridStage, THIRDSTAGE2_)
-               );
-               threeStageOpAmps.push_back(&opAmp);
-               index++;
+                for(auto & thridStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+                {
+                const Core::Circuit & opAmp = createFullyDifferentialOpAmp_Ext3(index, 
+                                    createInstance(firstStage, FIRSTSTAGE_), createInstance(feedbackStage, FEEDBACKSTAGE_), 
+                                    &createInstance(*secondStage, SECONDSTAGE1_), 
+                                    &createInstance(*secondStage, SECONDSTAGE2_), 
+                                    &createInstance(*thridStage, THIRDSTAGE1_), 
+                                    &createInstance(*thridStage, THIRDSTAGE2_)
+                );
+                threeStageOpAmps.push_back(&opAmp);
+                index++;
+                }
             }
-
+            return threeStageOpAmps;
         }
 
+        if (impl_ver == 1){
+            
+        }
         return threeStageOpAmps;
     }
 
@@ -834,7 +826,7 @@ namespace Synthesis {
 								Core::Instance * secondStage1, Core::Instance * secondStage2, Core::Instance * thirdStage1, Core::Instance * thirdStage2)
     {
         // TODO: consider moving these flags somewhere else.
-        bool enableZeroCompensation = true;
+        bool enableZeroCompensation = false;
     
         Core::Circuit * opAmp = new Core::Circuit;
         
@@ -924,7 +916,6 @@ namespace Synthesis {
         addTerminalsToCircuit(*opAmp, terminalToNetMap);
 
         setSupplyNets(*opAmp);
-
         connectInstanceTerminalsFullyDifferentialOpAmp_Ext3(*opAmp, firstStage, feedbackStage, secondStage1, secondStage2, thirdStage1, thirdStage2);
         if (enableZeroCompensation) 
         {
@@ -1509,7 +1500,7 @@ namespace Synthesis {
         connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::OUT_TERMINAL_, INNERCOMPLEMENTARYSECONDSTAGE_NET_);
         connectInstanceTerminal(opAmp, stageBiasComplementarySecondStage, VoltageBiases::IN_TERMINAL_, INNERCOMPLEMENTARYSECONDSTAGE_NET_);
         
-        
+        // green
         if(getDeviceNamesOfFlatCircuit(load).size() == 2  
                    && getDeviceNamesOfFlatCircuit(transconductanceComplementarySecondStage.getMaster()).size() == 1)
         {
@@ -1522,6 +1513,7 @@ namespace Synthesis {
         else if(getDeviceNamesOfFlatCircuit(load).size() == 2  
                    && getDeviceNamesOfFlatCircuit(transconductanceComplementarySecondStage.getMaster()).size() == 2)
         {
+            // orange
             connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUT1_TERMINAL_, OUTFIRSTSTAGE_NET_);
             connectInstanceTerminal(opAmp, secondStage, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUTFIRSTSTAGE_NET_);
             connectInstanceTerminal(opAmp, secondStage, InvertingStages::INOUTPUTTRANSCONDUCTANCE_TERMINAL_, INOUTPUTTRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
@@ -1532,6 +1524,7 @@ namespace Synthesis {
         }
         else
         {
+            //blue
             connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUTSOURCE1LOAD1_TERMINAL_, OUT1FIRSTSTAGE_NET_);
             connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUTOUTPUT1LOAD1_TERMINAL_, OUT2FIRSTSTAGE_NET_);
             connectInstanceTerminal(opAmp, secondStage, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUT1FIRSTSTAGE_NET_);
@@ -1553,7 +1546,8 @@ namespace Synthesis {
             	 connectInstanceTerminal(opAmp, transconductanceComplementarySecondStage, CurrentBiases::INOUTPUT_TERMINAL_, INOUTPUTTRANSCONDUCTANCECOMPLEMENTARYSECONDSTAGE_NET_);
             }
          }
-      
+
+        // purple
         if(getDeviceNamesOfFlatCircuit(stageBiasComplementarySecondStage.getMaster()).size() == 1)
         {
             connectInstanceTerminal(opAmp, stageBiasComplementarySecondStage, VoltageBiases::OUT_TERMINAL_, INSTAGEBIASCOMPLEMENTARYSECONDSTAGE_NET_);

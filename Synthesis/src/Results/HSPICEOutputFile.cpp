@@ -94,7 +94,6 @@ namespace Synthesis
 	void HSPICEOutputFile::write(const Circuit & circuit)
 	{
 		outputFile_ = new Control::OutputFile;
-		logDebug("Path the out put file is written to " << getPath());
 		outputFile_->setPath(getPath());
 		outputFile_->open();
 
@@ -111,7 +110,6 @@ namespace Synthesis
 	void HSPICEOutputFile::write(const Core::Circuit & circuit, const Partitioning::Result * partitioningResult)
 	{
 		outputFile_ = new Control::OutputFile;
-		logDebug("Netlist saved to: " << getPath());
 
 		outputFile_->setPath(getPath());
 		outputFile_->open();
