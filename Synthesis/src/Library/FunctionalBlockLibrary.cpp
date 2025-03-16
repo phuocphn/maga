@@ -178,11 +178,11 @@ namespace Synthesis {
 		return oss.str();
 	}
 
-	std::vector<Circuit*> FunctionalBlockLibrary::createSimpleOneStageOpAmps(int caseNumber, int & index) const
+	std::vector<Synthesis::Circuit*> FunctionalBlockLibrary::createSimpleOneStageOpAmps(int caseNumber, int & index) const
     {
     	auto start = std::chrono::high_resolution_clock::now();
 
-		std::vector<Circuit*> oneStageOpAmps;
+		std::vector<Synthesis::Circuit*> oneStageOpAmps;
 		std::cout << "Create simple op amps;" << std::endl;
 		std::vector<const Core::Circuit *> opAmpCircuits = getOpAmps().createSimpleOneStageOpAmps(caseNumber, index);
 		std::cout << "Finishing creating simple op amps" << std::endl;
@@ -195,7 +195,7 @@ namespace Synthesis {
         
 		for(auto & circuit : opAmpCircuits)
 		{
-				Circuit * opAmp = new Circuit;
+				Synthesis::Circuit * opAmp = new Synthesis::Circuit;
 				opAmp->initialize(*circuit, getStructRecLibrary());
 
 				oneStageOpAmps.push_back(opAmp);
