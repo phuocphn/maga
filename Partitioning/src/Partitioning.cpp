@@ -433,35 +433,46 @@ namespace Partitioning {
 
 	void Partitioning::classifyInverter(const StructRec::StructureCircuits & circuits, const StructRec::StructureName inverterName, const StructRec::StructurePinType gatePin1, const StructRec::StructurePinType gatePin2)
 	{
+		// Example data:
+		// gatePin1 = StructRec::StructurePinType("MosfetCascodedPMOSAnalogInverter", "InputPMOS1");
+		// gatePin2 = StructRec::StructurePinType("MosfetCascodedPMOSAnalogInverter", "InputNMOS1");
 
+
+		// The function starts by finding all structures in the circuit that match the given inverterName.
 		std::vector<const StructRec::Structure*> inverters = circuits.findStructures(inverterName);
+
+		// It initializes counters for child structures related to transconductance and bias.
 		int childNumberTransStruc = 0;
 		int childNumberBiasStruc = 0;
 		for(auto& it : inverters)
 		{
+			// **classifying based on GATEPIN1**
+			// For each inverter structure, the function checks if the structure has already been classified.
+			if(getResult().structureAlreadyClassified(*it))
+			{ continue; }
 
-			if(!getResult().structureAlreadyClassified(*it))
-			{
+			// If not, it proceeds to classify the inverter.
+			// The function then finds the net connected to the gatePin1 of the inverter structure.
 			const StructRec::Structure * inverter = & *it;
 			const StructRec::Pair * inverterPair =static_cast<const StructRec::Pair*>(inverter);
 			const StructRec::StructureNet & netGatePin1 = inverter->findNet(gatePin1);
 
 			std::string type;
+
+			// looking for other structure(s) that are connected with the StructRec::StructurePinType gatePin1
 			std::vector<const StructRec::Structure*> structuresGatePin1 = circuits.findConnectedStructures(netGatePin1.getIdentifier());
 			for(auto& it : structuresGatePin1)
 			{
-
 				const StructRec::Structure & structure = * it;
 
-
+				// The function checks if the connected structure has already been classified and if it is a transconductance or load part.
 				if(getResult().structureAlreadyClassified(structure) && (getResult().getPart(structure).isTransconductancePart() || getResult().getPart(structure).isLoadPart()))
 				{
-
+					// If the connected structure meets these criteria, it further checks if the net has a stage output connection and if the inverter has a voltage bias output connection or only one transistor connected to the net.
 					if(hasStageOutputNetConnection(netGatePin1, getResult().getPart(structure), circuits)
 							&& (hasVoltageBiasOutputConnection(inverter->findNet(gatePin2)) || onlyOneTransistorConnectedToNet(inverter->findNet(gatePin2)) ))
 					{
-
-
+						// If these conditions are met, it sets the child structure numbers and determines the type of the inverter stage (primary second stage or third stage).
 						if(inverterPair->getChild(1).getStructureName() != StructRec::StructureName("MosfetMixedCascodePair2"))
 						{
 							childNumberTransStruc = 1;
@@ -472,15 +483,13 @@ namespace Partitioning {
 							else if(getResult().getTransconductancePart(structure).isPrimarySecondStage())
 								type = "thirdStage";
 						}
-
-
 					}
 
 				}
 			}
 
+			// Similar to the classification based on gatePin1, it repeats the process for gatePin2.
 			const StructRec::StructureNet & netGatePin2 = inverter->findNet(gatePin2);
-
 			std::vector<const StructRec::Structure*> structuresGatePin2 = circuits.findConnectedStructures(netGatePin2.getIdentifier());
 			for(auto& it : structuresGatePin2)
 			{
@@ -493,28 +502,26 @@ namespace Partitioning {
 							&& (hasVoltageBiasOutputConnection(inverter->findNet(gatePin1))
 									|| onlyOneTransistorConnectedToNet(inverter->findNet(gatePin1)) ))
 					{
-							if(inverterPair->getChild(2).getStructureName() != StructRec::StructureName("MosfetMixedCascodePair2"))
-							{
-								childNumberTransStruc = 2;
-								childNumberBiasStruc = 1;
-								if(getResult().getPart(structure).isLoadPart() ||
-									getResult().getTransconductancePart(structure).isFirstStage())
-									type = "primarySecondStage";
-								else if(getResult().getTransconductancePart(structure).isPrimarySecondStage())
-									type = "thirdStage";
-							}
-
-
+						if(inverterPair->getChild(2).getStructureName() != StructRec::StructureName("MosfetMixedCascodePair2"))
+						{
+							childNumberTransStruc = 2;
+							childNumberBiasStruc = 1;
+							if(getResult().getPart(structure).isLoadPart() ||
+								getResult().getTransconductancePart(structure).isFirstStage())
+								type = "primarySecondStage";
+							else if(getResult().getTransconductancePart(structure).isPrimarySecondStage())
+								type = "thirdStage";
+						}
 					}
 				}
 			}
 
-				if(childNumberTransStruc != 0)
-				{
-
-					initializeInverterStage({&inverterPair->getChild(childNumberTransStruc)}, inverterPair->getChild(childNumberBiasStruc), type);
-				}
+			// If a valid child structure number is found, it initializes the inverter stage by calling initializeInverterStage with the appropriate child structures and type.
+			if(childNumberTransStruc != 0)
+			{
+				initializeInverterStage({&inverterPair->getChild(childNumberTransStruc)}, inverterPair->getChild(childNumberBiasStruc), type);
 			}
+			
 		}
 	}
 
@@ -2426,7 +2433,13 @@ namespace Partitioning {
 		return isConnected;
 	}
 
-
+	/** *
+	* Partitioning::hasSecondStageOutputConnection, checks if a given net has a connection to the output of a second-stage inverter. It does this by iterating through structures connected to the net and verifying if any of these structures are inverters connected to the first stage's output.
+	* The function Partitioning::isInverterName determines if a given structure name corresponds to an inverter. It compares the structure name against a predefined list of inverter names. If a match is found, it returns true; otherwise, it returns false.
+	* The function Partitioning::isConnectedToInverterOutput checks if a given net is connected to the output of an inverter. It asserts that the structure is indeed an inverter and then iterates through a list of inverter names, checking if the net identifier matches any of the inverter's output or inner pins. If a match is found, it returns true.
+	* Lastly, the function Partitioning::inputOfInverterIsConnectedToFirstStageOutput verifies if the input of an inverter is connected to the output of the first stage. It asserts that the structure is an inverter and then iterates through a list of inverter names, checking if the inverter's input pins are connected to the first stage's output. If a connection is found, it returns true.
+	* Together, these functions help in identifying and verifying specific connections within a circuit, particularly focusing on inverters and their roles in different stages of the circuit.
+	*/
 	bool Partitioning::hasSecondStageOutputConnection(const StructRec::StructureNet& net, const StructRec::StructureCircuits &circuits) const
 	{
 		bool hasConnection = false;
