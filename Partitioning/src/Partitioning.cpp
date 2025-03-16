@@ -459,6 +459,10 @@ namespace Partitioning {
 
 			std::string type;
 
+			// reset child numbers
+			childNumberTransStruc = 0;
+			childNumberBiasStruc = 0;
+			
 			// looking for other structure(s) that are connected with the StructRec::StructurePinType gatePin1
 			std::vector<const StructRec::Structure*> structuresGatePin1 = circuits.findConnectedStructures(netGatePin1.getIdentifier());
 			for(auto& it : structuresGatePin1)
