@@ -255,12 +255,30 @@ namespace Partitioning {
 	void Partitioning::partitioningThirdStage(const StructRec::StructureCircuits &circuits)
 	{
 
+		// Old set of Inverter classifiers
+		// classifyMosfetAnalogInverter(circuits);
+		// classifyMosfetCascodedAnalogInverter(circuits);
+		// classifyMosfetCascodedPMOSAnalogInverter(circuits);
+		// classifyMosfetCascodedNMOSAnalogInverter(circuits);
+
 		classifyMosfetAnalogInverter(circuits);
 		classifyMosfetCascodedAnalogInverter(circuits);
+		classifyMosfetAnalogInverterNmosCurrentMirrorLoad(circuits);
+		classifyMosfetAnalogInverterPmosCurrentMirrorLoad(circuits);
+		classifyMosfetAnalogInverterNmosDiodeTransistor(circuits);
+		classifyMosfetAnalogInverterPmosDiodeTransistor(circuits);
+		classifyMosfetAnalogInverterNmosDiodeTransistorPmosCurrentMirrorLoad(circuits);
+		classifyMosfetAnalogInverterPmosDiodeTransistorNmosCurrentMirrorLoad(circuits);
 		classifyMosfetCascodedPMOSAnalogInverter(circuits);
 		classifyMosfetCascodedNMOSAnalogInverter(circuits);
-		//By symmetrical OTAs it can happen that the third stage is connected to first and second stage
+		classifyMosfetCascodedPMOSAnalogInverterCurrentMirrorLoad(circuits);
+		classifyMosfetCascodedNMOSAnalogInverterCurrentMirrorLoad(circuits);
+		classifyMosfetCascodedPMOSAnalogInverterOneDiodeTransistor(circuits);
+		classifyMosfetCascodedNMOSAnalogInverterOneDiodeTransistor(circuits);
+		classifyMosfetCascodedAnalogInverterTwoCurrentMirrorLoads(circuits);
 
+		//By symmetrical OTAs it can happen that the third stage is connected to first and second stage
+		
 		if(getResult().hasSecondStage() && getResult().getSecondStages().size() > 1)
 		{
 			for(auto & secondStage: getResult().getSecondStages())
