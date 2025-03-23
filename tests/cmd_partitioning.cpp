@@ -30,10 +30,10 @@ int main(int argc, char *argv[]) {
 
 
             argv_default[5] = "--circuit-netlist";
-            argv_default[6] = "examples/Partitioning/cascodedSymmetricalCMOSOTA.hspice";
+            argv_default[6] = "examples/Partitioning/input.hspice";
 
             argv_default[7] = "--output-file";
-            argv_default[8] = "examples/Partitioning/cascodedSymmetricalCMOSOTA.xml";
+            argv_default[8] = "examples/Partitioning/output.xml";
 
             argv_default[9] = "--xml-structrec-library-file";
             argv_default[10] = "StructRec/xml/AnalogLibrary.xml";
