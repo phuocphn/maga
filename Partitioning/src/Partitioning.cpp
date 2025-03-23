@@ -2491,33 +2491,42 @@ namespace Partitioning {
 	{
 		bool hasConnection = false;
 
+		// Check for Symmetrical OpAmp Load Part
 		if(getResult().getFirstStage().getLoadPart().size() == 1 && isSymmetricalOpAmpLoadPart(**getResult().getFirstStage().getLoadPart().begin()))
 		{
 			LoadPart & loadPart = **getResult().getFirstStage().getLoadPart().begin();
 			if(hasVoltageBiasOutputConnection(net))
 			{
+				// For each main structure, it checks if the structure is a voltage bias and if it has a voltage bias input connection on the given net using the hasVoltageBiasInputConnectionOnNet method.
 				for(auto & mainStruct : loadPart.getMainStructures())
 				{
 					if(isVoltageBias(*mainStruct) && hasVoltageBiasInputConnectionOnNet(*mainStruct, net))
 					{
+						// If both conditions are met, it sets hasConnection to true.
 						hasConnection = true;
 					}
 				}
 			}
 			return hasConnection;
 		}
+
 		else if(!getResult().getFirstStage().isComplementary())
 		{
+			// Check for Non-Complementary First Stage
+			// If the first stage is not complementary, the method retrieves the names of differential pair and gate-connected couple structures.
 			const StructRec::StructureName diffPairName = StructRec::StructureName("MosfetDifferentialPair");
 			const StructRec::StructureName gateConnectedCoupleName = StructRec::StructureName("MosfetGateConnectedCouple");
 
+			// It then finds all structures connected to the given net using the findConnectedStructures method of the circuits object.
 			std::vector<const StructRec::Structure*> connectedStructures = circuits.findConnectedStructures(net.getIdentifier());
 			for(auto& it : connectedStructures)
 			{
 				const StructRec::Structure & connectedStructure = * it;
+				// For each connected structure, it checks if the structure's name matches either the differential pair or gate-connected couple names.
 				if(connectedStructure.getStructureName() == diffPairName || connectedStructure.getStructureName() == gateConnectedCoupleName)
 				{
 
+					// If a match is found, it retrieves the output pins of the connected structure and checks if either of these pins is connected to the given net.
 					const StructRec::StructurePinType output1 = StructRec::StructurePinType(connectedStructure.getStructureName().toStr(), "Output1");
 					const StructRec::StructurePinType output2 = StructRec::StructurePinType(connectedStructure.getStructureName().toStr(), "Output2");
 
