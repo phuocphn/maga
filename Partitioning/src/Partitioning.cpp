@@ -2246,6 +2246,16 @@ namespace Partitioning {
 		const StructRec::StructurePinType gate6_2 = StructRec::StructurePinType("MosfetCascodeNMOSAnalogInverterOneDiodeTransistor", "InputNMOS1");
 		const StructRec::StructureName inverterName6 = StructRec::StructureName("MosfetCascodeNMOSAnalogInverterOneDiodeTransistor");
 
+		const StructRec::StructurePinType output7 = StructRec::StructurePinType("MosfetCascodeAnalogInverterNmosDiodeTransistor", "Output");
+		const StructRec::StructurePinType gate7_1 = StructRec::StructurePinType("MosfetCascodeAnalogInverterNmosDiodeTransistor", "InputPMOS1");
+		const StructRec::StructurePinType gate7_2 = StructRec::StructurePinType("MosfetCascodeAnalogInverterNmosDiodeTransistor", "InputNMOS1");
+		const StructRec::StructureName inverterName7 = StructRec::StructureName("MosfetCascodeAnalogInverterNmosDiodeTransistor");
+
+		const StructRec::StructurePinType output8 = StructRec::StructurePinType("MosfetCascodeAnalogInverterPmosDiodeTransistor", "Output");
+		const StructRec::StructurePinType gate8_1 = StructRec::StructurePinType("MosfetCascodeAnalogInverterPmosDiodeTransistor", "InputPMOS1");
+		const StructRec::StructurePinType gate8_2 = StructRec::StructurePinType("MosfetCascodeAnalogInverterPmosDiodeTransistor", "InputNMOS1");
+		const StructRec::StructureName inverterName8 = StructRec::StructureName("MosfetCascodeAnalogInverterPmosDiodeTransistor");
+
 		std::vector<const StructRec::Structure*> connectedStructures = circuits.findConnectedStructures(net.getIdentifier());
 		for(auto& it : connectedStructures)
 		{
@@ -2264,6 +2274,13 @@ namespace Partitioning {
 					
 					|| (connectedStructure.getStructureName() == inverterName6 && connectedStructure.findNet(output6).getIdentifier() == net.getIdentifier()
 					&& (hasSecondStageOutputConnection(connectedStructure.findNet(gate6_1), circuits) ||hasSecondStageOutputConnection(connectedStructure.findNet(gate6_2), circuits )) ) 
+
+					|| (connectedStructure.getStructureName() == inverterName7 && connectedStructure.findNet(output7).getIdentifier() == net.getIdentifier()
+					&& (hasSecondStageOutputConnection(connectedStructure.findNet(gate7_1), circuits) ||hasSecondStageOutputConnection(connectedStructure.findNet(gate7_2), circuits )) )
+
+					|| (connectedStructure.getStructureName() == inverterName8 && connectedStructure.findNet(output8).getIdentifier() == net.getIdentifier()
+					&& (hasSecondStageOutputConnection(connectedStructure.findNet(gate8_1), circuits) ||hasSecondStageOutputConnection(connectedStructure.findNet(gate8_2), circuits )) )
+
 					)
 			{
 				hasConnection = true;
