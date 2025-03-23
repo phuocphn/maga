@@ -94,15 +94,20 @@ def partition(
 
 
 if __name__ == "__main__":
-    INPUT_NETLIST_DIR = "outputs/TopologyGen/FullyDifferentialOpAmps/"
-    ERROR_FILE = os.path.join(INPUT_NETLIST_DIR, "partitioning_errors.txt")
-    PROCCESSED_DIR = os.path.join(INPUT_NETLIST_DIR, "processed_circuits")
-    OUTPUT_DIR = os.path.join(INPUT_NETLIST_DIR, "res.partitioning")
+    INPUT_NETLIST_DIR = "outputs/TopologyGen_08_03_2025/FullyDifferentialOpAmps/"
+    ERROR_FILE = os.path.join(INPUT_NETLIST_DIR, "partitioning.errors.txt")
+    PROCCESSED_DIR = os.path.join(INPUT_NETLIST_DIR, "partitioning.processed_netlist")
+    OUTPUT_DIR = os.path.join(INPUT_NETLIST_DIR, "partitioning.result")
+    check_exist = False
     pymaga_io = pymaga.IOCore()
 
     os.system(ERROR_FILE)
 
     for fname in glob.glob(os.path.join(INPUT_NETLIST_DIR, "*.ckt")):
+        if check_exist and os.path.exists(
+            os.path.join(OUTPUT_DIR, os.path.basename(fname).replace(".ckt", ".xml"))
+        ):
+            continue
         ret = partition(
             fname,
             processed_dir=PROCCESSED_DIR,

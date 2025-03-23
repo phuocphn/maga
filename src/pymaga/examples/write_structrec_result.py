@@ -65,8 +65,15 @@ def process(
 
 
 if __name__ == "__main__":
-    INPUT_NETLIST_DIR = "outputs/TopologyGen/FullyDifferentialOpAmps/"
+    NETLIST_DIR = "outputs/TopologyGen/SingleOutputOpAmps/"
+    PROCESSED_DIR = os.path.join(
+        NETLIST_DIR, "structural_recognition.processed_netlist"
+    )
+    OUTPUT_DIR = os.path.join(NETLIST_DIR, "structural_recognition.result")
+    os.makedirs(PROCESSED_DIR, exist_ok=True)
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
     pymaga_io = pymaga.IOCore()
 
-    for fname in glob.glob(os.path.join(INPUT_NETLIST_DIR, "*")):
-        process(fname)
+    for fname in glob.glob(os.path.join(NETLIST_DIR, "*.ckt")):
+        process(fname, processed_dir=PROCESSED_DIR, output_dir=OUTPUT_DIR)
