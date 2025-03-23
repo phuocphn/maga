@@ -1,0 +1,60 @@
+** Design view name: schematic
+.GLOBAL vdd! gnd!
+
+.TEMP 25.0
+.OPTION
++    ARTIST=2
++    INGOLD=2
++    PARHIER=LOCAL
++    PSF=2
+
+** Library name: CascodeSymmetricalCMOSOTA
+** Cell name: cascodeSymmetricalCMOSOTA
+** View name: schematic
+c1 out1FirstStage out1
+c2 out2FirstStage out2
+m1 outVoltageBiasXXpXX1 outVoltageBiasXXnXX0 gnd! gnd! nmos
+m2 outVoltageBiasXXnXX0 ibias vdd! vdd! pmos
+m3 outInputVoltageBiasXXnXX1 ibias vdd! vdd! pmos
+m4 outInputVoltageBiasXXnXX2 ibias vdd! vdd! pmos
+m5 inputVoltageBiasXXnXX3 ibias vdd! vdd! pmos
+m6 FeedbackStageYout1 FeedbackStageYout1 gnd! gnd! nmos
+m7 outFeedback outFeedback gnd! gnd! nmos
+m8 FeedbackStageYsourceTransconductance1 ibias vdd! vdd! pmos
+m9 FeedbackStageYsourceTransconductance2 ibias vdd! vdd! pmos
+m10 FeedbackStageYout1 out2 FeedbackStageYsourceTransconductance1 FeedbackStageYsourceTransconductance1 pmos
+m11 outFeedback vref FeedbackStageYsourceTransconductance1 FeedbackStageYsourceTransconductance1 pmos
+m12 FeedbackStageYout1 out1 FeedbackStageYsourceTransconductance2 FeedbackStageYsourceTransconductance2 pmos
+m13 outFeedback vref FeedbackStageYsourceTransconductance2 FeedbackStageYsourceTransconductance2 pmos
+m14 out1FirstStage inputVoltageBiasXXnXX3 FirstStageYinnerTransistorStack1Load1 FirstStageYinnerTransistorStack1Load1 nmos
+m15 FirstStageYinnerTransistorStack1Load1 outFeedback gnd! gnd! nmos
+m16 out2FirstStage inputVoltageBiasXXnXX3 FirstStageYinnerTransistorStack2Load1 FirstStageYinnerTransistorStack2Load1 nmos
+m17 FirstStageYinnerTransistorStack2Load1 outFeedback gnd! gnd! nmos
+m18 FirstStageYsourceTransconductance ibias vdd! vdd! pmos
+m19 out1FirstStage in1 FirstStageYsourceTransconductance FirstStageYsourceTransconductance pmos
+m20 out2FirstStage in2 FirstStageYsourceTransconductance FirstStageYsourceTransconductance pmos
+c3 out1 gnd!
+c4 out2 gnd!
+m21 out1SecondStage inputVoltageBiasXXnXX3 SecondStage1YinnerTransconductance SecondStage1YinnerTransconductance nmos
+m22 SecondStage1YinnerTransconductance out1FirstStage gnd! gnd! nmos
+m23 out1SecondStage ibias vdd! vdd! pmos
+m24 out2SecondStage inputVoltageBiasXXnXX3 SecondStage2YinnerTransconductance SecondStage2YinnerTransconductance nmos
+m25 SecondStage2YinnerTransconductance out2FirstStage gnd! gnd! nmos
+m26 out2SecondStage ibias vdd! vdd! pmos
+m27 out1 outInputVoltageBiasXXnXX1 outSourceVoltageBiasXXnXX1 outSourceVoltageBiasXXnXX1 nmos
+m28 outSourceVoltageBiasXXnXX1 outSourceVoltageBiasXXnXX1 gnd! gnd! nmos
+m29 out1 outVoltageBiasXXpXX1 ThirdStage1YinnerTransconductance ThirdStage1YinnerTransconductance pmos
+m30 ThirdStage1YinnerTransconductance out1SecondStage vdd! vdd! pmos
+m31 out2 outInputVoltageBiasXXnXX2 outSourceVoltageBiasXXnXX2 outSourceVoltageBiasXXnXX2 nmos
+m32 outSourceVoltageBiasXXnXX2 outSourceVoltageBiasXXnXX2 gnd! gnd! nmos
+m33 out2 outVoltageBiasXXpXX1 ThirdStage2YinnerTransconductance ThirdStage2YinnerTransconductance pmos
+m34 ThirdStage2YinnerTransconductance out2SecondStage vdd! vdd! pmos
+m35 outVoltageBiasXXnXX0 outVoltageBiasXXnXX0 gnd! gnd! nmos
+m36 outInputVoltageBiasXXnXX1 outInputVoltageBiasXXnXX1 VoltageBiasXXnXX1Yinner VoltageBiasXXnXX1Yinner nmos
+m37 VoltageBiasXXnXX1Yinner outSourceVoltageBiasXXnXX1 gnd! gnd! nmos
+m38 outInputVoltageBiasXXnXX2 outInputVoltageBiasXXnXX2 VoltageBiasXXnXX2Yinner VoltageBiasXXnXX2Yinner nmos
+m39 VoltageBiasXXnXX2Yinner outSourceVoltageBiasXXnXX2 gnd! gnd! nmos
+m40 inputVoltageBiasXXnXX3 inputVoltageBiasXXnXX3 gnd! gnd! nmos
+m41 outVoltageBiasXXpXX1 outVoltageBiasXXpXX1 vdd! vdd! pmos
+m42 ibias ibias vdd! vdd! pmos
+.END
