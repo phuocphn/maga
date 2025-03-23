@@ -57,8 +57,7 @@ int main(int argc, char *argv[]) {
 
             // --HSPICE-netlist-dir InputFileExamples/TopologyLibraryGeneration/NetlistsWithLabels
             argv_default[5] = "--HSPICE-netlist-dir";
-            argv_default[6] = "InputFileExamples/TopologyLibraryGeneration/NetlistsWithoutLabels";
-
+            argv_default[6] = "outputs/TopologyGen";         
             control.run(argc,argv_default);
 
         }
