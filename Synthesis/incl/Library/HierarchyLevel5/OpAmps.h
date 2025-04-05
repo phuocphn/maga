@@ -144,7 +144,7 @@ namespace Synthesis
 			void addTerminalNets(std::vector<Core::NetId> & netNames, std::map<Core::TerminalName, Core::NetId> & terminalToNetMap,
 											Core::Circuit & opAmp) const;	
 			void addFirstStageToSecondStageNets(std::vector<Core::NetId> & netNames, const Core::Circuit & opAmp) const;	
-			void addFirstStageToSecondStageNets_Ext3(std::vector<Core::NetId> & netNames, const Core::Circuit & opAmp) const;									
+			void addFirstStageToSecondStageNets_Ext3(std::vector<Core::NetId> & netNames, const Core::Circuit & opAmp, bool create_three_stage=false) const;									
 
 			void addComplementarySecondStageNets(std::vector<Core::NetId> & netNames, Core::Circuit & opAmp) const;
 			

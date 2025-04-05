@@ -86,6 +86,7 @@ namespace Synthesis {
 
 
 		void createOpAmps(const FunctionalBlockLibrary & functionalBlockLibrary, const AutomaticSizing::CircuitParameter & circuitParameter);
+		void createThreeStageOpAmps(const FunctionalBlockLibrary & functionalBlockLibrary, const AutomaticSizing::CircuitParameter & circuitParameter);
 		void writeHSpiceFile(const Core::Circuit &  circuit, const AutomaticSizing::CircuitParameter & circuitParameter, std::string fileNamePrefx = "empty");
 
 		void setStructRecResult(StructRec::Result & strucRecResult);
