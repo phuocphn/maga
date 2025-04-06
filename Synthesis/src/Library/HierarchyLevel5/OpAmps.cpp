@@ -84,6 +84,9 @@ namespace Synthesis {
     const Core::InstanceName OpAmps::THIRDSTAGE1_ = Core::InstanceName("ThirdStage1");
     const Core::InstanceName OpAmps::THIRDSTAGE2_ = Core::InstanceName("ThirdStage2");
 
+    const Core::InstanceName OpAmps::FOURTHSTAGE_ = Core::InstanceName("FourthStage");  
+    const Core::InstanceName OpAmps::FOURTHSTAGE1_ = Core::InstanceName("FourthStage1");
+    const Core::InstanceName OpAmps::FOURTHSTAGE2_ = Core::InstanceName("FourthStage2");
 
     const Core::InstanceName OpAmps::LOADCAPACITOR_ = Core::InstanceName("LoadCapacitor");
     const Core::InstanceName OpAmps::LOADCAPACITOR1_ = Core::InstanceName("LoadCapacitor1");
@@ -123,9 +126,12 @@ namespace Synthesis {
     // const Core::NetId OpAmps::OUTSECONDSTAGE_NET_ = Core::NetName("outSecondStage").createRootIdentifier();
     const Core::NetId OpAmps::OUT1SECONDSTAGE_NET_ = Core::NetName("out1SecondStage").createRootIdentifier();
     const Core::NetId OpAmps::OUT2SECONDSTAGE_NET_ = Core::NetName("out2SecondStage").createRootIdentifier();
-
-
     const Core::NetId OpAmps::OUTSECONDSTAGE_NET_ = Core::NetName("outSecondStage").createRootIdentifier();
+
+    const Core::NetId OpAmps::OUTTHIRDSTAGE1_NET_ = Core::NetName("outThirdStage1").createRootIdentifier();
+    const Core::NetId OpAmps::OUTTHIRDSTAGE2_NET_ = Core::NetName("outThirdStage2").createRootIdentifier();
+    const Core::NetId OpAmps::OUTTHIRDSTAGE_NET_ = Core::NetName("outThirdStage").createRootIdentifier();
+
     const Core::NetId OpAmps::OUTFEEDBACKSTAGE_NET_ = Core::NetName("outFeedback").createRootIdentifier();
             
     const Core::NetId OpAmps::INNERCOMPLEMENTARYSECONDSTAGE_NET_ = Core::NetName("innerComplementarySecondStage").createRootIdentifier();
@@ -374,20 +380,21 @@ namespace Synthesis {
         std::vector<const Core::Circuit*> threeStageOpAmps;
         int index = 1;
         const Core::Circuit & firstStage = oneStageOpAmp.findInstance(createInstanceId(FIRSTSTAGE_)).getMaster();
-        const Core::Circuit & secondStage = twoStageOpAmp.findInstance(createInstanceId(SECONDSTAGE_)).getMaster();
 
-        // for(auto & secondStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
-        // {
-        //     const Core::Circuit & opAmp = createSimpleOpAmp(index, createInstance(firstStage, FIRSTSTAGE_), &createInstance(*secondStage, SECONDSTAGE_));
-        //     twoStageOpAmps.push_back(&opAmp);
-        //     index++;
-        // }
-
-        for(auto & thirdStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+        // const Core::Circuit & twoStageOpAmp: DON'T USE THIS
+        for(auto & secondStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
         {
-            const Core::Circuit & opAmp = createSimpleOpAmp_Ext(index, createInstance(firstStage, FIRSTSTAGE_), createInstance(secondStage, SECONDSTAGE_), &createInstance(*thirdStage, THIRDSTAGE_));
-            threeStageOpAmps.push_back(&opAmp);
-            index++;
+            for (auto & thirdStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+            {
+                for(auto & fourthStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+                {
+                    const Core::Circuit & opAmp = createSimpleOpAmp_2INV(index, createInstance(firstStage, FIRSTSTAGE_), &createInstance(*secondStage, SECONDSTAGE_), &createInstance(*thirdStage, THIRDSTAGE_), &createInstance(*fourthStage, FOURTHSTAGE_));
+                    threeStageOpAmps.push_back(&opAmp);
+                    index++;
+                    std::cout << "three-stage opamp index: " << index << std::endl;
+                }
+            }
+
         }
         // return twoStageOpAmps;
         return threeStageOpAmps;
@@ -745,6 +752,84 @@ namespace Synthesis {
     }
 
 
+    const Core::Circuit& OpAmps::createSimpleOpAmp_2INV(int & index, 
+            Core::Instance & firstStage, 
+            Core::Instance* secondStage, 
+            Core::Instance* thirdStage,
+            Core::Instance* fourthStage)
+    {
+    Core::Circuit * opAmp = new Core::Circuit;
+
+    std::vector<Core::NetId> netNames;
+    std::map<Core::TerminalName, Core::NetId> terminalToNetMap;
+
+    // Op_so,2,\bo\cap (s1)
+    opAmp->addInstance(firstStage);
+    firstStage.setCircuit(*opAmp);
+
+    Core::Instance & loadCapacitor = getCapacitor().createNewCapacitorInstance(LOADCAPACITOR_);
+    Core::Instance * compensationCapacitor1 = nullptr;
+    Core::Instance * compensationCapacitor2 = nullptr;
+
+    opAmp->addInstance(loadCapacitor);
+    loadCapacitor.setCircuit(*opAmp);
+
+    Core::CircuitIds circuitIds;
+
+
+    // if(secondStage != nullptr && thirdStage != nullptr)
+    if (1)
+    {
+        Core::CircuitId opAmpId = circuitIds.simpleThreeStageOpAmp(index);
+        opAmpId.setTechType(firstStage.getMaster().getCircuitIdentifier().getTechType());
+        opAmp->setCircuitIdentifier(opAmpId);
+        opAmp->addInstance(*secondStage);
+        opAmp->addInstance(*thirdStage);
+        opAmp->addInstance(*fourthStage);
+
+        addFirstStageToSecondStageNets_Ext3(netNames, *opAmp);
+        secondStage->setCircuit(*opAmp);
+        thirdStage->setCircuit(*opAmp);
+        fourthStage->setCircuit(*opAmp);
+
+        compensationCapacitor1 = &getCapacitor().createNewCapacitorInstance(COMPENSATIONCAPACITOR1_);
+        opAmp->addInstance(*compensationCapacitor1);
+        compensationCapacitor1->setCircuit(*opAmp);
+
+
+
+        compensationCapacitor2 = &getCapacitor().createNewCapacitorInstance(COMPENSATIONCAPACITOR2_);
+        opAmp->addInstance(*compensationCapacitor2);
+        compensationCapacitor2->setCircuit(*opAmp);
+
+
+    }
+    else
+    {
+        std::cout << "extended not implemented !";
+    }
+
+
+
+    addTerminalNets(netNames, terminalToNetMap,*opAmp); // checked, this function is used to add the nets to the circuit via (netNames, terminalToNetMap).
+    
+    netNames.push_back(OUTTHIRDSTAGE_NET_); 
+    addNetsToCircuit(*opAmp, netNames); // checked, this function calls opAmp->addNet(netNames[i]);
+    addTerminalsToCircuit(*opAmp, terminalToNetMap); // checked
+    setSupplyNets(*opAmp); // checked
+
+
+    connectInstanceTerminalsSimpleOpAmp_2INV(*opAmp, firstStage, secondStage, thirdStage, fourthStage); // checked
+    connectInstanceTerminalsCapacitors_Ext3(*opAmp, loadCapacitor, compensationCapacitor1, compensationCapacitor2); //ok
+
+
+    buildAndConnectedBias(*opAmp);
+
+
+    return *opAmp;
+    }
+
+
     const Core::Circuit& OpAmps::createFullyDifferentialOpAmp(int & index, Core::Instance & firstStage, Core::Instance & feedbackStage,
 								Core::Instance * secondStage1, Core::Instance * secondStage2)
     {
@@ -1047,8 +1132,8 @@ namespace Synthesis {
         opAmpId.setTechType(firstStage.getMaster().getCircuitIdentifier().getTechType());
         opAmp->setCircuitIdentifier(opAmpId);
 
-        addTerminalNets(netNames, terminalToNetMap,*opAmp);
-        addComplementarySecondStageNets( netNames, * opAmp);
+        addTerminalNets(netNames, terminalToNetMap,*opAmp); 
+        addComplementarySecondStageNets( netNames, * opAmp); 
         
         netNames.push_back(OUTSECONDSTAGE_NET_);
 		addNetsToCircuit(*opAmp, netNames);
@@ -1295,7 +1380,70 @@ namespace Synthesis {
 
     }
 
+	void OpAmps::connectInstanceTerminalsSimpleOpAmp_2INV(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance * secondStage, Core::Instance *thirdStage, Core::Instance *fourthStage) const
+    {
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::IN1_TERMINAL_, IN1_NET_); // checked
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::IN2_TERMINAL_, IN2_NET_); // checked
 
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_); // checked
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::SOURCENMOS_TERMINAL_, SOURCENMOS_NET_); // checked
+
+
+        // connect second stage to first stage
+        // *************************************************************************
+        connectInstanceTerminal(opAmp, *secondStage, InvertingStages::SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_); // checked
+        connectInstanceTerminal(opAmp, *secondStage, InvertingStages::SOURCENMOS_TERMINAL_, SOURCENMOS_NET_); // checked
+        // connectInstanceTerminal(opAmp, *secondStage, InvertingStages::OUTPUT_TERMINAL_, OUT_NET_); /// add new net
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUT2_TERMINAL_, OUTFIRSTSTAGE_NET_);
+        
+        const Core::Circuit & transconductanceSecondStage = getSecondStageTransconductance(secondStage->getMaster());
+        if(getDeviceNamesOfFlatCircuit(transconductanceSecondStage).size() == 1)
+        {
+            connectInstanceTerminal(opAmp, *secondStage, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUTFIRSTSTAGE_NET_); // checked
+        }
+        else
+        {
+            connectInstanceTerminal(opAmp, *secondStage, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUTFIRSTSTAGE_NET_); // checked
+        }
+
+
+
+        // connect third stage to second stage
+        // *************************************************************************
+        connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_); // checked
+        connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::SOURCENMOS_TERMINAL_, SOURCENMOS_NET_); // checked
+        connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::OUTPUT_TERMINAL_, OUTTHIRDSTAGE_NET_); // checked
+        connectInstanceTerminal(opAmp, *secondStage, InvertingStages::OUTPUT_TERMINAL_, OUTSECONDSTAGE_NET_);
+        
+        const Core::Circuit & transconductanceThirdStage = getSecondStageTransconductance(thirdStage->getMaster());
+        if(getDeviceNamesOfFlatCircuit(transconductanceThirdStage).size() == 1)
+        {
+            connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUTSECONDSTAGE_NET_); // checked
+        }
+        else
+        {
+            connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUTSECONDSTAGE_NET_); //checked
+        }
+
+
+        // connect fourth stage to third stage
+        // *************************************************************************
+        connectInstanceTerminal(opAmp, *fourthStage, InvertingStages::SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_); // checked
+        connectInstanceTerminal(opAmp, *fourthStage, InvertingStages::SOURCENMOS_TERMINAL_, SOURCENMOS_NET_); //checked
+        connectInstanceTerminal(opAmp, *fourthStage, InvertingStages::OUTPUT_TERMINAL_, OUT_NET_); // checked
+        // connectInstanceTerminal(opAmp, secondStage, InvertingStages::OUTPUT_TERMINAL_, OUTSECONDSTAGE_NET_);
+        
+        const Core::Circuit & transconductanceFourthStage = getSecondStageTransconductance(fourthStage->getMaster());
+        if(getDeviceNamesOfFlatCircuit(transconductanceFourthStage).size() == 1)
+        {
+            connectInstanceTerminal(opAmp, *fourthStage, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUTTHIRDSTAGE_NET_); //checked
+        }
+        else
+        {
+            connectInstanceTerminal(opAmp, *fourthStage, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUTTHIRDSTAGE_NET_); //checked
+        }
+
+    }
 
 	void OpAmps::connectInstanceTerminalsFullyDifferentialOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage, 
                             Core::Instance & feedbackStage, Core::Instance * secondStage1, Core::Instance * secondStage2) const
