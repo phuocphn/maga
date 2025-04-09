@@ -80,6 +80,7 @@ namespace Partitioning {
         bool isPrimarySecondStage() const;
         bool isSecondarySecondStage() const;
         bool isThirdStage() const;
+        bool isFourthStage() const;
         bool isFeedBack() const;
         bool isHigherStage() const;
 
@@ -120,7 +121,8 @@ namespace Partitioning {
 		       TYPE_PRIMARYSECONDSTAGE,
 			   TYPE_SECONDARYSECONDSTAGE,
 		       TYPE_FEEDBACK,
-			   TYPE_THIRDSTAGE
+			   TYPE_THIRDSTAGE,
+			   TYPE_FOURTHSTAGE
 	   };
 
 		enum FirstStageTypeEnum {
@@ -136,6 +138,7 @@ namespace Partitioning {
 	  static const std::string PRIMARYSECONDSTAGE_STRING_;
 	  static const std::string SECONDARYSECONDSTAGE_STRING_;
 	  static const std::string THIRDSTAGE_STRING_;
+	  static const std::string FOURTHSTAGE_STRING_;
 	  static const std::string FEEDBACK_STRING_;
 
 	  static const std::string SIMPLE_STRING_;

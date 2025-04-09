@@ -1041,6 +1041,24 @@ std::vector<TransconductancePart*> Result::getSecondStages() const
 
 }
 
+std::vector<TransconductancePart*> Result::getThirdStages() const
+{
+	assert(hasSecondStage(), "Does not have ThirdStage!");
+	std::vector<TransconductancePart*> thirdStages;
+	for(std::map<PartId, TransconductancePart*>::const_iterator it = transconductanceParts_.begin();
+			it != transconductanceParts_.end(); it++)
+	{
+		TransconductancePart * transPart = it->second;
+		// if(transPart->isPrimaryThirdStage() || transPart->isSecondaryThirdStage())
+		if(transPart->isThirdStage())
+
+		{
+			thirdStages.push_back(transPart);
+		}
+	}
+	return thirdStages;
+}
+
 TransconductancePart & Result::getPrimarySecondStage() const
 {
 	TransconductancePart * primarySecondStage = nullptr;
