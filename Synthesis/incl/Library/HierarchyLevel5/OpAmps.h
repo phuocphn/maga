@@ -172,6 +172,11 @@ namespace Synthesis
 											Core::Instance * compensationCapacitor = nullptr) const;
 			void connectInstanceTerminalsCapacitors_Ext3(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
 											Core::Instance * compensationCapacitor1 = nullptr, Core::Instance * compensationCapacitor2 = nullptr) const;
+			void connectInstanceTerminalsCapacitors_2INV(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
+											Core::Instance * compensationCapacitor1 = nullptr, Core::Instance * compensationCapacitor2 = nullptr,
+											Core::Instance * compensationCapacitor3 = nullptr) const;
+
+
 			void connectInstanceTerminalsCapacitorsWithResistorInSeries(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
 											Core::Instance * compensationCapacitor1 = nullptr, Core::Instance * compensationCapacitor2 = nullptr, Core::Instance * compensationResistor1 = nullptr, Core::Instance * compensationResistor2 = nullptr) const;
 											
@@ -263,6 +268,9 @@ namespace Synthesis
 			static const Core::InstanceName COMPENSATIONCAPACITOR_;
 			static const Core::InstanceName COMPENSATIONCAPACITOR1_;
 			static const Core::InstanceName COMPENSATIONCAPACITOR2_;
+			static const Core::InstanceName COMPENSATIONCAPACITOR3_;
+			static const Core::InstanceName COMPENSATIONCAPACITOR4_;
+
 
 			static const Core::InstanceName COMPENSATIONRESISTOR1_;
 			static const Core::InstanceName COMPENSATIONRESISTOR2_;
