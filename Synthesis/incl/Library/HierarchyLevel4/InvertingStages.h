@@ -67,6 +67,7 @@ namespace Synthesis
 			std::vector<const Core::Circuit *>  getInvertingStagesPmosTransconductance() const;
 			std::vector<const Core::Circuit *>  getInvertingStagesNmosTransconductance() const;
 			std::vector<const Core::Circuit *>  getInvertingStages() const;
+			std::vector<const Core::Circuit *>  getNonInvertingSelfBiasStages() const;
 
 			std::string toStr() const;
 
@@ -97,6 +98,8 @@ namespace Synthesis
 			const Core::Circuit & createInvertingStagePmosTransconductance(Core::Instance & analogInverter, int & index);
 			const Core::Circuit & createInvertingStageNmosTransconductance(Core::Instance & analogInverter, int & index);
 		
+			const Core::Circuit & createNonInvertingSelfBiasStage(Core::Instance & analogInverter, int & index);
+
 			void addTransconductanceNets(std::vector<Core::NetId> & netNames, 
 							std::map<Core::TerminalName, Core::NetId> & terminalToNetMap, const Core::Instance & transconductance);
         	void addStageBiasNets(std::vector<Core::NetId> & netNames, 
@@ -126,6 +129,7 @@ namespace Synthesis
 
 			std::vector<const Core::Circuit *> invertingStagesPmosTransconductance_;
             std::vector<const Core::Circuit *> invertingStagesNmosTransconductance_;
+			std::vector<const Core::Circuit *> nonInvertingStagesSelfBias_;
 	};
 
     }

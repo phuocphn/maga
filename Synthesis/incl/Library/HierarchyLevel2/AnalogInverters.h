@@ -68,6 +68,7 @@ namespace Synthesis
 			~AnalogInverters();
 
 			std::vector<const Core::Circuit*>  getAnalogInverters() const;
+			std::vector<const Core::Circuit*>  getAnalogSelfBiasInverters() const;
 
 
 			std::string toStr() const;
@@ -92,21 +93,29 @@ namespace Synthesis
 			static const Core::InstanceName CURRENTBIASNMOS_;
 			static const Core::InstanceName CURRENTBIASPMOS_;
 			
+			static const Core::InstanceName IN_PMOS;
+			static const Core::InstanceName OUT_PMOS;
+			static const Core::InstanceName IN_NMOS;
+			static const Core::InstanceName OUT_NMOS;
 
 		private:
 			void initializeAnalogInverters(StructuralLevel & StructuralLevel);
+			void initializeSelfBiasNonInverters(StructuralLevel & StructuralLevel);
 
 			const Core::Circuit & createNewAnalogInverter(const Core::Circuit & currentBiasPmos, 
 									const Core::Circuit & currentBiasNmos, int & index);
-
+			const Core::Circuit & createSelfBiasNonInverter( const Core::Circuit & normalTransistorPmos,  const Core::Circuit & diodeTransistorNmos, const Core::Circuit & normalTransistorNmos, int & index);
 			void connectInstanceTerminals(Core::Circuit & circuit, Core::Instance & currentBiasNmosInstance, 
 											Core::Instance & currentBiasPmosInstance);
-
+			// inPmosInstance, outPmosInstance, inDiodeNmosInstance, outNmosInstance
+			void connectInstanceTerminals_SelfBias(Core::Circuit & circuit, Core::Instance & inPmosInstance, Core::Instance & outPmosInstance, Core::Instance & inDiodeNmosInstance, Core::Instance & outNmosInstance);
 			void eraseAllAnalogInverters();
 
 		private:
 			static const Core::NetId OUTPUT_NET_;
-			
+			static const Core::NetId FIRST_INNER_DRAIN_NET_;
+			static const Core::NetId SELF_BIAS_GATE_NET_;
+
 			static const Core::NetId SOURCE_CURRENTBIASNMOS_NET_;
 			static const Core::NetId SOURCE_CURRENTBIASPMOS_NET_;
 			
@@ -121,7 +130,8 @@ namespace Synthesis
 			static const Core::NetId INNER_CURRENTBIASNMOS_NET_;
 			static const Core::NetId INNER_CURRENTBIASPMOS_NET_;
 
-			std::vector<const Core::Circuit *> analogInverters_;
+			std::vector<const Core::Circuit *> analogInverters_;			
+			std::vector<const Core::Circuit *> analogSelfBiasInverters_;
 
 	};
 
