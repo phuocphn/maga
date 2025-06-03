@@ -389,21 +389,38 @@ namespace Synthesis {
         const Core::Circuit & firstStage = oneStageOpAmp.findInstance(createInstanceId(FIRSTSTAGE_)).getMaster();
 
         // const Core::Circuit & twoStageOpAmp: DON'T USE THIS
-        for(auto & secondStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+        if (0)
         {
-            for (auto & thirdStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+            for(auto & secondStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
             {
-                for(auto & fourthStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+                for (auto & thirdStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
                 {
-                    const Core::Circuit & opAmp = createSimpleOpAmp_2INV(index, createInstance(firstStage, FIRSTSTAGE_), &createInstance(*secondStage, SECONDSTAGE_), &createInstance(*thirdStage, THIRDSTAGE_), &createInstance(*fourthStage, FOURTHSTAGE_));
+                    for(auto & fourthStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+                    {
+                        const Core::Circuit & opAmp = createSimpleOpAmp_2INV(index, createInstance(firstStage, FIRSTSTAGE_), &createInstance(*secondStage, SECONDSTAGE_), &createInstance(*thirdStage, THIRDSTAGE_), &createInstance(*fourthStage, FOURTHSTAGE_));
+                        threeStageOpAmps.push_back(&opAmp);
+                        index++;
+                        std::cout << "three-stage opamp index: " << index << std::endl;
+                    }
+                }
+
+            }
+        }
+
+        if (1)
+        {
+            for(auto & secondStage : getAmplificationStageLevel().getInvertingStages().getNonInvertingSelfBiasStages())
+            {
+                for (auto & thirdStage : getAmplificationStageLevel().getInvertingStages().getInvertingStages())
+                {
+                    const Core::Circuit & opAmp = createSimpleOpAmp_Ext(index, createInstance(firstStage, FIRSTSTAGE_), createInstance(*secondStage, SECONDSTAGE_), &createInstance(*thirdStage, THIRDSTAGE_));
                     threeStageOpAmps.push_back(&opAmp);
                     index++;
                     std::cout << "three-stage opamp index: " << index << std::endl;
                 }
             }
-
         }
-        // return twoStageOpAmps;
+
         return threeStageOpAmps;
     }
     /***********simple single-output three stage op-amps */
@@ -789,7 +806,7 @@ namespace Synthesis {
         setSupplyNets(*opAmp); // ok
 
 
-        connectInstanceTerminalsSimpleOpAmp_Ext(*opAmp, firstStage, secondStage, thirdStage); // ok
+        connectInstanceTerminalsSimpleOpAmp_ExtSelfBias(*opAmp, firstStage, secondStage, thirdStage); // ok
         connectInstanceTerminalsCapacitors_Ext3(*opAmp, loadCapacitor, compensationCapacitor1, compensationCapacitor2); //ok
     
 
@@ -1545,13 +1562,44 @@ namespace Synthesis {
                 connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUTSECONDSTAGE_NET_);
             }
         }
-
-
-
-
-
-
     }
+
+	void OpAmps::connectInstanceTerminalsSimpleOpAmp_ExtSelfBias(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance & secondStage, Core::Instance *thirdStage) const
+    {
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::IN1_TERMINAL_, IN1_NET_); //ok
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::IN2_TERMINAL_, IN2_NET_); // ok
+
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_); //ok
+        connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::SOURCENMOS_TERMINAL_, SOURCENMOS_NET_); //ok
+
+
+        if (1)
+        {
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_); // ok
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::SOURCENMOS_TERMINAL_, SOURCENMOS_NET_); // ok
+
+            connectInstanceTerminal(opAmp, firstStage, NonInvertingStages::OUT2_TERMINAL_, OUTFIRSTSTAGE_NET_);
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUTFIRSTSTAGE_NET_);
+
+  
+            connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_); //ok
+            connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::SOURCENMOS_TERMINAL_, SOURCENMOS_NET_); //ok
+            connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::OUTPUT_TERMINAL_, OUT_NET_); // ok
+
+            connectInstanceTerminal(opAmp, secondStage, InvertingStages::OUTPUT_TERMINAL_, OUTSECONDSTAGE_NET_);
+            const Core::Circuit & transconductanceThirdStage = getSecondStageTransconductance(thirdStage->getMaster());
+            if(getDeviceNamesOfFlatCircuit(transconductanceThirdStage).size() == 1)
+            {
+                connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::INTRANSCONDUCTANCE_TERMINAL_, OUTSECONDSTAGE_NET_);
+            }
+            else
+            {
+                connectInstanceTerminal(opAmp, *thirdStage, InvertingStages::INSOURCETRANSCONDUCTANCE_TERMINAL_, OUTSECONDSTAGE_NET_);
+            }
+        }
+    }
+
+
 
 	void OpAmps::connectInstanceTerminalsSimpleOpAmp_2INV(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance * secondStage, Core::Instance *thirdStage, Core::Instance *fourthStage) const
     {
