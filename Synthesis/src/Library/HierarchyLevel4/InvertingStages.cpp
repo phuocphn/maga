@@ -113,6 +113,11 @@ namespace Synthesis {
         assert(!invertingStagesNmosTransconductance_.empty());
         return invertingStagesNmosTransconductance_;
     }
+    std::vector<const Core::Circuit *>  InvertingStages::getNonInvertingSelfBiasStages() const
+    {
+        assert(!nonInvertingStagesSelfBias_.empty());
+        return nonInvertingStagesSelfBias_;
+    }
 
 	std::vector<const Core::Circuit *>  InvertingStages::getInvertingStages() const
     {
@@ -163,6 +168,17 @@ namespace Synthesis {
         invertingStagesPmosTransconductance_ = createInvertingStagesPmosTransconductance(analogInverters);
         invertingStagesNmosTransconductance_ = createInvertingStagesNmosTransconductance(analogInverters);
 
+        // nonInvertingStagesSelfBias_ = 
+        int index = 1;
+        std::vector<const Core::Circuit*> nonInvertingStagesSelfBiasOut;
+        std::vector<const Core::Circuit*> analogSelfBiasInverters = structuralLevel.getAnalogInverters().getAnalogSelfBiasInverters();
+        for(auto & sbNonInv : analogSelfBiasInverters)
+        {
+            const Core::Circuit & invertingSelfBiasStage = createNonInvertingSelfBiasStage(createInstance(*sbNonInv, ANALOGINVERTER_), index);
+            nonInvertingStagesSelfBiasOut.push_back(&invertingSelfBiasStage);
+            index++;
+        }
+        nonInvertingStagesSelfBias_ =  nonInvertingStagesSelfBiasOut;
     }
 
     
@@ -256,6 +272,60 @@ namespace Synthesis {
 
 
         connectInstanceTerminalsPmosTransconductance(*invertingStage, analogInverter);
+        analogInverter.setCircuit(*invertingStage);
+
+        return *invertingStage;
+    }
+
+
+    const Core::Circuit & InvertingStages::createNonInvertingSelfBiasStage(Core::Instance & analogInverter, int & index)
+    {
+        Core::Circuit * invertingStage = new Core::Circuit;
+
+        Core::CircuitIds circuitIds;
+        Core::CircuitId invertingStageId = circuitIds.invertingStage(index);
+        invertingStageId.setTechType(Core::TechType::p());
+		invertingStage->setCircuitIdentifier(invertingStageId);
+
+        //const Core::Instance & transconductance = analogInverter.getMaster().findInstance(createInstanceId(AnalogInverters::CURRENTBIASPMOS_));
+        //const Core::Instance & stageBias = analogInverter.getMaster().findInstance(createInstanceId(AnalogInverters::CURRENTBIASNMOS_));
+
+        std::vector<Core::NetId> netNames;
+        std::map<Core::TerminalName, Core::NetId> terminalToNetMap;
+
+        netNames.push_back(OUTPUT_NET_);
+        terminalToNetMap.insert(std::pair<Core::TerminalName, Core::NetId>(OUTPUT_TERMINAL_, OUTPUT_NET_));
+
+        netNames.push_back(SOURCEPMOS_NET_);
+        netNames.push_back(SOURCENMOS_NET_);
+        terminalToNetMap.insert(std::pair<Core::TerminalName, Core::NetId>(SOURCENMOS_TERMINAL_, SOURCENMOS_NET_));
+        terminalToNetMap.insert(std::pair<Core::TerminalName, Core::NetId>(SOURCEPMOS_TERMINAL_, SOURCEPMOS_NET_));
+
+        // addTransconductanceNets(netNames, terminalToNetMap, transconductance);
+        netNames.push_back(INTRANSCONDUCTANCE_NET_);
+        terminalToNetMap.insert(std::pair<Core::TerminalName, Core::NetId>(INTRANSCONDUCTANCE_TERMINAL_, INTRANSCONDUCTANCE_NET_));
+
+        // addStageBiasNets(netNames, terminalToNetMap, stageBias);
+        netNames.push_back(INSTAGEBIAS_NET_);
+        terminalToNetMap.insert(std::pair<Core::TerminalName, Core::NetId>(INSTAGEBIAS_TERMINAL_, INSTAGEBIAS_NET_));
+
+
+		addNetsToCircuit(*invertingStage, netNames);
+        addTerminalsToCircuit(*invertingStage, terminalToNetMap);
+
+        invertingStage->addInstance(analogInverter);
+        
+
+
+        // connectInstanceTerminalsPmosTransconductance(*invertingStage, analogInverter);
+        connectInstanceTerminal(*invertingStage, analogInverter, AnalogInverters::OUTPUT_TERMINAL_, OUTPUT_NET_);        
+        connectInstanceTerminal(*invertingStage, analogInverter, AnalogInverters::SOURCE_CURRENTBIASPMOS_TERMINAL_, SOURCEPMOS_NET_);
+        connectInstanceTerminal(*invertingStage, analogInverter, AnalogInverters::SOURCE_CURRENTBIASNMOS_TERMINAL_, SOURCENMOS_NET_);
+        connectInstanceTerminal(*invertingStage, analogInverter, AnalogInverters::IN_CURRENTBIASPMOS_TERMINAL_, INTRANSCONDUCTANCE_NET_);
+        connectInstanceTerminal(*invertingStage, analogInverter, AnalogInverters::IN_CURRENTBIASNMOS_TERMINAL_, INSTAGEBIAS_NET_);
+        
+
+
         analogInverter.setCircuit(*invertingStage);
 
         return *invertingStage;
