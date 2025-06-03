@@ -155,6 +155,8 @@ namespace Synthesis
 			
 			void connectInstanceTerminalsSimpleOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance * secondStage = nullptr) const;
 			void connectInstanceTerminalsSimpleOpAmp_Ext(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance & secondStage, Core::Instance* thirdStage=nullptr) const;
+			void connectInstanceTerminalsSimpleOpAmp_ExtSelfBias(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance & secondStage, Core::Instance* thirdStage=nullptr) const;
+			
 			void connectInstanceTerminalsSimpleOpAmp_2INV(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance * secondStage=nullptr, Core::Instance* thirdStage=nullptr, Core::Instance* fourthStage=nullptr) const;
 
 
