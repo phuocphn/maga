@@ -67,7 +67,7 @@ namespace Core {
 
     class Circuit : public Object
     {
-    private:
+    public:
     	typedef std::map<NetId, Net* > NetMap;
     	typedef std::map<TerminalId, Terminal*> TerminalMap;
     	typedef std::map<DeviceId, Device*> DeviceMap;
@@ -168,7 +168,7 @@ namespace Core {
 
         DeviceId createInInstanceDeviceId(InstanceName instanceName, DeviceId oldDeviceId) const;
 
-    private:
+    public:
         const NetMap& getNetMap() const;
         NetMap& getNetMap();
 

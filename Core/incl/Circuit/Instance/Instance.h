@@ -55,7 +55,7 @@ namespace Core {
     class Instance : public Object
     {
         friend class InstanceTerminal;
-    private:
+    public:
         typedef std::map<TerminalId, InstanceTerminal*> InstanceTerminalMap;
 
     public:
@@ -100,7 +100,7 @@ namespace Core {
 
         const Circuit & getCircuit() const;
 
-    private:
+    public:
 
         void printInstanceTerminals(std::ostream& stream) const;
         void printProperties(std::ostream& stream) const;
