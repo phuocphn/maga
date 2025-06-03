@@ -173,7 +173,7 @@ namespace Synthesis {
 		FunctionalBlockLibrary * functionalBlockLibrary = new FunctionalBlockLibrary(*circuitInformation);
 
 		logDebug("Create fully differential op amps");
-		createOpAmps(*functionalBlockLibrary,*circuitParameter);
+		createThreeStageOpAmps(*functionalBlockLibrary,*circuitParameter);
 
 		delete circuitInformation;
 		delete functionalBlockLibrary;
@@ -354,7 +354,7 @@ namespace Synthesis {
 					std::vector<const Core::Circuit*> twoStageOpAmps;
 					if(circuitParameter.isFullyDifferential())
 					{
-						threeStageOpAmps = library.getOpAmps().createFullyDifferentialThreeStageOpAmps(*oneStageOpAmp, *oneStageOpAmp);
+						threeStageOpAmps = library.getOpAmps().createFullyDifferentialThreeStageOpAmps_2INV(*oneStageOpAmp);
 					}
 					else
 					{
