@@ -78,6 +78,8 @@ namespace Partitioning {
 		void findPositiveFeedbackParts(const StructRec::StructureCircuits & circuits);
 
 		void classifyMosfetAnalogInverter(const StructRec::StructureCircuits & circuits);
+		void classifyMosfetNmosDiodeAnalogInverter(const StructRec::StructureCircuits & circuits);
+		void classifyMosfetPmosDiodeAnalogInverter(const StructRec::StructureCircuits & circuits);
 		void classifyMosfetCascodedAnalogInverter(const StructRec::StructureCircuits & circuits);
 		void classifyMosfetAnalogInverterNmosCurrentMirrorLoad(const StructRec::StructureCircuits & circuits);
 		void classifyMosfetAnalogInverterPmosCurrentMirrorLoad(const StructRec::StructureCircuits & circuits);
