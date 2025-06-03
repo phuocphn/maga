@@ -94,6 +94,9 @@ namespace Synthesis {
     const Core::InstanceName OpAmps::COMPENSATIONCAPACITOR_ = Core::InstanceName("CompensationCapacitor");
     const Core::InstanceName OpAmps::COMPENSATIONCAPACITOR1_ = Core::InstanceName("CompensationCapacitor1");
     const Core::InstanceName OpAmps::COMPENSATIONCAPACITOR2_ = Core::InstanceName("CompensationCapacitor2");
+    const Core::InstanceName OpAmps::COMPENSATIONCAPACITOR3_ = Core::InstanceName("CompensationCapacitor3");
+    const Core::InstanceName OpAmps::COMPENSATIONCAPACITOR4_ = Core::InstanceName("CompensationCapacitor3");
+
 
     const Core::InstanceName OpAmps::COMPENSATIONRESISTOR1_ = Core::InstanceName("CompensationResistor1");
     const Core::InstanceName OpAmps::COMPENSATIONRESISTOR2_ = Core::InstanceName("CompensationResistor2");
@@ -770,6 +773,8 @@ namespace Synthesis {
     Core::Instance & loadCapacitor = getCapacitor().createNewCapacitorInstance(LOADCAPACITOR_);
     Core::Instance * compensationCapacitor1 = nullptr;
     Core::Instance * compensationCapacitor2 = nullptr;
+    Core::Instance * compensationCapacitor3 = nullptr;
+
 
     opAmp->addInstance(loadCapacitor);
     loadCapacitor.setCircuit(*opAmp);
@@ -796,13 +801,9 @@ namespace Synthesis {
         opAmp->addInstance(*compensationCapacitor1);
         compensationCapacitor1->setCircuit(*opAmp);
 
-
-
         compensationCapacitor2 = &getCapacitor().createNewCapacitorInstance(COMPENSATIONCAPACITOR2_);
         opAmp->addInstance(*compensationCapacitor2);
         compensationCapacitor2->setCircuit(*opAmp);
-
-
     }
     else
     {
@@ -820,7 +821,7 @@ namespace Synthesis {
 
 
     connectInstanceTerminalsSimpleOpAmp_2INV(*opAmp, firstStage, secondStage, thirdStage, fourthStage); // checked
-    connectInstanceTerminalsCapacitors_Ext3(*opAmp, loadCapacitor, compensationCapacitor1, compensationCapacitor2); //ok
+    connectInstanceTerminalsCapacitors_2INV(*opAmp, loadCapacitor, compensationCapacitor1, compensationCapacitor2, compensationCapacitor3); //ok
 
 
     buildAndConnectedBias(*opAmp);
@@ -1975,6 +1976,62 @@ namespace Synthesis {
         
     }
 		
+
+    void OpAmps::connectInstanceTerminalsCapacitors_2INV(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
+        Core::Instance * compensationCapacitor1, Core::Instance * compensationCapacitor2, Core::Instance * compensationCapacitor3) const
+    {
+        if(opAmp.hasInstance(createInstanceId(FEEDBACKSTAGE_)))
+        {
+            Core::Instance & loadCapacitor2 = opAmp.findInstance(createInstanceId(LOADCAPACITOR2_));
+            connectInstanceTerminal(opAmp, loadCapacitor, Capacitor::PLUS_TERMINAL_, OUT1_NET_);
+            connectInstanceTerminal(opAmp, loadCapacitor2, Capacitor::PLUS_TERMINAL_, OUT2_NET_);
+            connectInstanceTerminal(opAmp, loadCapacitor2, Capacitor::MINUS_TERMINAL_, SOURCENMOS_NET_);
+        }
+        else
+        {
+            connectInstanceTerminal(opAmp, loadCapacitor, Capacitor::PLUS_TERMINAL_, OUT_NET_);
+        }
+        connectInstanceTerminal(opAmp, loadCapacitor, Capacitor::MINUS_TERMINAL_, SOURCENMOS_NET_);
+
+        if(compensationCapacitor1 != nullptr)
+        {
+            if(opAmp.hasInstance(createInstanceId(FEEDBACKSTAGE_)))
+            {
+                // Core::Instance & compensationCapacitor2 = opAmp.findInstance(createInstanceId(COMPENSATIONCAPACITOR2_));
+                connectInstanceTerminal(opAmp, *compensationCapacitor1, Capacitor::PLUS_TERMINAL_, OUT1FIRSTSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *compensationCapacitor1, Capacitor::MINUS_TERMINAL_, OUT1_NET_);
+            }
+            else
+            {   
+                connectInstanceTerminal(opAmp, *compensationCapacitor1, Capacitor::PLUS_TERMINAL_, OUTFIRSTSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *compensationCapacitor1, Capacitor::MINUS_TERMINAL_, OUT_NET_);
+            }
+        }
+
+
+        if(compensationCapacitor2 != nullptr)
+        {
+            if(opAmp.hasInstance(createInstanceId(FEEDBACKSTAGE_)))
+            {
+                // connectInstanceTerminal(opAmp, *compensationCapacitor2, Capacitor::PLUS_TERMINAL_, OUT2FIRSTSTAGE_NET_);
+                // connectInstanceTerminal(opAmp, *compensationCapacitor2, Capacitor::MINUS_TERMINAL_, OUT2_NET_);
+
+                connectInstanceTerminal(opAmp, *compensationCapacitor2, Capacitor::PLUS_TERMINAL_, OUTTHIRDSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *compensationCapacitor2, Capacitor::MINUS_TERMINAL_, OUT_NET_);
+
+                connectInstanceTerminal(opAmp, *compensationCapacitor3, Capacitor::PLUS_TERMINAL_, OUT2FIRSTSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *compensationCapacitor3, Capacitor::MINUS_TERMINAL_, OUT2_NET_);
+
+            }
+            else
+            {   
+                connectInstanceTerminal(opAmp, *compensationCapacitor2, Capacitor::PLUS_TERMINAL_, OUTTHIRDSTAGE_NET_);
+                connectInstanceTerminal(opAmp, *compensationCapacitor2, Capacitor::MINUS_TERMINAL_, OUT_NET_);
+            }         
+        }
+
+    }
+
 
     void OpAmps::connectInstanceTerminalsCapacitorsWithResistorInSeries(Core::Circuit & opAmp, Core::Instance & loadCapacitor, 
             Core::Instance * compensationCapacitor1, Core::Instance * compensationCapacitor2, Core::Instance * compensationResistor1, Core::Instance * compensationResistor2) const
