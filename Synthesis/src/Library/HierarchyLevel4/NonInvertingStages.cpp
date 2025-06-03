@@ -686,6 +686,11 @@ namespace Synthesis {
 		std::vector<const Core::Circuit *> nonInvertingStages;
 		for(auto & load : loads)
 		{
+			// ignore asymmetrical load structures
+			if ((getDeviceNamesOfFlatCircuit(*load).size() % 2) == 1){
+				continue;
+			}
+
 			for(auto & stageBias : stageBiases)
 			{
 				Core::Instance & transconductanceInstance = createInstance(transconductance, TRANSCONDUCTANCE_);
