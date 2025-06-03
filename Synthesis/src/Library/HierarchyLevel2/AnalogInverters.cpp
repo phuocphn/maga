@@ -111,6 +111,7 @@ namespace Synthesis {
 	AnalogInverters::AnalogInverters(StructuralLevel & structuralLevel)
     {
 		initializeAnalogInverters(structuralLevel);
+        initializeSelfBiasNonInverters(structuralLevel);
     }
 	
     AnalogInverters::~AnalogInverters()
@@ -198,30 +199,13 @@ namespace Synthesis {
 
 
 
+        const Core::Circuit & diodeTransistorPmos = structuralLevel.getDeviceLevel().getDiodeTransistor().getDiodeTransistorPmosCircuit();
+        // const Core::Circuit & normalTransistorPmos = structuralLevel.getDeviceLevel().getNormalTransistor().getNormalTransistorPmosCircuit();
+        // const Core::Circuit & normalTransistorNmos = structuralLevel.getDeviceLevel().getNormalTransistor().getNormalTransistorNmosCircuit();
+        const Core::Circuit & selfBiasPmosDiodeNonInverter = createselfBiasPmosDiodeNonInverter(diodeTransistorPmos, normalTransistorPmos, normalTransistorNmos, index);
+        analogInverters.push_back(&selfBiasPmosDiodeNonInverter);
 
-        // std::vector<const Core::Circuit *> currentBiasesPmos = structuralLevel.getCurrentBiases().getAllCurrentBiasesPmos();
-        // std::vector<const Core::Circuit *> currentBiasesNmos = structuralLevel.getCurrentBiases().getAllCurrentBiasesNmos();
 
-        // int  index = 1;
-        // for(auto & currentBiasPmos : currentBiasesPmos)
-        // {
-        //     for(auto & currentBiasNmos : currentBiasesNmos)
-        //     {
-        //         if(currentBiasPmos->findInstances().size() == 2 && currentBiasNmos->findInstances().size() == 2)
-        //         {
-        //             if(!(currentBiasPmos->getGateNetsNotConnectedToADrain().size() ==1 
-        //                         && currentBiasNmos->getGateNetsNotConnectedToADrain().size() ==1 ))
-        //             {
-        //                 const Core::Circuit & analogInverter = createNewAnalogInverter(*currentBiasPmos, *currentBiasNmos, index);
-        //                 analogInverters.push_back(&analogInverter);
-        //             }
-        //         }
-        //         else
-        //         {
-
-        //         }
-        //     }
-        // }
         analogSelfBiasInverters_ = analogInverters;
     }
 
@@ -289,6 +273,125 @@ namespace Synthesis {
     }
 
     
+    const Core::Circuit & AnalogInverters::createselfBiasPmosDiodeNonInverter(const Core::Circuit & diodeTransistorPmos,  const Core::Circuit & normalTransistorPmos, const Core::Circuit & normalTransistorNmos, int & index)
+    {
+        Core::Instance & inDiodePmosInstance = createInstance(diodeTransistorPmos, IN_PMOS);
+        Core::Instance & outPmosInstance = createInstance(normalTransistorPmos, OUT_PMOS);
+        Core::Instance & inNmosInstance = createInstance(normalTransistorNmos, IN_NMOS);
+        Core::Instance & outNmosInstance = createInstance(normalTransistorNmos, OUT_NMOS);
+        
+
+        Core::Circuit * analogInverter = new Core::Circuit;
+
+        Core::CircuitIds circuitIds;
+        Core::CircuitId analogInverterId = circuitIds.analogInverter(index);
+        analogInverterId.setTechType(Core::TechType::undefined());
+		analogInverter->setCircuitIdentifier(analogInverterId);
+
+        std::vector<Core::NetId> netNames;
+        std::map<Core::TerminalName, Core::NetId> terminalToNetMap;
+
+        netNames.push_back(OUTPUT_NET_);
+        terminalToNetMap.insert(std::pair<Core::TerminalName, Core::NetId>(OUTPUT_TERMINAL_, OUTPUT_NET_));
+
+        netNames.push_back(SOURCE_CURRENTBIASNMOS_NET_);
+        netNames.push_back(SOURCE_CURRENTBIASPMOS_NET_);
+        netNames.push_back(FIRST_INNER_DRAIN_NET_);
+        netNames.push_back(SELF_BIAS_GATE_NET_);
+        
+        terminalToNetMap.insert(std::pair<Core::TerminalName, Core::NetId>(SOURCE_CURRENTBIASNMOS_TERMINAL_, SOURCE_CURRENTBIASNMOS_NET_));
+        terminalToNetMap.insert(std::pair<Core::TerminalName, Core::NetId>(SOURCE_CURRENTBIASPMOS_TERMINAL_, SOURCE_CURRENTBIASPMOS_NET_));
+
+
+ 
+        netNames.push_back(IN_CURRENTBIASPMOS_NET_);
+        terminalToNetMap.insert(std::pair<Core::TerminalName, Core::NetId>(IN_CURRENTBIASPMOS_TERMINAL_, IN_CURRENTBIASPMOS_NET_));
+    
+        netNames.push_back(IN_CURRENTBIASNMOS_NET_);
+        terminalToNetMap.insert(std::pair<Core::TerminalName, Core::NetId>(IN_CURRENTBIASNMOS_TERMINAL_, IN_CURRENTBIASNMOS_NET_));
+
+
+
+		addNetsToCircuit(*analogInverter, netNames);
+        addTerminalsToCircuit(*analogInverter, terminalToNetMap);
+
+        analogInverter->addInstance(inDiodePmosInstance);
+        analogInverter->addInstance(outPmosInstance);
+        analogInverter->addInstance(inNmosInstance);
+        analogInverter->addInstance(outNmosInstance);
+
+
+        // connectInstanceTerminals_SelfBias(*analogInverter, inPmosInstance, outPmosInstance, inDiodeNmosInstance, outNmosInstance);
+        // -----------------------------------
+        Core::Circuit & circuit = *analogInverter;
+        Core::TerminalId terminalIdOut;
+        Core::TerminalId terminalDiodeIdOut;
+        terminalIdOut.setTerminalName(NormalTransistor::DRAIN_TERMINAL_);
+        terminalDiodeIdOut.setTerminalName(DiodeTransistor::DRAIN_TERMINAL_);
+
+
+        Core::InstanceTerminal & outTerminalCurrentBiasPmos = outPmosInstance.findInstanceTerminal(terminalIdOut);
+        outTerminalCurrentBiasPmos.connect(circuit.findNet(OUTPUT_NET_));
+        Core::InstanceTerminal & outTerminalCurrentBiasNmos = outNmosInstance.findInstanceTerminal(terminalIdOut);
+        outTerminalCurrentBiasNmos.connect(circuit.findNet(OUTPUT_NET_));
+
+        Core::InstanceTerminal & v5 = inNmosInstance.findInstanceTerminal(terminalIdOut);
+        v5.connect(circuit.findNet(FIRST_INNER_DRAIN_NET_));
+        Core::InstanceTerminal & v6 = inDiodePmosInstance.findInstanceTerminal(terminalDiodeIdOut);
+        v6.connect(circuit.findNet(FIRST_INNER_DRAIN_NET_));
+
+        
+        Core::TerminalId terminalIdSource;
+        Core::TerminalId terminalDiodeIdSource;
+        terminalIdSource.setTerminalName(NormalTransistor::SOURCE_TERMINAL_);
+        terminalDiodeIdSource.setTerminalName(DiodeTransistor::SOURCE_TERMINAL_);
+
+        Core::InstanceTerminal & sourceTerminalCurrentBiasPmos = inDiodePmosInstance.findInstanceTerminal(terminalIdSource);
+        sourceTerminalCurrentBiasPmos.connect(circuit.findNet(SOURCE_CURRENTBIASPMOS_NET_));
+        Core::InstanceTerminal & v2 = outPmosInstance.findInstanceTerminal(terminalIdSource);
+        v2.connect(circuit.findNet(SOURCE_CURRENTBIASPMOS_NET_));
+
+
+        Core::InstanceTerminal & sourceTerminalCurrentBiasNmos = inNmosInstance.findInstanceTerminal(terminalDiodeIdSource);
+        sourceTerminalCurrentBiasNmos.connect(circuit.findNet(SOURCE_CURRENTBIASNMOS_NET_));
+        Core::InstanceTerminal & v3 = outNmosInstance.findInstanceTerminal(terminalIdSource);
+        v3.connect(circuit.findNet(SOURCE_CURRENTBIASNMOS_NET_));
+
+        Core::TerminalId terminalDiodeIdGate;
+        Core::TerminalId terminalIdIn;
+
+        terminalDiodeIdGate.setTerminalName(DiodeTransistor::GATE_TERMINAL_);
+        terminalIdIn.setTerminalName(NormalTransistor::GATE_TERMINAL_);
+
+        Core::InstanceTerminal & v7 = inDiodePmosInstance.findInstanceTerminal(terminalDiodeIdGate);
+        v7.connect(circuit.findNet(SELF_BIAS_GATE_NET_));
+        Core::InstanceTerminal & v8 = outPmosInstance.findInstanceTerminal(terminalIdIn);
+        v8.connect(circuit.findNet(SELF_BIAS_GATE_NET_));
+        
+
+        // Core::TerminalId terminalIdInSource;
+        // terminalIdInSource.setTerminalName(CurrentBiases::INSOURCE_TERMINAL_);
+        Core::InstanceTerminal & inTerminalCurrentBiasPmos = inNmosInstance.findInstanceTerminal(terminalIdIn);
+        inTerminalCurrentBiasPmos.connect(circuit.findNet(IN_CURRENTBIASPMOS_NET_));
+        
+        Core::InstanceTerminal & inTerminalCurrentBiasNmos = outNmosInstance.findInstanceTerminal(terminalIdIn);
+        inTerminalCurrentBiasNmos.connect(circuit.findNet(IN_CURRENTBIASNMOS_NET_));
+        // -----------------------------------
+
+
+        inDiodePmosInstance.setCircuit(*analogInverter);
+        outPmosInstance.setCircuit(*analogInverter);
+        inNmosInstance.setCircuit(*analogInverter);
+        outNmosInstance.setCircuit(*analogInverter);
+
+		
+        index++;
+
+        return *analogInverter;
+    }
+
+
+
     const Core::Circuit & AnalogInverters::createNewAnalogInverter(const Core::Circuit & currentBiasPmos, const Core::Circuit & currentBiasNmos, int & index)
     {
         Core::Instance & currentBiasPmosInstance = createInstance(currentBiasPmos, CURRENTBIASPMOS_);

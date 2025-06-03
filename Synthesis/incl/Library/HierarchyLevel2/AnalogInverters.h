@@ -105,6 +105,8 @@ namespace Synthesis
 			const Core::Circuit & createNewAnalogInverter(const Core::Circuit & currentBiasPmos, 
 									const Core::Circuit & currentBiasNmos, int & index);
 			const Core::Circuit & createSelfBiasNonInverter( const Core::Circuit & normalTransistorPmos,  const Core::Circuit & diodeTransistorNmos, const Core::Circuit & normalTransistorNmos, int & index);
+			const Core::Circuit & createselfBiasPmosDiodeNonInverter( const Core::Circuit & diodeTransistorPmos,  const Core::Circuit & normalTransistorPmos, const Core::Circuit & normalTransistorNmos, int & index);
+
 			void connectInstanceTerminals(Core::Circuit & circuit, Core::Instance & currentBiasNmosInstance, 
 											Core::Instance & currentBiasPmosInstance);
 			// inPmosInstance, outPmosInstance, inDiodeNmosInstance, outNmosInstance
