@@ -126,6 +126,9 @@ namespace Synthesis
 
 			const Core::Circuit& createSimpleOpAmp_Ext(int & index, Core::Instance & firstStage, 
 													Core::Instance& secondStage, Core::Instance * thirdStage=nullptr);
+			const Core::Circuit& createSimpleOpAmp_2INV(int & index, Core::Instance & firstStage, 
+														Core::Instance* secondStage=nullptr, Core::Instance * thirdStage=nullptr, Core::Instance * fourthStage=nullptr);
+
 		private:
 
             void addGateInstanceTerminalConnectedToADrain(const Core::InstanceTerminal & terminal);
@@ -150,6 +153,8 @@ namespace Synthesis
 			
 			void connectInstanceTerminalsSimpleOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance * secondStage = nullptr) const;
 			void connectInstanceTerminalsSimpleOpAmp_Ext(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance & secondStage, Core::Instance* thirdStage=nullptr) const;
+			void connectInstanceTerminalsSimpleOpAmp_2INV(Core::Circuit & opAmp, Core::Instance & firstStage, Core::Instance * secondStage=nullptr, Core::Instance* thirdStage=nullptr, Core::Instance* fourthStage=nullptr) const;
+
 
 			void connectInstanceTerminalsFullyDifferentialOpAmp(Core::Circuit & opAmp, Core::Instance & firstStage, 
                                             Core::Instance & feedbackStage, Core::Instance * secondStage1 = nullptr, Core::Instance * secondStage2 = nullptr) const;
@@ -247,6 +252,11 @@ namespace Synthesis
 			static const Core::InstanceName THIRDSTAGE2_;
 
 
+			static const Core::InstanceName FOURTHSTAGE_;
+			static const Core::InstanceName FOURTHSTAGE1_;
+			static const Core::InstanceName FOURTHSTAGE2_;
+
+
 			static const Core::InstanceName LOADCAPACITOR_;
 			static const Core::InstanceName LOADCAPACITOR1_;
 			static const Core::InstanceName LOADCAPACITOR2_;
@@ -287,10 +297,12 @@ namespace Synthesis
             // static const Core::NetId OUTSECONDSTAGE_NET_;
 			static const Core::NetId OUT1SECONDSTAGE_NET_;
 			static const Core::NetId OUT2SECONDSTAGE_NET_;
-
-
             static const Core::NetId OUTSECONDSTAGE_NET_;
 
+
+			static const Core::NetId OUTTHIRDSTAGE1_NET_;
+			static const Core::NetId OUTTHIRDSTAGE2_NET_;
+			static const Core::NetId OUTTHIRDSTAGE_NET_;
 
 			static const Core::NetId OUTFEEDBACKSTAGE_NET_;
 
