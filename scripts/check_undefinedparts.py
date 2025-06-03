@@ -2,13 +2,21 @@ import xml.etree.ElementTree as ET
 import glob
 
 import os
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-d", "--dir", type=str, default="outputs/TopologyGen/SingleOutputOpAmps/"
+)
+args = parser.parse_args()
 
 
-def check_undefinedparts(delete=False):
+def check_undefinedparts(
+    delete=False,
+    PARTITIONING_DIR="outputs/TopologyGen/SingleOutputOpAmps/partitioning.result",
+):
     num_errors = 0
-    for PATH in glob.glob(
-        "outputs/TopologyGen/SingleOutputOpAmps/partitioning.result/*.xml"
-    ):
+    for PATH in glob.glob(f"{PARTITIONING_DIR}/*.xml"):
         # PATH = "outputs/TopologyGen_08_03_2025/FullyDifferentialOpAmps/partitioning.result/three_stage_fully_differential_op_amp_1_2_1.xml"
         tree = ET.parse(PATH)
         root = tree.getroot()
@@ -38,4 +46,4 @@ def check_undefinedparts(delete=False):
     print(f"{num_errors} errors found")
 
 
-check_undefinedparts()
+check_undefinedparts(PARTITIONING_DIR=args.dir)

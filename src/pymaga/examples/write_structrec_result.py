@@ -3,6 +3,13 @@ import os
 import glob
 
 from loguru import logger
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-d", "--dir", type=str, default="outputs/TopologyGen/SingleOutputOpAmps/"
+)
+args = parser.parse_args()
 
 
 def recognize(circuit: pymaga.Circuit, fname) -> pymaga.StructRecResult:
@@ -65,7 +72,7 @@ def process(
 
 
 if __name__ == "__main__":
-    NETLIST_DIR = "outputs/TopologyGen/SingleOutputOpAmps/"
+    NETLIST_DIR = args.dir
     PROCESSED_DIR = os.path.join(
         NETLIST_DIR, "structural_recognition.processed_netlist"
     )

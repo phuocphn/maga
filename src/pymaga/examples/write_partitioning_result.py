@@ -4,6 +4,13 @@ import glob
 from pathlib import Path
 
 from loguru import logger
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-d", "--dir", type=str, default="outputs/TopologyGen/SingleOutputOpAmps/"
+)
+args = parser.parse_args()
 
 
 def print_partitioning_result(circuit: pymaga.Circuit) -> pymaga.PartitioningResult:
@@ -94,7 +101,7 @@ def partition(
 
 
 if __name__ == "__main__":
-    INPUT_NETLIST_DIR = "outputs/TopologyGen_08_03_2025/FullyDifferentialOpAmps/"
+    INPUT_NETLIST_DIR = args.dir
     ERROR_FILE = os.path.join(INPUT_NETLIST_DIR, "partitioning.errors.txt")
     PROCCESSED_DIR = os.path.join(INPUT_NETLIST_DIR, "partitioning.processed_netlist")
     OUTPUT_DIR = os.path.join(INPUT_NETLIST_DIR, "partitioning.result")
