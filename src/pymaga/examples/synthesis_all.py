@@ -2,6 +2,7 @@ import pymaga
 import os
 
 from loguru import logger
+from utils import get_circuit_tree
 
 
 def synthesis_level2():
@@ -138,6 +139,9 @@ def synthesis_level5():
     cap = pymaga.Capacitor()
     opAmps = pymaga.OpAmps(amplificationStageLevel, currentBiases, voltageBiases, cap)
     print(opAmps)
+
+    simple_one_stage_opamps = opAmps.createSimpleOneStageOpAmps(1, 1)
+    print(get_circuit_tree(simple_one_stage_opamps[-1]))
 
 
 if __name__ == "__main__":

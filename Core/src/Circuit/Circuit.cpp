@@ -66,10 +66,10 @@ namespace Core {
 
     Circuit::~Circuit()
     {
-        eraseDevices();
-        eraseNets();
-        eraseInstances();
-        eraseTerminals();
+        // eraseDevices();
+        // eraseNets();
+        // eraseInstances();
+        // eraseTerminals();
 
     }
 
