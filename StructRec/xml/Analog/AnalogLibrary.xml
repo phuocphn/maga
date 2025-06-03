@@ -22,6 +22,8 @@
             <pairLibraryItemFile>Items/Mosfet/MosfetDiodeStack.xml</pairLibraryItemFile>
             <pairLibraryItemFile>Items/Mosfet/MosfetMixedCascodePair1.xml</pairLibraryItemFile>
 			<pairLibraryItemFile>Items/Mosfet/MosfetMixedCascodePair2.xml</pairLibraryItemFile>
+			<pairLibraryItemFile>Items/Mosfet/MosfetNmosDiodeAnalogInverter.xml</pairLibraryItemFile>
+			<pairLibraryItemFile>Items/Mosfet/MosfetPmosDiodeAnalogInverter.xml</pairLibraryItemFile>
 			<pairLibraryItemFile>Items/Mosfet/MosfetAnalogInverter.xml</pairLibraryItemFile>
 			<pairLibraryItemFile>Items/Mosfet/MosfetCascodedAnalogInverter.xml</pairLibraryItemFile>
 			<pairLibraryItemFile>Items/Mosfet/MosfetCascodedPMOSAnalogInverter.xml</pairLibraryItemFile>
@@ -37,6 +39,7 @@
 			<pairLibraryItemFile>Items/Mosfet/MosfetCascodePMOSAnalogInverterCurrentMirrorLoad.xml</pairLibraryItemFile>
 			<pairLibraryItemFile>Items/Mosfet/MosfetCascodeNMOSAnalogInverterCurrentMirrorLoad.xml</pairLibraryItemFile>
             <pairLibraryItemFile>Items/Mosfet/MosfetCascodeAnalogInverterTwoCurrentMirrorLoads.xml</pairLibraryItemFile>
+			<pairLibraryItemFile>Items/Mosfet/MosfetAnalogInverterStage.xml</pairLibraryItemFile>
 
             <pairLibraryItemFile>Items/Mosfet/MosfetCascodeCurrentMirror.xml</pairLibraryItemFile>
             <pairLibraryItemFile>Items/Mosfet/MosfetFourTransistorCurrentMirror.xml</pairLibraryItemFile> 
@@ -80,13 +83,14 @@
                 <pairLibraryItem persistence="1">MosfetLevelShifter</pairLibraryItem>
                 <pairLibraryItem persistence="1">MosfetCurrentMirrorLoad</pairLibraryItem>
                 <pairLibraryItem>MosfetVoltageReference1</pairLibraryItem>
+                <pairLibraryItem>MosfetNmosDiodeAnalogInverter</pairLibraryItem>
+                <pairLibraryItem>MosfetPmosDiodeAnalogInverter</pairLibraryItem>
                 <pairLibraryItem>MosfetAnalogInverter</pairLibraryItem>
                 <pairLibraryItem persistence="1">MosfetVoltageReference2</pairLibraryItem>
                 <pairLibraryItem persistence="1">MosfetGateConnectedCouple</pairLibraryItem>
                 <pairLibraryItem persistence="1">MosfetDiodeStack</pairLibraryItem>
                 <pairLibraryItem persistence="1">MosfetMixedCascodePair1</pairLibraryItem>
                 <pairLibraryItem persistence="1">MosfetMixedCascodePair2</pairLibraryItem>
-                
                 
                 <pairLibraryItem>BipolarSimpleCurrentMirror</pairLibraryItem>
                 <pairLibraryItem>BipolarCrossCoupledPair</pairLibraryItem>
@@ -124,6 +128,7 @@
                 <pairLibraryItem>MosfetCascodePMOSAnalogInverterCurrentMirrorLoad</pairLibraryItem>
                 <pairLibraryItem>MosfetCascodeNMOSAnalogInverterCurrentMirrorLoad</pairLibraryItem>
                 <pairLibraryItem>MosfetCascodeAnalogInverterTwoCurrentMirrorLoads</pairLibraryItem>
+                <pairLibraryItem>MosfetAnalogInverterStage</pairLibraryItem>
                 
                 <pairLibraryItem>BipolarBufferedCurrentMirror</pairLibraryItem>
                 <pairLibraryItem>BipolarCascodeCurrentMirror</pairLibraryItem>
