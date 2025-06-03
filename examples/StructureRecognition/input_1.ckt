@@ -1,0 +1,37 @@
+.GLOBAL vdd! gnd!
+
+.TEMP 25.0
+.OPTION
++    ARTIST=2
++    INGOLD=2
++    PARHIER=LOCAL
++    PSF=2
+
+** Library name: CascodeSymmetricalCMOSOTA
+** Cell name: cascodeSymmetricalCMOSOTA
+** View name: schematic
+c1 outFirstStage out 
+c2 outSecondStage out 
+m1 outVoltageBiasXXpXX1 outVoltageBiasXXnXX2 gnd! gnd! nmos
+m2 outInputVoltageBiasXXnXX1 ibias vdd! vdd! pmos
+m3 outVoltageBiasXXnXX2 ibias vdd! vdd! pmos
+m4 FirstStageYout1 FirstStageYout1 gnd! gnd! nmos
+m5 outFirstStage FirstStageYout1 gnd! gnd! nmos
+m6 FirstStageYsourceTransconductance ibias vdd! vdd! pmos
+m7 FirstStageYout1 in1 FirstStageYsourceTransconductance FirstStageYsourceTransconductance pmos
+m8 outFirstStage in2 FirstStageYsourceTransconductance FirstStageYsourceTransconductance pmos
+c3 out gnd! 
+m9 SecondStageYAnalogInverterYfirstInnerDrain outFirstStage gnd! gnd! nmos
+m10 SecondStageYAnalogInverterYfirstInnerDrain SecondStageYAnalogInverterYfirstInnerDrain vdd! vdd! pmos
+m11 outSecondStage outVoltageBiasXXnXX2 gnd! gnd! nmos
+m12 outSecondStage SecondStageYAnalogInverterYfirstInnerDrain vdd! vdd! pmos
+m13 out outInputVoltageBiasXXnXX1 outSourceVoltageBiasXXnXX1 outSourceVoltageBiasXXnXX1 nmos
+m14 outSourceVoltageBiasXXnXX1 outSourceVoltageBiasXXnXX1 gnd! gnd! nmos
+m15 out outVoltageBiasXXpXX1 ThirdStageYinnerTransconductance ThirdStageYinnerTransconductance pmos
+m16 ThirdStageYinnerTransconductance outSecondStage vdd! vdd! pmos
+m17 outInputVoltageBiasXXnXX1 outInputVoltageBiasXXnXX1 VoltageBiasXXnXX1Yinner VoltageBiasXXnXX1Yinner nmos
+m18 VoltageBiasXXnXX1Yinner outSourceVoltageBiasXXnXX1 gnd! gnd! nmos
+m19 outVoltageBiasXXnXX2 outVoltageBiasXXnXX2 gnd! gnd! nmos
+m20 outVoltageBiasXXpXX1 outVoltageBiasXXpXX1 vdd! vdd! pmos
+m21 ibias ibias vdd! vdd! pmos
+.END
