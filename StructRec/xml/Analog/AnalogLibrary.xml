@@ -50,6 +50,10 @@
             <pairLibraryItemFile>Items/Mosfet/MosfetCascodedDifferentialPair.xml</pairLibraryItemFile> 
             <pairLibraryItemFile>Items/Mosfet/MosfetFoldedCascodeDifferentialPair.xml</pairLibraryItemFile> 
             
+            <!-- Self-biasing Non-Inverting Second Stage / XML file-->
+			<pairLibraryItemFile>Items/Mosfet/MosfetNmosNonInvertingInverter.xml</pairLibraryItemFile>
+			<pairLibraryItemFile>Items/Mosfet/MosfetPmosNonInvertingInverter.xml</pairLibraryItemFile>
+
             <pairLibraryItemFile>Items/Mosfet/MosfetDifferentialStage.xml</pairLibraryItemFile> 
             <pairLibraryItemFile>Items/Mosfet/MosfetDifferentialStageWithCascodedDifferentialPair.xml</pairLibraryItemFile> 
             <pairLibraryItemFile>Items/Mosfet/MosfetDifferentialStageWithFoldedCascodeDifferentialPair.xml</pairLibraryItemFile> 
@@ -129,6 +133,10 @@
                 <pairLibraryItem>MosfetCascodeNMOSAnalogInverterCurrentMirrorLoad</pairLibraryItem>
                 <pairLibraryItem>MosfetCascodeAnalogInverterTwoCurrentMirrorLoads</pairLibraryItem>
                 <pairLibraryItem>MosfetAnalogInverterStage</pairLibraryItem>
+
+                <!-- Self-biasing Non-Inverting Second Stage -->
+                <pairLibraryItem>MosfetNmosNonInvertingInverter</pairLibraryItem>
+                <pairLibraryItem>MosfetPmosNonInvertingInverter</pairLibraryItem>
                 
                 <pairLibraryItem>BipolarBufferedCurrentMirror</pairLibraryItem>
                 <pairLibraryItem>BipolarCascodeCurrentMirror</pairLibraryItem>

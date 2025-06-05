@@ -84,6 +84,15 @@ namespace StructRec{
 		for(PairLibraryItemVector::const_iterator it = pairLibraryItems_.begin(); it != pairLibraryItems_.end(); it++)
 		{
 			 PairLibraryItem * pairItem = *it;
+
+			 // For debug purposes only!
+			// *************************************
+			//  std::cout << "find: " << pairItem->getName().toStr() << std::endl;
+			// if (pairItem->getName().toStr()  == "MosfetNmosNonInvertingInverter")
+			// {
+			// 	std::cout << "start checking: MosfetNmosNonInvertingInverter";
+			// }
+			// *************************************
 		     pairItem->recognize(circuits,* levelCircuit);
 		}
 		circuits.addStructureCircuit(*levelCircuit);
