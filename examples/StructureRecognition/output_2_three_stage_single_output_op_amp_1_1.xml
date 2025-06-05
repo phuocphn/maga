@@ -1,6 +1,76 @@
 <acst_results>
-	<date day="3" month="6" year="2025" hour="21" minute="57" second="45"/>
+	<date day="4" month="6" year="2025" hour="15" minute="38" second="4"/>
 	<structure_recognition_results>
+		<structure name="MosfetNmosNonInvertingInverter[1]" techType="undefined" instance="/">
+			<pins>
+				<pin name="Gnd" net="/gnd!"/>
+				<pin name="InputNMOS1" net="/ibias"/>
+				<pin name="InputPMOS1" net="/outFirstStage"/>
+				<pin name="Output" net="/outSecondStage"/>
+				<pin name="Vdd" net="/vdd!"/>
+			</pins>
+			<structure name="MosfetNmosDiodeAnalogInverter[1]" techType="undefined" instance="/">
+				<pins>
+					<pin name="Gnd" net="/gnd!"/>
+					<pin name="InputNMOS1" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
+					<pin name="InputPMOS1" net="/outFirstStage"/>
+					<pin name="Output" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
+					<pin name="Vdd" net="/vdd!"/>
+				</pins>
+				<structure name="MosfetNormalArray[6]" techType="p" instance="/">
+					<pins>
+						<pin name="Bulk" net="/vdd!"/>
+						<pin name="Drain" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
+						<pin name="Gate" net="/outFirstStage"/>
+						<pin name="Source" net="/vdd!"/>
+					</pins>
+					<devices>
+						<device name="/m7" deviceType="Mosfet" techType="p" instance="/"/>
+					</devices>
+				</structure>
+				<structure name="MosfetDiodeArray[2]" techType="n" instance="/">
+					<pins>
+						<pin name="Bulk" net="/gnd!"/>
+						<pin name="Drain" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
+						<pin name="Source" net="/gnd!"/>
+					</pins>
+					<devices>
+						<device name="/m6" deviceType="Mosfet" techType="n" instance="/"/>
+					</devices>
+				</structure>
+			</structure>
+			<structure name="MosfetAnalogInverter[2]" techType="undefined" instance="/">
+				<pins>
+					<pin name="Gnd" net="/gnd!"/>
+					<pin name="InputNMOS1" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
+					<pin name="InputPMOS1" net="/ibias"/>
+					<pin name="Output" net="/outSecondStage"/>
+					<pin name="Vdd" net="/vdd!"/>
+				</pins>
+				<structure name="MosfetNormalArray[9]" techType="p" instance="/">
+					<pins>
+						<pin name="Bulk" net="/vdd!"/>
+						<pin name="Drain" net="/outSecondStage"/>
+						<pin name="Gate" net="/ibias"/>
+						<pin name="Source" net="/vdd!"/>
+					</pins>
+					<devices>
+						<device name="/m9" deviceType="Mosfet" techType="p" instance="/"/>
+					</devices>
+				</structure>
+				<structure name="MosfetNormalArray[3]" techType="n" instance="/">
+					<pins>
+						<pin name="Bulk" net="/gnd!"/>
+						<pin name="Drain" net="/outSecondStage"/>
+						<pin name="Gate" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
+						<pin name="Source" net="/gnd!"/>
+					</pins>
+					<devices>
+						<device name="/m8" deviceType="Mosfet" techType="n" instance="/"/>
+					</devices>
+				</structure>
+			</structure>
+		</structure>
 		<structure name="MosfetAnalogInverter[1]" techType="undefined" instance="/">
 			<pins>
 				<pin name="Gnd" net="/gnd!"/>
@@ -32,37 +102,6 @@
 				</devices>
 			</structure>
 		</structure>
-		<structure name="MosfetAnalogInverter[2]" techType="undefined" instance="/">
-			<pins>
-				<pin name="Gnd" net="/gnd!"/>
-				<pin name="InputNMOS1" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
-				<pin name="InputPMOS1" net="/ibias"/>
-				<pin name="Output" net="/outSecondStage"/>
-				<pin name="Vdd" net="/vdd!"/>
-			</pins>
-			<structure name="MosfetNormalArray[9]" techType="p" instance="/">
-				<pins>
-					<pin name="Bulk" net="/vdd!"/>
-					<pin name="Drain" net="/outSecondStage"/>
-					<pin name="Gate" net="/ibias"/>
-					<pin name="Source" net="/vdd!"/>
-				</pins>
-				<devices>
-					<device name="/m9" deviceType="Mosfet" techType="p" instance="/"/>
-				</devices>
-			</structure>
-			<structure name="MosfetNormalArray[3]" techType="n" instance="/">
-				<pins>
-					<pin name="Bulk" net="/gnd!"/>
-					<pin name="Drain" net="/outSecondStage"/>
-					<pin name="Gate" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
-					<pin name="Source" net="/gnd!"/>
-				</pins>
-				<devices>
-					<device name="/m8" deviceType="Mosfet" techType="n" instance="/"/>
-				</devices>
-			</structure>
-		</structure>
 		<structure name="MosfetDifferentialPair[1]" techType="p" instance="/">
 			<pins>
 				<pin name="Input1" net="/in1"/>
@@ -91,36 +130,6 @@
 				</pins>
 				<devices>
 					<device name="/m5" deviceType="Mosfet" techType="p" instance="/"/>
-				</devices>
-			</structure>
-		</structure>
-		<structure name="MosfetNmosDiodeAnalogInverter[1]" techType="undefined" instance="/">
-			<pins>
-				<pin name="Gnd" net="/gnd!"/>
-				<pin name="InputNMOS1" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
-				<pin name="InputPMOS1" net="/outFirstStage"/>
-				<pin name="Output" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
-				<pin name="Vdd" net="/vdd!"/>
-			</pins>
-			<structure name="MosfetNormalArray[6]" techType="p" instance="/">
-				<pins>
-					<pin name="Bulk" net="/vdd!"/>
-					<pin name="Drain" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
-					<pin name="Gate" net="/outFirstStage"/>
-					<pin name="Source" net="/vdd!"/>
-				</pins>
-				<devices>
-					<device name="/m7" deviceType="Mosfet" techType="p" instance="/"/>
-				</devices>
-			</structure>
-			<structure name="MosfetDiodeArray[2]" techType="n" instance="/">
-				<pins>
-					<pin name="Bulk" net="/gnd!"/>
-					<pin name="Drain" net="/SecondStageYAnalogInverterYfirstInnerDrain"/>
-					<pin name="Source" net="/gnd!"/>
-				</pins>
-				<devices>
-					<device name="/m6" deviceType="Mosfet" techType="n" instance="/"/>
 				</devices>
 			</structure>
 		</structure>
