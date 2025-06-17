@@ -108,7 +108,7 @@ namespace Partitioning {
 			stream << structure->getIdentifier() << ", " ;
 		}
 		stream << std::endl;
-		print(stream);
+		// print(stream);
 		return stream.str();
 	}
 

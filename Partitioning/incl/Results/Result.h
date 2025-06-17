@@ -120,6 +120,7 @@ public:
 	TransconductancePart & getFirstStage() const;
 	TransconductancePart & getFeedbackStage() const;
 	std::vector<TransconductancePart*> getSecondStages() const;
+	std::vector<TransconductancePart*> getThirdStages() const;
 	TransconductancePart & getPrimarySecondStage() const;
 	TransconductancePart & getSecondarySecondStage() const;
 	TransconductancePart & getThirdStage() const;

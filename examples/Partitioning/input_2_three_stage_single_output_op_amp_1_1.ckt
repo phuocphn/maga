@@ -1,0 +1,28 @@
+.GLOBAL vdd! gnd!
+
+.TEMP 25.0
+.OPTION
++    ARTIST=2
++    INGOLD=2
++    PARHIER=LOCAL
++    PSF=2
+
+** Library name: CascodeSymmetricalCMOSOTA
+** Cell name: cascodeSymmetricalCMOSOTA
+** View name: schematic
+c1 outFirstStage out 
+c2 outSecondStage out 
+m1 FirstStageYout1 FirstStageYout1 gnd! gnd! nmos
+m2 outFirstStage FirstStageYout1 gnd! gnd! nmos
+m3 FirstStageYsourceTransconductance ibias vdd! vdd! pmos
+m4 FirstStageYout1 in1 FirstStageYsourceTransconductance FirstStageYsourceTransconductance pmos
+m5 outFirstStage in2 FirstStageYsourceTransconductance FirstStageYsourceTransconductance pmos
+c3 out gnd! 
+m6 SecondStageYAnalogInverterYfirstInnerDrain SecondStageYAnalogInverterYfirstInnerDrain gnd! gnd! nmos
+m7 SecondStageYAnalogInverterYfirstInnerDrain outFirstStage vdd! vdd! pmos
+m8 outSecondStage SecondStageYAnalogInverterYfirstInnerDrain gnd! gnd! nmos
+m9 outSecondStage ibias vdd! vdd! pmos
+m10 out outSecondStage gnd! gnd! nmos
+m11 out ibias vdd! vdd! pmos
+m12 ibias ibias vdd! vdd! pmos
+.END

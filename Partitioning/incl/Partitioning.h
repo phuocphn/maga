@@ -73,10 +73,13 @@ namespace Partitioning {
 		void partitioningLoadPartsOfDifferentialPairs(const StructRec::StructureCircuits & circuits);
 		void partitioningSecondStage(const StructRec::StructureCircuits &circuits);
 		void partitioningThirdStage(const StructRec::StructureCircuits & circuit);
+		void partitioningFourthStage(const StructRec::StructureCircuits & circuit);
 		void findCommonModeSignalDetector(const StructRec::StructureCircuits &circuits);
 		void findPositiveFeedbackParts(const StructRec::StructureCircuits & circuits);
 
 		void classifyMosfetAnalogInverter(const StructRec::StructureCircuits & circuits);
+		void classifyMosfetNmosDiodeAnalogInverter(const StructRec::StructureCircuits & circuits);
+		void classifyMosfetPmosDiodeAnalogInverter(const StructRec::StructureCircuits & circuits);
 		void classifyMosfetCascodedAnalogInverter(const StructRec::StructureCircuits & circuits);
 		void classifyMosfetAnalogInverterNmosCurrentMirrorLoad(const StructRec::StructureCircuits & circuits);
 		void classifyMosfetAnalogInverterPmosCurrentMirrorLoad(const StructRec::StructureCircuits & circuits);
@@ -135,6 +138,7 @@ namespace Partitioning {
 		bool hasFirstStageOutputConnection(const StructRec::StructureNet& net, const StructRec::StructureCircuits & circuits) const ;
 		bool hasThirdStageInputConnection(const TransconductancePart & part) const;
 		bool hasThirdStageOutputConnection(const StructRec::StructureNet& net, const StructRec::StructureCircuits & circuits) const;
+		bool hasFourthStageOutputConnection(const StructRec::StructureNet& net, const StructRec::StructureCircuits & circuits) const;
 		bool hasGroundConnection(const StructRec::StructureNet & net ) const;
 		bool hasStageOutputNetConnection(const StructRec::StructureNet& net, const Part & stage,
 				const StructRec::StructureCircuits & circuits) const;

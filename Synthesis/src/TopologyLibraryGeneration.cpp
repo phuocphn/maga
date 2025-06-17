@@ -152,7 +152,7 @@ namespace Synthesis {
 
 		FunctionalBlockLibrary * functionalBlockLibrary = new FunctionalBlockLibrary(*circuitInformation);
 
-		createOpAmps(*functionalBlockLibrary,*circuitParameter);
+		createThreeStageOpAmps(*functionalBlockLibrary,*circuitParameter);
 
 		logDebug("Delete Circuit informations");
 		delete circuitInformation;
@@ -173,7 +173,7 @@ namespace Synthesis {
 		FunctionalBlockLibrary * functionalBlockLibrary = new FunctionalBlockLibrary(*circuitInformation);
 
 		logDebug("Create fully differential op amps");
-		createOpAmps(*functionalBlockLibrary,*circuitParameter);
+		createThreeStageOpAmps(*functionalBlockLibrary,*circuitParameter);
 
 		delete circuitInformation;
 		delete functionalBlockLibrary;
@@ -279,6 +279,100 @@ namespace Synthesis {
 						}
 						delete &flatTwoStageOpAmp;
 						delete twoStageOpAmp;
+					}
+
+				}
+
+				delete oneStageOpAmp;
+				delete &flatOneStageOpAmp;
+			}
+
+			for(auto & symmetricalOpAmp : symmetricalOpAmps)
+			{
+				const Core::Circuit & flatSymmetricalOpAmp = createFlatCircuit(*symmetricalOpAmp);
+				writeHSpiceFile(flatSymmetricalOpAmp, circuitParameter);
+				delete symmetricalOpAmp;
+				delete &flatSymmetricalOpAmp;
+			}
+
+
+			caseNumber ++;
+			// break;
+			// delete &oneStageOpAmps;
+
+
+			// delete twoStageOpAmps;
+			// delete threeStageOpAmps;
+		} while (!oneStageOpAmps.empty() || !symmetricalOpAmps.empty());
+
+	}
+
+	void TopologyLibraryGeneration::createThreeStageOpAmps(const FunctionalBlockLibrary & library, const AutomaticSizing::CircuitParameter & circuitParameter)
+	{
+		std::vector<const Core::Circuit*> oneStageOpAmps;
+		std::vector<const Core::Circuit*> threeStageOpAmps;
+		std::vector<const Core::Circuit*> symmetricalOpAmps;
+
+		oneStageOpAmps.empty();
+		symmetricalOpAmps.empty();
+
+		int caseNumber = 1;
+		int indexComplementary = 1;
+		int indexFullyDifferential = 1;
+		int indexSymmetrical = 1;
+		int indexSingleOutput = 1;
+
+		do
+		{
+			if (circuitParameter.isComplementary())
+			{
+				oneStageOpAmps = library.getOpAmps().createComplementaryOpAmps(caseNumber, indexComplementary);
+			}
+			else if(circuitParameter.isFullyDifferential())
+			{
+				oneStageOpAmps = library.getOpAmps().createFullyDifferentialOneStageOpAmps(caseNumber, indexFullyDifferential);
+			}
+			else
+			{
+				// case #1: simple op-amps goes here ....
+				oneStageOpAmps = library.getOpAmps().createSimpleOneStageOpAmps(caseNumber, indexSingleOutput);
+				symmetricalOpAmps = library.getOpAmps().createSymmetricalOpAmps(caseNumber, indexSymmetrical);
+
+				// case #2: generate symmetrical three-stage opamps directly
+				// in this case, do not initialize oneStageOpAmps
+				//symmetricalOpAmps = library.getOpAmps().createSymmetricalThreeStageOpAmps(caseNumber, indexSymmetrical);
+			}
+
+			for(auto & oneStageOpAmp : oneStageOpAmps)
+			{
+				const Core::Circuit & flatOneStageOpAmp = createFlatCircuit(*oneStageOpAmp);
+				// writeHSpiceFile(flatOneStageOpAmp, circuitParameter);
+				std::ostringstream oneStageOpAmpId;
+				oneStageOpAmpId << oneStageOpAmp->getCircuitIdentifier().getId();
+				if(!circuitParameter.isComplementary())
+				{
+					std::vector<const Core::Circuit*> twoStageOpAmps;
+					if(circuitParameter.isFullyDifferential())
+					{
+						threeStageOpAmps = library.getOpAmps().createFullyDifferentialThreeStageOpAmps_2INV(*oneStageOpAmp);
+					}
+					else
+					{
+						threeStageOpAmps = library.getOpAmps().createSimpleThreeStageOpAmps(*oneStageOpAmp, *oneStageOpAmp);
+					}
+					
+
+					for(auto & threeStageOpAmp : threeStageOpAmps)
+					{
+
+						std::ostringstream spiceFilePath;
+						spiceFilePath << oneStageOpAmpId.str();
+						const Core::Circuit & flatThreeStageOpAmp = createFlatCircuit(*threeStageOpAmp);
+						writeHSpiceFile(flatThreeStageOpAmp, circuitParameter, spiceFilePath.str());
+
+						delete threeStageOpAmp;
+						delete &flatThreeStageOpAmp;
+
 					}
 
 				}

@@ -135,8 +135,6 @@ PYBIND11_MODULE(pymaga, m) {
     py::class_<AutomaticSizing::DesignAttributes>(m, "DesignAttributes")
         .def(py::init<>()); 
 
-    py::class_<Core::Instance>(m, "Instance")
-        .def(py::init<>()); 
 
 
     py::class_<AutomaticSizing::CircuitInformation>(m, "CircuitInformation")
@@ -245,7 +243,53 @@ PYBIND11_MODULE(pymaga, m) {
         .def(py::init<Synthesis::AmplificationStagesSubBlockLevel&>())
         .def("__repr__", [](Synthesis::Loads &self) {
             return self.toStr();
-        });
+        })
+        .def("createSimpleMixedLoadPmos", [](Synthesis::Loads &self) {
+            return self.createSimpleMixedLoadPmos();
+        })
+        .def("createSimpleMixedLoadNmos", [](Synthesis::Loads &self) {
+            return self.createSimpleMixedLoadNmos();
+        })
+        .def("createSimpleTwoLoadPartsFoldedGCCMixedLoadPmos", [](Synthesis::Loads &self) {
+            return self.createSimpleTwoLoadPartsFoldedGCCMixedLoadPmos();
+        })        
+        .def("createSimpleTwoLoadPartsFoldedGCCMixedLoadNmos", [](Synthesis::Loads &self) {
+            return self.createSimpleTwoLoadPartsFoldedGCCMixedLoadNmos();
+        })            
+        .def("createLoadsTwoLoadPartsCascodeGCCMixedPmos", [](Synthesis::Loads &self) {
+            return self.createLoadsTwoLoadPartsCascodeGCCMixedPmos();
+        }) 
+        .def("createLoadsTwoLoadPartsCascodeGCCMixedNmos", [](Synthesis::Loads &self) {
+            return self.createLoadsTwoLoadPartsCascodeGCCMixedNmos();
+        }) 
+        .def("createLoadsTwoLoadPartsMixedCurrentBiasesPmos", [](Synthesis::Loads &self) {
+            return self.createLoadsTwoLoadPartsMixedCurrentBiasesPmos();
+        }) 
+        .def("createLoadsTwoLoadPartsMixedCurrentBiasesNmos", [](Synthesis::Loads &self) {
+            return self.createLoadsTwoLoadPartsMixedCurrentBiasesNmos();
+        }) 
+        .def("createLoadsPmosForFullyDifferentialNonInvertingStage", [](Synthesis::Loads &self) {
+            return self.createLoadsPmosForFullyDifferentialNonInvertingStage();
+        }) 
+        .def("createLoadsNmosForFullyDifferentialNonInvertingStage", [](Synthesis::Loads &self) {
+            return self.createLoadsNmosForFullyDifferentialNonInvertingStage();
+        }) 
+        .def("createLoadsForComplementaryNonInvertingStage", [](Synthesis::Loads &self) {
+            return self.createLoadsForComplementaryNonInvertingStage();
+        }) 
+        .def("createLoadsPmosTwoForSymmetricalOpAmpNonInvertingStage", [](Synthesis::Loads &self) {
+            return self.createLoadsPmosTwoForSymmetricalOpAmpNonInvertingStage();
+        }) 
+        .def("createLoadsPmosFourForSymmetricalOpAmpNonInvertingStage", [](Synthesis::Loads &self) {
+            return self.createLoadsPmosFourForSymmetricalOpAmpNonInvertingStage();
+        }) 
+        .def("createLoadsNmosTwoForSymmetricalOpAmpNonInvertingStage", [](Synthesis::Loads &self) {
+            return self.createLoadsNmosTwoForSymmetricalOpAmpNonInvertingStage();
+        }) 
+        .def("createLoadsNmosFourForSymmetricalOpAmpNonInvertingStage", [](Synthesis::Loads &self) {
+            return self.createLoadsNmosFourForSymmetricalOpAmpNonInvertingStage();
+        }) 
+        ;
 
 
     // level 4
@@ -334,10 +378,110 @@ PYBIND11_MODULE(pymaga, m) {
         }, py::return_value_policy::take_ownership);
 
     
+
+    // Simple Definition
+    py::class_<Core::Net>(m, "Net")
+        .def(py::init<>()); 
+    py::class_<Core::InstanceId>(m, "InstanceId")
+        .def(py::init<>()); 
+    py::class_<Core::InstanceTerminal>(m, "InstanceTerminal")
+        .def(py::init<>())
+        .def("__repr__", [](Core::InstanceTerminal &self) {
+            return "undefined";
+        })
+        .def("getNet", [](Core::InstanceTerminal &self)
+        {
+            // return self.getNet();
+            const auto& net = self.getNet();
+
+            // TODO: can not return the Net object itself
+            return net.toStr();
+        })
+        .def("getIdentifier", [](Core::InstanceTerminal &self) {
+            return self.getIdentifier().toStr();
+        });
+
+
+    py::class_<Core::TerminalId>(m, "TerminalId")
+        .def(py::init<>()); 
+    py::class_<Core::Terminal>(m, "Terminal")
+        .def(py::init<>())
+        .def("getNet", [](Core::Terminal &self)
+        {
+            // return self.getNet();
+            const auto& net = self.getNet();
+
+            // TODO: can not return the Net object itself
+            return net.toStr();
+        })
+        .def("__repr__", [](Core::Terminal &self) {
+            return self.toStr();
+        })
+        .def("getIdentifier", [](Core::Terminal &self) {
+            return self.getIdentifier().toStr();
+        })
+        ;
+    py::class_<Core::Circuit::TerminalMap>(m, "TerminalMap")
+        .def(py::init<>()); 
+    py::class_<Core::Instance::InstanceTerminalMap>(m, "InstanceTerminalMap")
+        .def(py::init<>()); 
+        
+
+    
+    py::class_<Core::Instance>(m, "Instance")
+        .def(py::init<>())
+        .def("getInstanceTerminalMap", [](Core::Instance &self) {
+            py::dict d;
+            const auto& instanceTerminalMap = self.getInstanceTerminalMap();
+            for (const auto& item : instanceTerminalMap) {
+                d[py::cast(item.first)] = py::cast(item.second);
+            }
+            return d;
+        })
+        .def("__repr__", [](Core::Instance &self) {
+            return self.toStr();
+        })
+        .def("hasMaster", [](Core::Instance &self) {
+            return self.hasMaster();
+        })
+        .def("getMaster", [](Core::Instance &self) {
+            // py::cast does not remove or modify instances in C++.
+            // It only wraps the returned object for Python.
+            // If self.getMaster().clone() returns a Circuit with no instances,
+            // the issue is in the clone() or getMaster() implementation, not py::cast.
+            return py::cast(self.getMaster());
+        })
+        ; 
+
+
     py::class_<Core::Circuit, std::shared_ptr<Core::Circuit>>(m, "Circuit")
         .def(py::init<>())
+        .def("getTerminalMap", [](Core::Circuit &self) {
+            py::dict d;
+            const auto& terminalMap = self.getTerminalMap();
+            for (const auto& item : terminalMap) {
+                d[py::cast(item.first)] = py::cast(item.second);
+            }
+            return d;
+        })
+        .def("getInstanceMap", [](Core::Circuit &self) {
+            py::dict d;
+            const auto& instancelMap = self.getInstanceMap();
+            for (const auto& item : instancelMap) {
+                d[py::cast(item.first)] = py::cast(item.second);
+            }
+            return d;
+        })
+
         .def("__repr__", [](Core::Circuit &self) {
-            return self.toStr();
+            return self.getCircuitIdentifier().toStr();
+        })
+        .def("printBasicInfo", [](Core::Circuit &self) {
+            std::ostringstream buf;
+
+            self.printBasicInfo(buf);
+            return buf.str();
+
         });
 
     py::class_<DerivedHspiceOptions>(m, "IOCore")

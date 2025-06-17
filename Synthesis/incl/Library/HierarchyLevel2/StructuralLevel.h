@@ -64,6 +64,7 @@ namespace Synthesis {
         const CurrentMirrors & getCurrentMirrors() const;
 		const DifferentialPair & getDifferentialPair() const;
         const AnalogInverters & getAnalogInverters() const;
+		const DeviceLevel & getDeviceLevel() const;
 
 		std::string toStr() const;
 
@@ -74,7 +75,7 @@ namespace Synthesis {
         CurrentMirrors * currentMirrors_;
 		DifferentialPair* differentialPair_;
         AnalogInverters * analogInverters_;
-
+		const DeviceLevel * deviceLevel_;
 	};
 
 

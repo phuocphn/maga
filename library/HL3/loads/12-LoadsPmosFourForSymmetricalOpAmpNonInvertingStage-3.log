@@ -1,0 +1,57 @@
+
+--------------------------
+ Variant Name: LoadsPmosFourForSymmetricalOpAmpNonInvertingStage
+ Number of circuits: 3
+--------------------------
+📁VoltageBiasLoad[p, 1][#instances=1,#ports=9]: [InnerTransistorStack1Load1(/innerTransistorStack1Load1),InnerTransistorStack2Load1(/innerTransistorStack2Load1),Out1(/out1),Out2(/out2),OutOutput1Load1(/outOutput1Load1),OutOutput2Load1(/outOutput2Load1),OutSourceLoad1(/outSource1Load1),OutSourceLoad2(/outSource2Load1),SourceLoad1(/sourceLoad1)]
+└── LoadPart1[#ports=9]: [InnerTransistorStack1(/innerTransistorStack1Load1),InnerTransistorStack2(/innerTransistorStack2Load1),Out1(/out1),Out2(/out2),OutOutput1(/outOutput1Load1),OutOutput2(/outOutput2Load1),OutSource1(/outSource1Load1),OutSource2(/outSource2Load1),Source(/sourceLoad1)]
+    └── 📁VoltageBiasLoadPart[p, 1][#instances=2,#ports=9]: [InnerTransistorStack1(/innerTransistorStack1),InnerTransistorStack2(/innerTransistorStack2),Out1(/out1),Out2(/out2),OutOutput1(/outOutput1),OutOutput2(/outOutput2),OutSource1(/outSource1),OutSource2(/outSource2),Source(/source)]
+        ├── TransistorStack1[#ports=5]: [In(/out1),Inner(/innerTransistorStack1),OutInput(/outOutput1),OutSource(/outSource1),Source(/source)]
+        │   └── 📁VoltageBias[p, 3][#instances=2,#ports=5]: [In(/in),Inner(/inner),OutInput(/outInput),OutSource(/outSource),Source(/source)]
+        │       ├── OutputTransistor[#ports=3]: [Drain(/in),Gate(/outInput),Source(/inner)]
+        │       │   └── 📁DiodeTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/drain),Source(/source)]
+        │       └── SourceTransistor[#ports=3]: [Drain(/inner),Gate(/outSource),Source(/source)]
+        │           └── 📁DiodeTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/drain),Source(/source)]
+        └── TransistorStack2[#ports=5]: [In(/out2),Inner(/innerTransistorStack2),OutInput(/outOutput2),OutSource(/outSource2),Source(/source)]
+            └── 📁VoltageBias[p, 3][#instances=2,#ports=5]: [In(/in),Inner(/inner),OutInput(/outInput),OutSource(/outSource),Source(/source)]
+                ├── OutputTransistor[#ports=3]: [Drain(/in),Gate(/outInput),Source(/inner)]
+                │   └── 📁DiodeTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/drain),Source(/source)]
+                └── SourceTransistor[#ports=3]: [Drain(/inner),Gate(/outSource),Source(/source)]
+                    └── 📁DiodeTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/drain),Source(/source)]
+
+++++++++++++++++++++++++
+📁VoltageBiasLoad[p, 2][#instances=1,#ports=9]: [InnerTransistorStack1Load1(/innerTransistorStack1Load1),InnerTransistorStack2Load1(/innerTransistorStack2Load1),Out1(/out1),Out2(/out2),OutOutput1Load1(/outOutput1Load1),OutOutput2Load1(/outOutput2Load1),OutSourceLoad1(/outSource1Load1),OutSourceLoad2(/outSource2Load1),SourceLoad1(/sourceLoad1)]
+└── LoadPart1[#ports=9]: [InnerTransistorStack1(/innerTransistorStack1Load1),InnerTransistorStack2(/innerTransistorStack2Load1),Out1(/out1),Out2(/out2),OutOutput1(/outOutput1Load1),OutOutput2(/outOutput2Load1),OutSource1(/outSource1Load1),OutSource2(/outSource2Load1),Source(/sourceLoad1)]
+    └── 📁VoltageBiasLoadPart[p, 2][#instances=2,#ports=9]: [InnerTransistorStack1(/innerTransistorStack1),InnerTransistorStack2(/innerTransistorStack2),Out1(/out1),Out2(/out2),OutOutput1(/outOutput1),OutOutput2(/outOutput2),OutSource1(/outSource1),OutSource2(/outSource2),Source(/source)]
+        ├── TransistorStack1[#ports=5]: [In(/out1),Inner(/innerTransistorStack1),OutInput(/outOutput1),OutSource(/outSource1),Source(/source)]
+        │   └── 📁VoltageBias[p, 4][#instances=2,#ports=5]: [In(/in),Inner(/inner),OutInput(/outInput),OutSource(/in),Source(/source)]
+        │       ├── OutputTransistor[#ports=3]: [Drain(/in),Gate(/outInput),Source(/inner)]
+        │       │   └── 📁NormalTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/gate),Source(/source)]
+        │       └── SourceTransistor[#ports=3]: [Drain(/inner),Gate(/in),Source(/source)]
+        │           └── 📁NormalTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/gate),Source(/source)]
+        └── TransistorStack2[#ports=5]: [In(/out2),Inner(/innerTransistorStack2),OutInput(/outOutput2),OutSource(/outSource2),Source(/source)]
+            └── 📁VoltageBias[p, 4][#instances=2,#ports=5]: [In(/in),Inner(/inner),OutInput(/outInput),OutSource(/in),Source(/source)]
+                ├── OutputTransistor[#ports=3]: [Drain(/in),Gate(/outInput),Source(/inner)]
+                │   └── 📁NormalTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/gate),Source(/source)]
+                └── SourceTransistor[#ports=3]: [Drain(/inner),Gate(/in),Source(/source)]
+                    └── 📁NormalTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/gate),Source(/source)]
+
+++++++++++++++++++++++++
+📁VoltageBiasLoad[p, 3][#instances=1,#ports=9]: [InnerTransistorStack1Load1(/innerTransistorStack1Load1),InnerTransistorStack2Load1(/innerTransistorStack2Load1),Out1(/out1),Out2(/out2),OutOutput1Load1(/outOutput1Load1),OutOutput2Load1(/outOutput2Load1),OutSourceLoad1(/outSource1Load1),OutSourceLoad2(/outSource2Load1),SourceLoad1(/sourceLoad1)]
+└── LoadPart1[#ports=9]: [InnerTransistorStack1(/innerTransistorStack1Load1),InnerTransistorStack2(/innerTransistorStack2Load1),Out1(/out1),Out2(/out2),OutOutput1(/outOutput1Load1),OutOutput2(/outOutput2Load1),OutSource1(/outSource1Load1),OutSource2(/outSource2Load1),Source(/sourceLoad1)]
+    └── 📁VoltageBiasLoadPart[p, 3][#instances=2,#ports=9]: [InnerTransistorStack1(/innerTransistorStack1),InnerTransistorStack2(/innerTransistorStack2),Out1(/out1),Out2(/out2),OutOutput1(/outOutput1),OutOutput2(/outOutput2),OutSource1(/outSource1),OutSource2(/outSource2),Source(/source)]
+        ├── TransistorStack1[#ports=5]: [In(/out1),Inner(/innerTransistorStack1),OutInput(/outOutput1),OutSource(/outSource1),Source(/source)]
+        │   └── 📁VoltageBias[p, 6][#instances=2,#ports=5]: [In(/in),Inner(/inner),OutInput(/outInput),OutSource(/in),Source(/source)]
+        │       ├── OutputTransistor[#ports=3]: [Drain(/in),Gate(/outInput),Source(/inner)]
+        │       │   └── 📁DiodeTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/drain),Source(/source)]
+        │       └── SourceTransistor[#ports=3]: [Drain(/inner),Gate(/in),Source(/source)]
+        │           └── 📁NormalTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/gate),Source(/source)]
+        └── TransistorStack2[#ports=5]: [In(/out2),Inner(/innerTransistorStack2),OutInput(/outOutput2),OutSource(/outSource2),Source(/source)]
+            └── 📁VoltageBias[p, 6][#instances=2,#ports=5]: [In(/in),Inner(/inner),OutInput(/outInput),OutSource(/in),Source(/source)]
+                ├── OutputTransistor[#ports=3]: [Drain(/in),Gate(/outInput),Source(/inner)]
+                │   └── 📁DiodeTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/drain),Source(/source)]
+                └── SourceTransistor[#ports=3]: [Drain(/inner),Gate(/in),Source(/source)]
+                    └── 📁NormalTransistor[p, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/gate),Source(/source)]
+
+++++++++++++++++++++++++
+********************************************************************************************************

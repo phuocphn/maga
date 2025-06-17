@@ -55,6 +55,7 @@ namespace Partitioning {
    const std::string TransconductancePart::PRIMARYSECONDSTAGE_STRING_ = "primarySecondStage";
    const std::string TransconductancePart::SECONDARYSECONDSTAGE_STRING_ = "secondarySecondStage";
    const std::string TransconductancePart::THIRDSTAGE_STRING_ = "thirdStage";
+   const std::string TransconductancePart::FOURTHSTAGE_STRING_ = "fourthStage";
    const std::string TransconductancePart::FEEDBACK_STRING_ = "feedBack";
 
 
@@ -185,6 +186,12 @@ namespace Partitioning {
       return typeEnum_ == TYPE_THIRDSTAGE;
    }
 
+   bool TransconductancePart::isFourthStage() const
+   {
+      assert(hasType());
+      return typeEnum_ == TYPE_FOURTHSTAGE;
+   }
+
    bool TransconductancePart::isHigherStage() const
    {
       assert(hasType());
@@ -293,6 +300,7 @@ namespace Partitioning {
            theMap[PRIMARYSECONDSTAGE_STRING_] = TYPE_PRIMARYSECONDSTAGE;
            theMap[SECONDARYSECONDSTAGE_STRING_] = TYPE_SECONDARYSECONDSTAGE;
            theMap[THIRDSTAGE_STRING_] = TYPE_THIRDSTAGE;
+           theMap[FOURTHSTAGE_STRING_] = TYPE_FOURTHSTAGE;
            theMap[FEEDBACK_STRING_] = TYPE_FEEDBACK;
        }
        return theMap;
@@ -321,6 +329,8 @@ namespace Partitioning {
            theMap[TYPE_PRIMARYSECONDSTAGE] = PRIMARYSECONDSTAGE_STRING_;
            theMap[TYPE_SECONDARYSECONDSTAGE] = SECONDARYSECONDSTAGE_STRING_;
            theMap[TYPE_THIRDSTAGE] = THIRDSTAGE_STRING_;
+           theMap[TYPE_THIRDSTAGE] = THIRDSTAGE_STRING_;
+           theMap[TYPE_FOURTHSTAGE] = FOURTHSTAGE_STRING_;
            theMap[TYPE_FEEDBACK] = FEEDBACK_STRING_;
        }
        return theMap;

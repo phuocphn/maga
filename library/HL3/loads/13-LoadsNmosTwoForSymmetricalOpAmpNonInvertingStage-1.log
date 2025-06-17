@@ -1,0 +1,19 @@
+
+--------------------------
+ Variant Name: LoadsNmosTwoForSymmetricalOpAmpNonInvertingStage
+ Number of circuits: 1
+--------------------------
+📁VoltageBiasLoad[n, 1][#instances=1,#ports=3]: [Out1(/out1),Out2(/out2),SourceLoad1(/sourceLoad1)]
+└── LoadPart1[#ports=3]: [Out1(/out1),Out2(/out2),Source(/sourceLoad1)]
+    └── 📁VoltageBiasLoadPart[n, 1][#instances=2,#ports=3]: [Out1(/out1),Out2(/out2),Source(/source)]
+        ├── TransistorStack1[#ports=3]: [In(/out1),Out(/out1),Source(/source)]
+        │   └── 📁VoltageBias[n, 2][#instances=1,#ports=3]: [In(/in),Out(/out),Source(/source)]
+        │       └── Transistor[#ports=3]: [Drain(/in),Gate(/out),Source(/source)]
+        │           └── 📁DiodeTransistor[n, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/drain),Source(/source)]
+        └── TransistorStack2[#ports=3]: [In(/out2),Out(/out2),Source(/source)]
+            └── 📁VoltageBias[n, 2][#instances=1,#ports=3]: [In(/in),Out(/out),Source(/source)]
+                └── Transistor[#ports=3]: [Drain(/in),Gate(/out),Source(/source)]
+                    └── 📁DiodeTransistor[n, 1][#instances=0,#ports=3]: [Drain(/drain),Gate(/drain),Source(/source)]
+
+++++++++++++++++++++++++
+********************************************************************************************************

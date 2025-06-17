@@ -49,12 +49,13 @@
 
 namespace Synthesis {
 
-    		StructuralLevel::StructuralLevel(const DeviceLevel & deviceLevel, const AutomaticSizing::CircuitInformation & circuitInformation) :
+            StructuralLevel::StructuralLevel(const DeviceLevel & deviceLevel, const AutomaticSizing::CircuitInformation & circuitInformation) :
                 voltageBiases_(nullptr),
                 currentBiases_(nullptr),
                 currentMirrors_(nullptr),
                 differentialPair_(nullptr),
-                analogInverters_(nullptr)
+                analogInverters_(nullptr),
+                deviceLevel_(nullptr)
             {
     			//logDebug("Creating voltage biases");
                 voltageBiases_ = new VoltageBiases(deviceLevel);
@@ -62,6 +63,7 @@ namespace Synthesis {
                 currentBiases_ = new CurrentBiases(deviceLevel);
                 //logDebug("Creating differential pairs");
                 differentialPair_ = new DifferentialPair(deviceLevel);
+                deviceLevel_ = &deviceLevel;
 
                 if(!circuitInformation.getCircuitParameter().isComplementary())
                 {
@@ -109,7 +111,11 @@ namespace Synthesis {
             assert(analogInverters_ != nullptr);
             return *analogInverters_;
         }
-
+        const DeviceLevel & StructuralLevel::getDeviceLevel() const
+        {
+            assert(deviceLevel_ != nullptr);
+            return *deviceLevel_;
+        }
 		std::string StructuralLevel::toStr() const
         {
                         std::ostringstream oss;

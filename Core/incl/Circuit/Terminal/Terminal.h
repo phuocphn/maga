@@ -50,13 +50,15 @@ namespace Core {
     class Terminal : public Object
     {
     public:
+        const Net & getNet() const;
+
+    public:
         Terminal();
 
         void setNet(const Net& net);
         void setTerminalId(const TerminalId& terminalIdentifier);
         void setTerminalType(const TerminalType& terminalType);
 
-        const Net & getNet() const;
 
         NetId getNetId() const;
         TerminalId getIdentifier() const;
