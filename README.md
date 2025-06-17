@@ -1,4 +1,4 @@
-# maga
+# Analog Circuit Synthesis Tool
 
 
 # References
