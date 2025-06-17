@@ -80,7 +80,7 @@ namespace Partitioning {
 		}
 		partitioningSecondStage(circuits);
 		partitioningThirdStage(circuits);
-		partitioningFourthStage(circuits);
+		// partitioningFourthStage(circuits);
 		recognizeSecondSecondStage(circuits);
 
 		if(result->hasSecondarySecondStage())
@@ -386,17 +386,17 @@ namespace Partitioning {
 
 	void Partitioning::classifyMosfetNmosDiodeAnalogInverter(const StructRec::StructureCircuits & circuits)
 	{
-		const StructRec::StructureName inverterName =  StructRec::StructureName("MosfetNmosDiodeAnalogInverter");
-		const StructRec::StructurePinType gatePin1 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "InputPMOS1");
-		const StructRec::StructurePinType gatePin2 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "InputNMOS1");
+		const StructRec::StructureName inverterName =  StructRec::StructureName("MosfetNmosNonInvertingInverter");
+		const StructRec::StructurePinType gatePin1 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "InputPMOS1");
+		const StructRec::StructurePinType gatePin2 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "InputNMOS1");
 
 		classifyInverter(circuits, inverterName, gatePin1,  gatePin2);
 	}
 	void Partitioning::classifyMosfetPmosDiodeAnalogInverter(const StructRec::StructureCircuits & circuits)
 	{
-		const StructRec::StructureName inverterName =  StructRec::StructureName("MosfetPmosDiodeAnalogInverter");
-		const StructRec::StructurePinType gatePin1 = StructRec::StructurePinType("MosfetPmosDiodeAnalogInverter", "InputPMOS1");
-		const StructRec::StructurePinType gatePin2 = StructRec::StructurePinType("MosfetPmosDiodeAnalogInverter", "InputNMOS1");
+		const StructRec::StructureName inverterName =  StructRec::StructureName("MosfetPmosNonInvertingInverter");
+		const StructRec::StructurePinType gatePin1 = StructRec::StructurePinType("MosfetPmosNonInvertingInverter", "InputPMOS1");
+		const StructRec::StructurePinType gatePin2 = StructRec::StructurePinType("MosfetPmosNonInvertingInverter", "InputNMOS1");
 
 		classifyInverter(circuits, inverterName, gatePin1,  gatePin2);
 	}
@@ -553,7 +553,7 @@ namespace Partitioning {
 			const StructRec::Pair * inverterPair =static_cast<const StructRec::Pair*>(inverter);
 			const StructRec::StructureNet & netGatePin1 = inverter->findNet(gatePin1);
 
-			std::string type;
+			std::string type = "unclassified";
 
 			// reset child numbers
 			childNumberTransStruc = 0;
@@ -622,6 +622,16 @@ namespace Partitioning {
 			}
 
 			// If a valid child structure number is found, it initializes the inverter stage by calling initializeInverterStage with the appropriate child structures and type.
+			if ((inverter->getIdentifier().getName().toStr() == "MosfetNmosNonInvertingInverter" || inverter->getIdentifier().getName().toStr() ==  "MosfetPmosNonInvertingInverter" ) && type != "unclassified")
+			{
+				TransconductancePart* transPart = new TransconductancePart(getIdTransPart()); // getIdTransPart() returns a iit with value of 1.
+				transPart->addMainStructure(*inverter, getResult());
+				// StructRec::Structure biasStruc = static_cast<const StructRec::Pair*>(&inverterPair->getChild(2))->getChild(2);
+				transPart->setType(type);
+				// transPart->setHelperStructure(biasStruc);
+				getResult().addTransconductancePart(*transPart);
+			}
+
 			if(childNumberTransStruc != 0)
 			{
 				initializeInverterStage({&inverterPair->getChild(childNumberTransStruc)}, inverterPair->getChild(childNumberBiasStruc), type);
@@ -2360,15 +2370,15 @@ namespace Partitioning {
 		const StructRec::StructurePinType gate8_2 = StructRec::StructurePinType("MosfetCascodeAnalogInverterPmosDiodeTransistor", "InputNMOS1");
 		const StructRec::StructureName inverterName8 = StructRec::StructureName("MosfetCascodeAnalogInverterPmosDiodeTransistor");
 
-		const StructRec::StructurePinType output9 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "Output");
-		const StructRec::StructurePinType gate9_1 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "InputPMOS1");
-		const StructRec::StructurePinType gate9_2 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "InputNMOS1");
-		const StructRec::StructureName inverterName9 = StructRec::StructureName("MosfetNmosDiodeAnalogInverter");
+		const StructRec::StructurePinType output9 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "Output");
+		const StructRec::StructurePinType gate9_1 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "InputPMOS1");
+		const StructRec::StructurePinType gate9_2 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "InputNMOS1");
+		const StructRec::StructureName inverterName9 = StructRec::StructureName("MosfetNmosNonInvertingInverter");
 
-		const StructRec::StructurePinType output10 = StructRec::StructurePinType("MosfetPmosDiodeAnalogInverter", "Output");
-		const StructRec::StructurePinType gate10_1 = StructRec::StructurePinType("MosfetPmosDiodeAnalogInverter", "InputPMOS1");
-		const StructRec::StructurePinType gate10_2 = StructRec::StructurePinType("MosfetPmosDiodeAnalogInverter", "InputNMOS1");
-		const StructRec::StructureName inverterName10 = StructRec::StructureName("MosfetPmosDiodeAnalogInverter");
+		const StructRec::StructurePinType output10 = StructRec::StructurePinType("MosfetPmosNonInvertingInverter", "Output");
+		const StructRec::StructurePinType gate10_1 = StructRec::StructurePinType("MosfetPmosNonInvertingInverter", "InputPMOS1");
+		const StructRec::StructurePinType gate10_2 = StructRec::StructurePinType("MosfetPmosNonInvertingInverter", "InputNMOS1");
+		const StructRec::StructureName inverterName10 = StructRec::StructureName("MosfetPmosNonInvertingInverter");
 
 		std::vector<const StructRec::Structure*> connectedStructures = circuits.findConnectedStructures(net.getIdentifier());
 		for(auto& it : connectedStructures)
@@ -2450,15 +2460,15 @@ namespace Partitioning {
 		const StructRec::StructurePinType gate8_2 = StructRec::StructurePinType("MosfetCascodeAnalogInverterPmosDiodeTransistor", "InputNMOS1");
 		const StructRec::StructureName inverterName8 = StructRec::StructureName("MosfetCascodeAnalogInverterPmosDiodeTransistor");
 
-		const StructRec::StructurePinType output9 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "Output");
-		const StructRec::StructurePinType gate9_1 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "InputPMOS1");
-		const StructRec::StructurePinType gate9_2 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "InputNMOS1");
-		const StructRec::StructureName inverterName9 = StructRec::StructureName("MosfetNmosDiodeAnalogInverter");
+		const StructRec::StructurePinType output9 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "Output");
+		const StructRec::StructurePinType gate9_1 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "InputPMOS1");
+		const StructRec::StructurePinType gate9_2 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "InputNMOS1");
+		const StructRec::StructureName inverterName9 = StructRec::StructureName("MosfetNmosNonInvertingInverter");
 
-		const StructRec::StructurePinType output10 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "Output");
-		const StructRec::StructurePinType gate10_1 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "InputPMOS1");
-		const StructRec::StructurePinType gate10_2 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "InputNMOS1");
-		const StructRec::StructureName inverterName10 = StructRec::StructureName("MosfetNmosDiodeAnalogInverter");
+		const StructRec::StructurePinType output10 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "Output");
+		const StructRec::StructurePinType gate10_1 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "InputPMOS1");
+		const StructRec::StructurePinType gate10_2 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "InputNMOS1");
+		const StructRec::StructureName inverterName10 = StructRec::StructureName("MosfetNmosNonInvertingInverter");
 
 
 		std::vector<const StructRec::Structure*> connectedStructures = circuits.findConnectedStructures(net.getIdentifier());
@@ -2518,13 +2528,13 @@ namespace Partitioning {
 		const StructRec::StructurePinType gate4_2 = StructRec::StructurePinType("MosfetCascodedNMOSAnalogInverter", "InputNMOS1");
 		const StructRec::StructureName inverterName4 = StructRec::StructureName("MosfetCascodedNMOSAnalogInverter");
 
-		const StructRec::StructurePinType gate5_1 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "InputPMOS1");
-		const StructRec::StructurePinType gate5_2 = StructRec::StructurePinType("MosfetNmosDiodeAnalogInverter", "InputNMOS1");
-		const StructRec::StructureName inverterName5 = StructRec::StructureName("MosfetNmosDiodeAnalogInverter");
+		const StructRec::StructurePinType gate5_1 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "InputPMOS1");
+		const StructRec::StructurePinType gate5_2 = StructRec::StructurePinType("MosfetNmosNonInvertingInverter", "InputNMOS1");
+		const StructRec::StructureName inverterName5 = StructRec::StructureName("MosfetNmosNonInvertingInverter");
 
-		const StructRec::StructurePinType gate6_1 = StructRec::StructurePinType("MosfetPmosDiodeAnalogInverter", "InputPMOS1");
-		const StructRec::StructurePinType gate6_2 = StructRec::StructurePinType("MosfetPmosDiodeAnalogInverter", "InputNMOS1");
-		const StructRec::StructureName inverterName6 = StructRec::StructureName("MosfetPmosDiodeAnalogInverter");
+		const StructRec::StructurePinType gate6_1 = StructRec::StructurePinType("MosfetPmosNonInvertingInverter", "InputPMOS1");
+		const StructRec::StructurePinType gate6_2 = StructRec::StructurePinType("MosfetPmosNonInvertingInverter", "InputNMOS1");
+		const StructRec::StructureName inverterName6 = StructRec::StructureName("MosfetPmosNonInvertingInverter");
 
 		std::vector<const StructRec::Structure*> connectedStructures = circuits.findConnectedStructures(net.getIdentifier());
 		for(auto & connectedStruc : connectedStructures)
@@ -2557,8 +2567,8 @@ namespace Partitioning {
 		std::vector<StructRec::StructureName> inverterNames;
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodedAnalogInverter"));
 		inverterNames.push_back(StructRec::StructureName("MosfetAnalogInverter"));
-		inverterNames.push_back(StructRec::StructureName("MosfetNmosDiodeAnalogInverter"));
-		inverterNames.push_back(StructRec::StructureName("MosfetPmosDiodeAnalogInverter"));
+		inverterNames.push_back(StructRec::StructureName("MosfetNmosNonInvertingInverter"));
+		inverterNames.push_back(StructRec::StructureName("MosfetPmosNonInvertingInverter"));
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodeAnalogInverterNmosCurrentMirrorLoad"));
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodeAnalogInverterPmosCurrentMirrorLoad"));
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodeAnalogInverterNmosDiodeTransistor"));
@@ -2592,8 +2602,8 @@ namespace Partitioning {
 		std::vector<StructRec::StructureName> inverterNames;
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodedAnalogInverter"));
 		inverterNames.push_back(StructRec::StructureName("MosfetAnalogInverter"));
-		inverterNames.push_back(StructRec::StructureName("MosfetNmosDiodeAnalogInverter"));
-		inverterNames.push_back(StructRec::StructureName("MosfetPmosDiodeAnalogInverter"));
+		inverterNames.push_back(StructRec::StructureName("MosfetNmosNonInvertingInverter"));
+		inverterNames.push_back(StructRec::StructureName("MosfetPmosNonInvertingInverter"));
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodeAnalogInverterNmosCurrentMirrorLoad"));
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodeAnalogInverterPmosCurrentMirrorLoad"));
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodeAnalogInverterNmosDiodeTransistor"));
@@ -2658,8 +2668,8 @@ namespace Partitioning {
 		std::vector<StructRec::StructureName> inverterNames;
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodedAnalogInverter"));
 		inverterNames.push_back(StructRec::StructureName("MosfetAnalogInverter"));
-		inverterNames.push_back(StructRec::StructureName("MosfetNmosDiodeAnalogInverter"));
-		inverterNames.push_back(StructRec::StructureName("MosfetPmosDiodeAnalogInverter"));
+		inverterNames.push_back(StructRec::StructureName("MosfetNmosNonInvertingInverter"));
+		inverterNames.push_back(StructRec::StructureName("MosfetPmosNonInvertingInverter"));
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodeAnalogInverterNmosCurrentMirrorLoad"));
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodeAnalogInverterPmosCurrentMirrorLoad"));
 		inverterNames.push_back(StructRec::StructureName("MosfetCascodeAnalogInverterNmosDiodeTransistor"));
